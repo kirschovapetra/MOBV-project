@@ -1,0 +1,16 @@
+PAYMENT
+
+id number - The operation’s ID number.
+paging_token string - A cursor value for use in pagination.
+type_i number - A number indicating the operation type.
+type string - The name of the operation type. ("payment")
+transaction_hash string - A unique identifier for the transaction this operation belongs to.
+transaction_successful boolean - Indicates if this operation was part of a successful transaction.
+source_account string - The account that originates the operation.
+created_at string - The date this operation was created.
+asset_type string - The type of asset being sent. Either native, credit_alphanum4, or credit_alphanum12.
+asset_code string - The code for the asset being sent. Appears if the asset_type is not native.
+asset_issuer string - The Stellar address of the issuer of the asset being sent. Appears if the asset_type is not native.
+from string - The payment sender’s public key.
+to string - The payment recipient’s public key.
+amount string - Amount sent.

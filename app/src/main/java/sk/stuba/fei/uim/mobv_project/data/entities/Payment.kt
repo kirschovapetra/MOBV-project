@@ -1,26 +1,28 @@
-package sk.stuba.fei.uim.mobv_project.modules.database.entities
+package sk.stuba.fei.uim.mobv_project.data.entities
 
 import androidx.room.*
-import java.util.*
-import sk.stuba.fei.uim.mobv_project.modules.general.constants.AssetType
+import sk.stuba.fei.uim.mobv_project.data.Constants
 
 @Entity(
     tableName = "payment",
     foreignKeys = [
-        androidx.room.ForeignKey(
+        ForeignKey(
             entity = Account::class,
-            parentColumns = ["accountId"],
-            childColumns = ["sourceAccount"],
+            parentColumns = ["account_id"],
+            childColumns = ["source_account"],
             onDelete = ForeignKey.CASCADE
         )
+    ],
+    indices = [
+        Index(value= ["source_account" ], unique= true)
     ]
 )
 data class Payment(
     @PrimaryKey @ColumnInfo(name = "payment_id") val paymentId: String,
     @ColumnInfo(name = "transaction_hash") val transactionHash: String?,
     @ColumnInfo(name = "transaction_successful") val transactionSuccessful: Boolean?,
-    @ColumnInfo(name = "created_at") val createdAt: Date?,
-    @ColumnInfo(name = "asset_type") val assetType: AssetType?,
+    @ColumnInfo(name = "created_at") val createdAt: String?,
+    @ColumnInfo(name = "asset_type") val assetType: Constants.AssetType?,
     @ColumnInfo(name = "from") val from: String?,
     @ColumnInfo(name = "to") val to: String?,
     @ColumnInfo(name = "amount") val amount: Double?,

@@ -1,0 +1,35 @@
+ACCOUNT
+(id == account_id)
+
+id string - A unique identifier for this account.
+account_id string - This account’s public key encoded in a base32 string representation.
+sequence number - This account’s current sequence number. For use when submitting this account’s next transaction.
+subentry_count number - The number of subentries on this account.
+home_domain string - The domain that hosts this account’s stellar.toml file.
+last_modified_ledger number - The ID of the last ledger that included changes to this account.
+last_modified_time DateTime
+num_sponsoring number - The number of reserves sponsored by this account.
+num_sponsored number - The number of reserves sponsored for this account.
+sponsor string (optional) - The account ID of the sponsor who is paying the reserves for this account.
+
+flags object - Flags denote the enabling/disabling of certain asset issuer privileges.
+	auth_immutable boolean - If set to true, none of the following flags can be changed.
+	auth_required boolean - If set to true, anyone who wants to hold an asset issued by this account must first be approved by this account.
+	auth_revocable boolean - If set to true, this account can freeze the balance of a holder of an asset issued by this account.
+	auth_clawback_enabled boolean - If set to true, trustlines created for assets issued by this account have clawbacks enabled.
+
+balances object (Asset) - The assets this account holds. 
+	balance string - The number of units of an asset held by this account.
+	buying_liabilities string (optional) - The sum of all buy offers owned by this account for this asset.
+	selling_liabilities string (optional) - The sum of all sell offers owned by this account for this asset.
+	limit number (optional) - The maximum amount of this asset that this account is willing to accept. Specified when opening a trustline.
+	asset_type string - Either native, credit_alphanum4, credit_alphanum12, or liquidity_pool_shares.
+	asset_code string (optional) - The code for this asset.
+	asset_issuer string (optional) - The Stellar address of this asset’s issuer.
+	sponsor string (optional) - The account ID of the sponsor who is paying the reserves for this trustline.
+
+signers array of objects - The public keys and associated weights that can be used to authorize transactions for this account. Used for multi-sig.
+	weight number - The numerical weight of a signer. Used to determine if a transaction meets the threshold requirements.
+	sponsor string (optional) - The account ID of the sponsor who is paying the reserves for this signer.
+	key string - A hash of characters dependent on the signer type.
+	type string - The type of hash for this signer. - ed25519_public_key / sha256_hash / preauth_tx
