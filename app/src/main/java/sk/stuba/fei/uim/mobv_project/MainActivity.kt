@@ -1,21 +1,45 @@
 package sk.stuba.fei.uim.mobv_project
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupActionBarWithNavController
 import kotlinx.coroutines.launch
-import sk.stuba.fei.uim.mobv_project.data.*
-import sk.stuba.fei.uim.mobv_project.data.entities.*
-import sk.stuba.fei.uim.mobv_project.data.repositories.*
-import sk.stuba.fei.uim.mobv_project.databinding.ActivityMainBinding
+import sk.stuba.fei.uim.mobv_project.data.AppDatabase
+import sk.stuba.fei.uim.mobv_project.data.Constants
+import sk.stuba.fei.uim.mobv_project.data.entities.Account
+import sk.stuba.fei.uim.mobv_project.data.entities.Balances
+import sk.stuba.fei.uim.mobv_project.data.entities.Contact
+import sk.stuba.fei.uim.mobv_project.data.entities.Payment
+import sk.stuba.fei.uim.mobv_project.data.repositories.AccountRepository
+import sk.stuba.fei.uim.mobv_project.data.repositories.BalanceRepository
+import sk.stuba.fei.uim.mobv_project.data.repositories.ContactRepository
+import sk.stuba.fei.uim.mobv_project.data.repositories.PaymentRepository
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityMainBinding
+
+    private lateinit var navController: NavController
+
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp() || super.onSupportNavigateUp()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(R.layout.activity_main)
+
+        //TODO: set navigation start by checking whether pin exists in DB
+
+        val navHostFragment = supportFragmentManager.findFragmentById(
+            R.id.nav_host_fragment
+        ) as NavHostFragment
+
+        navController = navHostFragment.navController
+        setupActionBarWithNavController(navController)
+
         dbCheck()
     }
 
@@ -54,15 +78,13 @@ class MainActivity : AppCompatActivity() {
             payments.forEach { paymentRepo.insertPayment(it) }
 
             val accAll = accountRepo.getAllAccounts()
-            println("----------------------------------------------------------------------\n")
-            println("Vsetky accounty: $accAll")
-            println("Billovi bffs: " + contactRepo.getAccountContacts(bill.accountId))
-            println("Billove paymenty: " + paymentRepo.getAccountPayments(bill.accountId))
-            println("Billove balances: " + balanceRepo.getAccountBalances(bill.accountId))
-            println("Jeffove balances: " + balanceRepo.getAccountBalances(jeff.accountId))
+            Log.i(MainActivity::class.java.simpleName, "Vsetky accounty: $accAll")
+            Log.i(MainActivity::class.java.simpleName, "Billovi bffs: " + contactRepo.getAccountContacts(bill.accountId))
+            Log.i(MainActivity::class.java.simpleName, "Billove paymenty: " + paymentRepo.getAccountPayments(bill.accountId))
+            Log.i(MainActivity::class.java.simpleName, "Billove balances: " + balanceRepo.getAccountBalances(bill.accountId))
+            Log.i(MainActivity::class.java.simpleName, "Jeffove balances: " + balanceRepo.getAccountBalances(jeff.accountId))
 
-            binding.tvHelloWorld.text = "pocet accountov: " + accAll.size
-
+            Log.i(MainActivity::class.java.simpleName, "pocet accountov: " + accAll.size)
         }
     }
 }

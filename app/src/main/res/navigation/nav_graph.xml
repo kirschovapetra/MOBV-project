@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/loginFragment">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="sk.stuba.fei.uim.mobv_project.ui.login.LoginFragment"
+        android:label="@string/fragment_login_label"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_loginFragment_to_introFragment"
+            app:destination="@id/introFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpToInclusive="false" />
+    </fragment>
+    <fragment
+        android:id="@+id/createWalletFragment"
+        android:name="sk.stuba.fei.uim.mobv_project.ui.intro.create_wallet.CreateWalletFragment"
+        android:label="@string/fragment_create_wallet_label"
+        tools:layout="@layout/fragment_create_wallet">
+        <action
+            android:id="@+id/action_createWalletFragment_to_introFragment"
+            app:destination="@id/introFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left" />
+    </fragment>
+    <fragment
+        android:id="@+id/importWalletFragment"
+        android:name="sk.stuba.fei.uim.mobv_project.ui.intro.import_wallet.ImportWalletFragment"
+        android:label="@string/fragment_import_wallet_label"
+        tools:layout="@layout/fragment_import_wallet">
+        <action
+            android:id="@+id/action_importWalletFragment_to_introFragment"
+            app:destination="@id/introFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left" />
+    </fragment>
+    <fragment
+        android:id="@+id/introFragment"
+        android:name="sk.stuba.fei.uim.mobv_project.ui.intro.IntroFragment"
+        android:label="@string/fragment_intro_label"
+        tools:layout="@layout/fragment_intro">
+        <action
+            android:id="@+id/action_introFragment_to_createWalletFragment"
+            app:destination="@id/createWalletFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_introFragment_to_importWalletFragment"
+            app:destination="@id/importWalletFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/createPinFragment"
+        android:name="sk.stuba.fei.uim.mobv_project.ui.login.CreatePinFragment"
+        android:label="@string/fragment_create_pin_label"
+        tools:layout="@layout/fragment_create_pin">
+        <action
+            android:id="@+id/action_createPinFragment_to_loginFragment"
+            app:destination="@id/introFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+</navigation>

@@ -1,3 +1,34 @@
 <resources>
     <string name="app_name">MOBV-project</string>
+
+    <!-- Fragment label -->
+    <string name="fragment_login_label">Login</string>
+    <string name="fragment_intro_label">Intro</string>
+    <string name="fragment_create_wallet_label">Create a new wallet</string>
+    <string name="fragment_import_wallet_label">Import an existing wallet</string>
+
+    <!-- Create pin -->
+    <string name="create_pin_pin_hint">Enter pin</string>
+    <string name="create_pin_submit_button_text">Confirm pin</string>
+    <string name="create_pin_confirmation_hint">Repeat your pin</string>
+
+    <!-- Login -->
+    <string name="login_pin_hint">Enter pin</string>
+    <string name="login_submit_button_text">Log in</string>
+
+    <!-- Intro -->
+    <string name="intro_create_new_wallet_button_text">Create a new wallet</string>
+    <string name="intro_import_wallet_button_text">Already have a wallet?</string>
+
+    <!-- Registered -->
+    <string name="registered_warning_text">Please save the displayed Private Key.\nIf you loose your Private Key you won\'t be able to recover your wallet if you change your device or forget you pin code.</string>
+    <string name="registered_copy_private_key_button_text">Copy</string>
+    <string name="registered_continue_button_text">Continue</string>
+
+    <!-- Import -->
+    <string name="import_private_key_hint">Enter you private key</string>
+    <string name="import_submit_import">Import</string>
+    <string name="fragment_create_pin_label">Create pin</string>
+
+
 </resources>
