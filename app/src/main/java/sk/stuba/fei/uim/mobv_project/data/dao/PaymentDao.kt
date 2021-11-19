@@ -1,5 +1,6 @@
 package sk.stuba.fei.uim.mobv_project.data.dao;
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import sk.stuba.fei.uim.mobv_project.data.entities.Payment;
 
@@ -7,14 +8,14 @@ import sk.stuba.fei.uim.mobv_project.data.entities.Payment;
 interface PaymentDao : EntityDao<Payment> {
 
     @Query("SELECT * FROM payment")
-    suspend fun getAll(): List<Payment>
+    fun getAll(): LiveData<List<Payment>>
 
     @Query("SELECT * FROM payment WHERE payment_id = :id")
-    suspend fun getById(id: String): Payment
+    fun getById(id: String): LiveData<Payment>
 
     @Query("SELECT * FROM payment WHERE source_account = :accountId")
-    suspend fun getBySourceAccount(accountId: String): List<Payment>
+    fun getBySourceAccount(accountId: String): LiveData<List<Payment>>
 
     @Query("DELETE FROM payment")
-    suspend fun clear()
+    suspend fun clear(): Int
 }

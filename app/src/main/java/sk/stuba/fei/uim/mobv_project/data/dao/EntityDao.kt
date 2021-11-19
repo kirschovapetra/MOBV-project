@@ -4,7 +4,6 @@ import androidx.room.*
 
 @Dao
 interface EntityDao<T> {
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(vararg entity: T): List<Long>
     @Update

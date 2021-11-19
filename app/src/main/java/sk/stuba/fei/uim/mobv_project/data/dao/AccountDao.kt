@@ -1,5 +1,6 @@
 package sk.stuba.fei.uim.mobv_project.data.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import sk.stuba.fei.uim.mobv_project.data.entities.*
 
@@ -7,10 +8,10 @@ import sk.stuba.fei.uim.mobv_project.data.entities.*
 interface AccountDao: EntityDao<Account> {
 
     @Query("SELECT * FROM account")
-    suspend fun getAll(): List<Account>
+    fun getAll(): LiveData<List<Account>>
 
     @Query("SELECT * FROM account WHERE account_id = :id")
-    suspend fun getById(id: String): Account
+    fun getById(id: String): LiveData<Account>
 
     @Query("DELETE FROM account")
     suspend fun clear(): Int

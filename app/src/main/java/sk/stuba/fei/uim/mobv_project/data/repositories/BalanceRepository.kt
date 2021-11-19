@@ -1,10 +1,14 @@
 package sk.stuba.fei.uim.mobv_project.data.repositories
 
+import androidx.lifecycle.LiveData
 import sk.stuba.fei.uim.mobv_project.data.dao.BalanceDao
 import sk.stuba.fei.uim.mobv_project.data.entities.Balances
 
 class BalanceRepository(private val dao: BalanceDao) {
-    suspend fun getAllBalances(): List<Balances> = dao.getAll()
+    fun getAllBalances(): LiveData<List<Balances>> = dao.getAll()
+    fun getBalanceById(id: Long): LiveData<Balances>  = dao.getById(id)
+    fun getAccountBalances(id: String): LiveData<List<Balances>> = dao.getBySourceAccount(id)
+
     suspend fun insertBalance(balance: Balances){
         dao.insert(balance)
     }
@@ -13,12 +17,5 @@ class BalanceRepository(private val dao: BalanceDao) {
     }
     suspend fun deleteBalance(balance: Balances){
         dao.delete(balance)
-    }
-    suspend fun getBalanceById(id: Long){
-        dao.getById(id)
-    }
-
-    suspend fun getAccountBalances(sourceAccount: String): List<Balances>{
-        return dao.getBySourceAccount(sourceAccount)
     }
 }

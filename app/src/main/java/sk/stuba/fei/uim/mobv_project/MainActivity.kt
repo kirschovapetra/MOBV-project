@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -41,11 +42,11 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController)
 
         dbCheck()
-        testCrash()
+//        testCrash()
     }
 
     private fun testCrash() {
-        var firebaseAnalytics = Firebase.analytics
+        val firebaseAnalytics = Firebase.analytics
         firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM) {
             param(FirebaseAnalytics.Param.ITEM_ID, "test-id")
             param(FirebaseAnalytics.Param.ITEM_NAME, "trest-name")
@@ -62,6 +63,7 @@ class MainActivity : AppCompatActivity() {
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT))
     }
+
     private fun dbCheck() {
 
         val db = AppDatabase.getInstance(this)
@@ -81,8 +83,8 @@ class MainActivity : AppCompatActivity() {
             Contact(jeff.accountId, "Bestie", "Bezos", bill.accountId)
         )
         val balances = listOf(
-            Balances(10000.0, 100.0, Constants.AssetType.native,  bill.accountId),
-            Balances(20000.0, 200.0, Constants.AssetType.native,  jeff.accountId),
+            Balances(10000.0, 100.0, Constants.AssetType.native, bill.accountId),
+            Balances(20000.0, 200.0, Constants.AssetType.native, jeff.accountId),
         )
         val payments = listOf(
             Payment("0", "QWERTYUIOP", true,
@@ -90,20 +92,50 @@ class MainActivity : AppCompatActivity() {
                 50.0, bill.accountId)
         )
 
+        val owner = this
+        val appName = MainActivity::class.java.simpleName
+
         lifecycleScope.launch {
             accounts.forEach { accountRepo.insertAccount(it) }
             contacts.forEach { contactRepo.insertContact(it) }
             balances.forEach { balanceRepo.insertBalance(it) }
             payments.forEach { paymentRepo.insertPayment(it) }
 
-            val accAll = accountRepo.getAllAccounts()
-            Log.i(MainActivity::class.java.simpleName, "Vsetky accounty: $accAll")
-            Log.i(MainActivity::class.java.simpleName, "Billovi bffs: " + contactRepo.getAccountContacts(bill.accountId))
-            Log.i(MainActivity::class.java.simpleName, "Billove paymenty: " + paymentRepo.getAccountPayments(bill.accountId))
-            Log.i(MainActivity::class.java.simpleName, "Billove balances: " + balanceRepo.getAccountBalances(bill.accountId))
-            Log.i(MainActivity::class.java.simpleName, "Jeffove balances: " + balanceRepo.getAccountBalances(jeff.accountId))
+            accountRepo.getAllAccounts().observe(
+                owner,
+                { accAll ->
+                    Log.i(appName, "Vsetky accounty: $accAll")
+                    Log.i(appName, "pocet accountov: " + accAll.size)
+                }
+            )
 
-            Log.i(MainActivity::class.java.simpleName, "pocet accountov: " + accAll.size)
+            contactRepo.getAccountContacts(bill.accountId).observe(
+                owner,
+                { billsContacts ->
+                    Log.i(appName, "Billovi bffs: $billsContacts")
+                }
+            )
+
+            paymentRepo.getAccountPayments(bill.accountId).observe(
+                owner,
+                { billsPayments ->
+                    Log.i(appName, "Billove paymenty: $billsPayments")
+                }
+            )
+
+            balanceRepo.getAccountBalances(bill.accountId).observe(
+                owner,
+                { billsBalances ->
+                    Log.i(appName, "Billove balances: $billsBalances")
+                }
+            )
+
+            balanceRepo.getAccountBalances(jeff.accountId).observe(
+                owner,
+                { jeffsBalances ->
+                    Log.i(appName, "Jeffove balances: $jeffsBalances")
+                }
+            )
         }
     }
 }
