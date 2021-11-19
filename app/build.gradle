@@ -1,7 +1,6 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
-    id 'kotlin-android-extensions'
     id 'kotlin-kapt'
     id 'androidx.navigation.safeargs'
     id 'com.google.gms.google-services'
@@ -35,8 +34,6 @@ android {
     }
 
     buildFeatures {
-        //TODO: remove after updating login and wallet fragments
-        viewBinding true
         dataBinding true
     }
 
@@ -67,22 +64,21 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment-ktx:2.3.5'
 
     // Room and Lifecycle dependencies
+    implementation 'androidx.room:room-ktx:2.3.0'
     implementation 'androidx.room:room-runtime:2.3.0'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    // https://stackoverflow.com/a/63034316
+    annotationProcessor 'androidx.room:room-compiler:2.3.0'
+    kapt "androidx.room:room-compiler:2.3.0"
+
+    // Coroutines
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0'
 
     //ViewModel and LiveData
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.0'
     implementation 'androidx.lifecycle:lifecycle-common-java8:2.4.0'
-
-    // Coroutines
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0'
-
-    // Kotlin Extensions and Coroutines support for Room
-    implementation 'androidx.room:room-ktx:2.3.0'
-    kapt 'androidx.room:room-compiler:2.3.0'
 
     //Testing
     testImplementation 'junit:junit:4.13.2'
