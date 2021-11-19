@@ -1,25 +1,49 @@
 package sk.stuba.fei.uim.mobv_project.ui.login
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import sk.stuba.fei.uim.mobv_project.R
+import sk.stuba.fei.uim.mobv_project.data.view_models.LoginViewModel
 import sk.stuba.fei.uim.mobv_project.databinding.FragmentLoginBinding
-import sk.stuba.fei.uim.mobv_project.ui.abstracts.FullscreenFragment
 
-class LoginFragment : FullscreenFragment<FragmentLoginBinding>(
-    R.layout.fragment_login,
-    FragmentLoginBinding::bind
-) {
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+class LoginFragment : Fragment() {
 
-        binding!!.submitLoginButton.setOnClickListener {
-            //TODO: validate against DB
+    private val viewModel: LoginViewModel by viewModels()
+    private lateinit var binding: FragmentLoginBinding
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = DataBindingUtil.inflate(
+            inflater,
+            R.layout.fragment_login,
+            container,
+            false
+        )
+        binding.loginViewModel = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
+
+        viewModel.eventPinCorrect.observe(viewLifecycleOwner, { onPinChange(it) } )
+
+        return binding.root
+    }
+
+    private fun onPinChange(isCorrect: Boolean) {
+        if (isCorrect) {
             //TODO: if already has a private key then navigate to My Balance
             findNavController().navigate(
                 LoginFragmentDirections.actionLoginFragmentToIntroFragment()
             )
+            viewModel.afterNavigationComplete()
         }
     }
 }
