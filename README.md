@@ -1,5 +1,6 @@
 # MOBV-project
-
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](https://github.com/sindresorhus/awesome)  
 ## Zadanie
 
 Vytvorte Android aplikáciu v jazyku Kotlin, v ktorej si budeme môcť vygenerovať krypto penaženku pre Steller Lumeny a s možnosťou ich posielania a zobrazovania transakcií a zostatku. Semestralne zadanie budete vypracovavat vo štvorici. Odovzdať ho je potrebné pred 11. cvičením. Na 11. a 12. cvičení ho budete prezentovat.
@@ -41,4 +42,4 @@ Pozn.: Práca na pozadí sa vykonáva v Repozitári a volá sa vo ViewModel, vý
 * https://jonfhancock.com/your-viewholders-are-dumb-make-em-not-dumb-82e6f73f630c
 * https://www.reddit.com/r/androiddev/comments/6zex21/optimizing_nested_recyclerview/
 
-## Na zaznamenávanie chyb počas behu app je povinné použiť [Firebase Crashlytics](https://www.youtube.com/watch?v=k_mdNRZzd30&feature=emb_title) 
+## :heavy_check_mark: Na zaznamenávanie chýb počas behu app je povinné použiť [Firebase Crashlytics](https://www.youtube.com/watch?v=k_mdNRZzd30&feature=emb_title) 

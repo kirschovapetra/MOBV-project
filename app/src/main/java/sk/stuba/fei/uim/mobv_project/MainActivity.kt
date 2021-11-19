@@ -2,22 +2,22 @@ package sk.stuba.fei.uim.mobv_project
 
 import android.os.Bundle
 import android.util.Log
+import android.view.ViewGroup
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupActionBarWithNavController
 import kotlinx.coroutines.launch
-import sk.stuba.fei.uim.mobv_project.data.AppDatabase
-import sk.stuba.fei.uim.mobv_project.data.Constants
-import sk.stuba.fei.uim.mobv_project.data.entities.Account
-import sk.stuba.fei.uim.mobv_project.data.entities.Balances
-import sk.stuba.fei.uim.mobv_project.data.entities.Contact
-import sk.stuba.fei.uim.mobv_project.data.entities.Payment
-import sk.stuba.fei.uim.mobv_project.data.repositories.AccountRepository
-import sk.stuba.fei.uim.mobv_project.data.repositories.BalanceRepository
-import sk.stuba.fei.uim.mobv_project.data.repositories.ContactRepository
-import sk.stuba.fei.uim.mobv_project.data.repositories.PaymentRepository
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
+import com.google.firebase.ktx.Firebase
+import sk.stuba.fei.uim.mobv_project.data.*
+import sk.stuba.fei.uim.mobv_project.data.entities.*
+import sk.stuba.fei.uim.mobv_project.data.repositories.*
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -41,8 +41,27 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController)
 
         dbCheck()
+        testCrash()
     }
 
+    private fun testCrash() {
+        var firebaseAnalytics = Firebase.analytics
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM) {
+            param(FirebaseAnalytics.Param.ITEM_ID, "test-id")
+            param(FirebaseAnalytics.Param.ITEM_NAME, "trest-name")
+            param(FirebaseAnalytics.Param.CONTENT_TYPE, "image")
+        }
+
+        val crashButton = Button(this)
+        crashButton.text = "Test Crash"
+        crashButton.setOnClickListener {
+            throw RuntimeException("Test Crash") // Force a crash
+        }
+
+        addContentView(crashButton, ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT))
+    }
     private fun dbCheck() {
 
         val db = AppDatabase.getInstance(this)

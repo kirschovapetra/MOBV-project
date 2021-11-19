@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "401139093830",
+    "project_id": "mobv-project",
+    "storage_bucket": "mobv-project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:401139093830:android:ea1b84a7391fd9ea261547",
+        "android_client_info": {
+          "package_name": "sk.stuba.fei.uim.mobv_project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "401139093830-bos5jufgtejoso199u3p0ug19ic2nnid.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZDu68UsqofqxUN8jOq0fXm88ySpHTqXs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "401139093830-bos5jufgtejoso199u3p0ug19ic2nnid.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
