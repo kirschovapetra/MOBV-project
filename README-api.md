@@ -1,5 +1,7 @@
 # Nejaké poznámky k DB a API
 
+![LocalDB drawio](https://user-images.githubusercontent.com/49959692/142734649-b14856cb-3b8f-4bb3-b8f5-1f5cfb0950c6.png)
+
 ## Account
 
 Zatiaľ je dohoda taká, že bude iba 1 account. Teda v tejto tabuľke máme iba 1 riadok a z neho sa potom odvádzajú ďalšie veci..
