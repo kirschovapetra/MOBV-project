@@ -1,7 +1,7 @@
 package sk.stuba.fei.uim.mobv_project.data.entities
 
 import androidx.room.*
-import sk.stuba.fei.uim.mobv_project.data.Constants
+import sk.stuba.fei.uim.mobv_project.data.Constants.AssetType
 
 @Entity(
     tableName = "payment",
@@ -22,7 +22,9 @@ data class Payment(
     @ColumnInfo(name = "transaction_hash") val transactionHash: String?,
     @ColumnInfo(name = "transaction_successful") val transactionSuccessful: Boolean?,
     @ColumnInfo(name = "created_at") val createdAt: String?,
-    @ColumnInfo(name = "asset_type") val assetType: Constants.AssetType?,
+    @ColumnInfo(name = "asset_type") val assetType: AssetType = AssetType.native,
+    @ColumnInfo(name = "asset_code") val assetCode: String = "native",
+    @ColumnInfo(name = "asset_issuer") val assetIssuer: String = "native",
     @ColumnInfo(name = "from") val from: String?,
     @ColumnInfo(name = "to") val to: String?,
     @ColumnInfo(name = "amount") val amount: Double?,

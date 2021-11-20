@@ -6,7 +6,9 @@ import sk.stuba.fei.uim.mobv_project.data.entities.Balances
 
 class BalanceRepository(private val dao: BalanceDao) {
     fun getAllBalances(): LiveData<List<Balances>> = dao.getAll()
-    fun getBalanceById(id: Long): LiveData<Balances>  = dao.getById(id)
+    fun getBalancesByAssetCode(code: String): LiveData<Balances>  = dao.getByAssetCode(code)
+    fun getBalancesByAssetIssuer(issuer: String): LiveData<Balances>  = dao.getByAssetIssuer(issuer)
+    fun getBalancesByAssetCodeAndIssuer(code: String, issuer: String): LiveData<Balances>  = dao.getByAssetCodeAndIssuer(code, issuer)
     fun getAccountBalances(id: String): LiveData<List<Balances>> = dao.getBySourceAccount(id)
 
     suspend fun insertBalance(balance: Balances){
