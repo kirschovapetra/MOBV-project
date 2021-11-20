@@ -6,7 +6,7 @@
     <data>
         <variable
             name="loginViewModel"
-            type="sk.stuba.fei.uim.mobv_project.data.view_models.LoginViewModel" />
+            type="sk.stuba.fei.uim.mobv_project.data.view_models.login.LoginViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

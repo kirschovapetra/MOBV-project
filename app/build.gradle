@@ -50,6 +50,9 @@ dependencies {
     // Stellar
     implementation 'com.github.stellar:java-stellar-sdk:0.29.0'
 
+    // Argon2 hashing function
+    implementation 'org.signal:argon2:13.1@aar'
+
     // Support Libraries
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.appcompat:appcompat:1.4.0'

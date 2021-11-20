@@ -10,7 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import sk.stuba.fei.uim.mobv_project.R
-import sk.stuba.fei.uim.mobv_project.data.view_models.LoginViewModel
+import sk.stuba.fei.uim.mobv_project.data.view_models.login.LoginViewModel
 import sk.stuba.fei.uim.mobv_project.databinding.FragmentLoginBinding
 
 class LoginFragment : Fragment() {
@@ -32,18 +32,32 @@ class LoginFragment : Fragment() {
         binding.loginViewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
-        viewModel.eventPinCorrect.observe(viewLifecycleOwner, { onPinChange(it) } )
+        viewModel.eventPinCorrect.observe(viewLifecycleOwner, { isCorrect ->
+            isCorrect.getContentIfNotHandled().let {
+                if (true == it) {
+                    onPinCorrect()
+                }
+                else {
+                    onPinIncorrect()
+                }
+            }
+        })
 
         return binding.root
     }
 
-    private fun onPinChange(isCorrect: Boolean) {
-        if (isCorrect) {
-            //TODO: if already has a private key then navigate to My Balance
-            findNavController().navigate(
-                LoginFragmentDirections.actionLoginFragmentToIntroFragment()
-            )
-            viewModel.afterNavigationComplete()
+    private fun onPinCorrect() {
+        //TODO: if already has a private key then navigate to My Balance
+        findNavController().navigate(
+            LoginFragmentDirections.actionLoginFragmentToIntroFragment()
+        )
+    }
+
+    private fun onPinIncorrect() {
+        view?.let {
+            //TODO: replace hardcoded text
+            Snackbar.make(it, "Invalid pin", Snackbar.LENGTH_SHORT)
+                    .show()
         }
     }
 }
