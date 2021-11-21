@@ -18,8 +18,7 @@ import androidx.room.*
 )
 data class Contact(
     @PrimaryKey @ColumnInfo(name = "contact_id") val contactId: String,
-    @ColumnInfo(name = "first_name") val firstName: String?,
-    @ColumnInfo(name = "last_name") val lastName: String?,
+    @ColumnInfo(name = "name") val name: String?,
     // FK: ref na account
     @ColumnInfo(name = "source_account") val sourceAccount: String?
     // ...
