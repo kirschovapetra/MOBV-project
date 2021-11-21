@@ -65,6 +65,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun dbCheck() {
+        // TODO check aby asset_code sedel s asset_type
 
         val db = AppDatabase.getInstance(this)
 
@@ -83,13 +84,16 @@ class MainActivity : AppCompatActivity() {
             Contact(jeff.accountId, "Bestie", "Bezos", bill.accountId)
         )
         val balances = listOf(
-            Balances(10000.0, 100.0, Constants.AssetType.native, bill.accountId),
-            Balances(20000.0, 200.0, Constants.AssetType.native, jeff.accountId),
+            Balances(assetIssuer = bill.accountId, balance = 10000.0, limit = 100.0,
+                assetType = Constants.AssetType.native, sourceAccount = bill.accountId),
+            Balances(assetCode="DOGECOIN", assetIssuer = jeff.accountId, balance = 20000.0,
+                limit = 200.0, assetType = Constants.AssetType.native, sourceAccount = jeff.accountId),
         )
         val payments = listOf(
-            Payment("0", "QWERTYUIOP", true,
-                "2021-11-18", Constants.AssetType.native, bill.accountId, jeff.accountId,
-                50.0, bill.accountId)
+            Payment(paymentId = "0", transactionHash =  "QWERTYUIOP", transactionSuccessful = true,
+                createdAt = "2021-11-18", assetType = Constants.AssetType.native, assetCode = "DOGECOIN",
+                assetIssuer=bill.accountId, from=bill.accountId,to = jeff.accountId,
+                amount = 50.0, sourceAccount = bill.accountId)
         )
 
         val owner = this
@@ -130,10 +134,10 @@ class MainActivity : AppCompatActivity() {
                 }
             )
 
-            balanceRepo.getAccountBalances(jeff.accountId).observe(
+            balanceRepo.getBalancesByAssetCode("DOGECOIN").observe(
                 owner,
-                { jeffsBalances ->
-                    Log.i(appName, "Jeffove balances: $jeffsBalances")
+                { dogecoinBalances ->
+                    Log.i(appName, "Dogecoinove balances: $dogecoinBalances")
                 }
             )
         }

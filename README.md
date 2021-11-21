@@ -34,7 +34,7 @@ Pozn.: Práca na pozadí sa vykonáva v Repozitári a volá sa vo ViewModel, vý
 * http://testnet.stellarchain.io/
 * https://github.com/stellar/java-stellar-sdk
 * https://stellar.github.io/java-stellar-sdk/
-
+* https://laboratory.stellar.org/#?network=test
 
 ## Na swipovania medzi príspevkami je potrebné použiť [RecyclerView](https://developer.android.com/guide/topics/ui/layout/recyclerview)
 * https://proandroiddev.com/optimizing-nested-recyclerview-a9b7830a4ba7
