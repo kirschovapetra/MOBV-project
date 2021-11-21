@@ -53,8 +53,6 @@ class NewContactFragment : Fragment() {
         binding.newContactViewModel = newContactViewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
-
-//        return inflater.inflate(R.layout.fragment_new_contact, container, false)
         return binding.root
     }
 

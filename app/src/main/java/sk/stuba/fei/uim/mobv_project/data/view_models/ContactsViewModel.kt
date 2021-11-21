@@ -9,10 +9,13 @@ class ContactsViewModel : ViewModel() {
 
     val contacts = MutableLiveData<ArrayList<Contact>>() // neskor mapa
 
-    private val arrayList = ArrayList<Contact>()
+    val arrayList = ArrayList<Contact>()
 
     init {
-        arrayList.add(Contact("86223", "Jozko", "Vajda", "1"))
+        arrayList.add(Contact("86223", "Jozko", "1"))
+        arrayList.add(Contact("86223", "Jozko", "2"))
+        arrayList.add(Contact("86223", "Jozko", "3"))
+        arrayList.add(Contact("86223", "Jozko", "4"))
         contacts.postValue(arrayList)
     }
 }
