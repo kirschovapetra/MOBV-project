@@ -30,5 +30,12 @@
     <string name="import_submit_import">Import</string>
     <string name="fragment_create_pin_label">Create pin</string>
 
+    <!-- New contact -->
+    <string name="newContactFragmentName">New contact</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="contactNameHint">John Smith</string>
+    <string name="contactAccountIdHint">123456789</string>
+    <string name="addNewContactButton">Add contact</string>
+
 
 </resources>
