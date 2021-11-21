@@ -106,7 +106,7 @@ class MainActivity : AppCompatActivity() {
 
         val accounts = listOf(bill, jeff)
         val contacts = listOf(
-            Contact(jeff.accountId, "Bestie", "Bezos", bill.accountId)
+            Contact(contactId = jeff.accountId, name = "Bestie", sourceAccount = bill.accountId)
         )
         val balances = listOf(
             Balances(assetIssuer = bill.accountId, balance = 10000.0, limit = 100.0,
