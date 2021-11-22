@@ -30,14 +30,14 @@ class ContactsRecycleViewAdapter(private val contacts: List<Contact>) : Recycler
 
         // sets the text to the textview from our itemHolder class
         holder.contactNameTextView.text = contactsViewModel.name
-
-
     }
 
     // return the number of the items in the list
     override fun getItemCount(): Int {
         return contacts.size
     }
+
+
 
     // Holds the views for adding it to image and text
     class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {

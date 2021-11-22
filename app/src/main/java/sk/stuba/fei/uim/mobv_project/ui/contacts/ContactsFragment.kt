@@ -32,14 +32,14 @@ class ContactsFragment : Fragment() {
 //    private var param1: String? = null
 //    private var param2: String? = null
 //
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-//        arguments?.let {
-//            param1 = it.getString(ARG_PARAM1)
-//            param2 = it.getString(ARG_PARAM2)
-//        }
-
-    }
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+////        arguments?.let {
+////            param1 = it.getString(ARG_PARAM1)
+////            param2 = it.getString(ARG_PARAM2)
+////        }
+//
+//    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,16 +56,14 @@ class ContactsFragment : Fragment() {
         binding.contactsViewModel = contactsViewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
-        val contactsRecyclerView = binding.contactsRecyclerView//view?.findViewById<RecyclerView>(R.id.contactsRecyclerView)
-        Log.e("RecyclerView", (contactsRecyclerView != null).toString())
+        val contactsRecyclerView = binding.contactsRecyclerView
 
-        contactsRecyclerView?.layoutManager = LinearLayoutManager(context)
+        contactsRecyclerView.layoutManager = LinearLayoutManager(context)
         val data = contactsViewModel.arrayList
 
         val adapter = ContactsRecycleViewAdapter(data)
-        contactsRecyclerView?.adapter = adapter
+        contactsRecyclerView.adapter = adapter
 
-        
         return binding.root
     }
 

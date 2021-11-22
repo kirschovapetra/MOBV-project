@@ -16,6 +16,14 @@ class ContactsViewModel : ViewModel() {
         arrayList.add(Contact("86223", "Jozko", "2"))
         arrayList.add(Contact("86223", "Jozko", "3"))
         arrayList.add(Contact("86223", "Jozko", "4"))
+        arrayList.add(Contact("86223", "Jozko", "1"))
+        arrayList.add(Contact("86223", "Jozko", "2"))
+        arrayList.add(Contact("86223", "Jozko", "3"))
+        arrayList.add(Contact("86223", "Jozko", "4"))
+        arrayList.add(Contact("86223", "Jozko", "1"))
+        arrayList.add(Contact("86223", "Jozko", "2"))
+        arrayList.add(Contact("86223", "Jozko", "3"))
+        arrayList.add(Contact("86223", "Jozko", "4"))
         contacts.postValue(arrayList)
     }
 }
