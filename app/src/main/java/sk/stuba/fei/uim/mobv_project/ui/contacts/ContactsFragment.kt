@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 import sk.stuba.fei.uim.mobv_project.R
 import sk.stuba.fei.uim.mobv_project.data.view_models.ContactsViewModel
 import sk.stuba.fei.uim.mobv_project.databinding.FragmentContactsBinding
+import androidx.navigation.fragment.findNavController
+import sk.stuba.fei.uim.mobv_project.data.entities.Contact
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -32,14 +34,14 @@ class ContactsFragment : Fragment() {
 //    private var param1: String? = null
 //    private var param2: String? = null
 //
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 ////        arguments?.let {
 ////            param1 = it.getString(ARG_PARAM1)
 ////            param2 = it.getString(ARG_PARAM2)
 ////        }
-//
-//    }
+        adapter = ContactsRecycleViewAdapter(contactsViewModel.arrayList, this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

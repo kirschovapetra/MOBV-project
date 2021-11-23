@@ -3,6 +3,7 @@ package sk.stuba.fei.uim.mobv_project.ui.contacts
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import sk.stuba.fei.uim.mobv_project.R
@@ -36,8 +37,6 @@ class ContactsRecycleViewAdapter(private val contacts: List<Contact>) : Recycler
     override fun getItemCount(): Int {
         return contacts.size
     }
-
-
 
     // Holds the views for adding it to image and text
     class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {

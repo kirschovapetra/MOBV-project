@@ -11,8 +11,9 @@ import androidx.lifecycle.ViewModel
 class NewContactViewModel : ViewModel(){
     val isStringEmpty = MutableLiveData<Boolean>()
 
-    val inputName = MutableLiveData<String>()
-    val inputAccountId = MutableLiveData<String>()
+    var entityId = MutableLiveData<Int>()
+    var inputName = MutableLiveData<String>()
+    var inputAccountId = MutableLiveData<String>()
 
 
     init {

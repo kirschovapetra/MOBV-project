@@ -24,19 +24,23 @@ import sk.stuba.fei.uim.mobv_project.databinding.FragmentNewContactBinding
 //todo set action bar title to ADD or EDIT
 class NewContactFragment : Fragment() {
     // TODO: Rename and change types of parameters
-//    private var param1: String? = null
-//    private var param2: String? = null
+
+    private var CONTACT_ID : Int? = null
+    private var NAME : String? = null
+    private var SOURCE_ACCOUNT : Int? = null
 
     private val newContactViewModel: NewContactViewModel by viewModels()
     private lateinit var binding: FragmentNewContactBinding
 
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        arguments?.let {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
 //            param1 = it.getString(ARG_PARAM1)
 //            param2 = it.getString(ARG_PARAM2)
-//        }
-//    }
+//            newContactViewModel.entityId =  1// it.getString(ARG_PARAM1)
+        }
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
