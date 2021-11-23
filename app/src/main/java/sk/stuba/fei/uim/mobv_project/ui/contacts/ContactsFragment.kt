@@ -2,14 +2,13 @@ package sk.stuba.fei.uim.mobv_project.ui.contacts
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import sk.stuba.fei.uim.mobv_project.R
 import sk.stuba.fei.uim.mobv_project.data.view_models.ContactsViewModel
 import sk.stuba.fei.uim.mobv_project.databinding.FragmentContactsBinding
@@ -26,10 +25,12 @@ import sk.stuba.fei.uim.mobv_project.data.entities.Contact
  * Use the [ContactsFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class ContactsFragment : Fragment() {
+class ContactsFragment : Fragment(), ContactsRecycleViewAdapter.OnContactClickListener {
 
     private val contactsViewModel: ContactsViewModel by viewModels()
     private lateinit var binding: FragmentContactsBinding
+    private lateinit var adapter: ContactsRecycleViewAdapter
+
     // TODO: Rename and change types of parameters
 //    private var param1: String? = null
 //    private var param2: String? = null
@@ -61,15 +62,21 @@ class ContactsFragment : Fragment() {
         val contactsRecyclerView = binding.contactsRecyclerView
 
         contactsRecyclerView.layoutManager = LinearLayoutManager(context)
-        val data = contactsViewModel.arrayList
-
-        val adapter = ContactsRecycleViewAdapter(data)
         contactsRecyclerView.adapter = adapter
 
         return binding.root
     }
 
-//    companion object {
+    override fun onContactClick(position: Int) {
+        val clickedContact = contactsViewModel.arrayList[position]
+        Log.e("MATKYVAJCA", clickedContact.name.toString() + " AHOOOOOOOOOOOOOOOOOOOOOOOj")
+        findNavController().navigate(
+            ContactsFragmentDirections.actionContactsFragmentToNewContactFragment(clickedContact)
+        )
+        adapter.notifyItemChanged(position)
+    }
+
+    //    companion object {
 //        /**
 //         * Use this factory method to create a new instance of
 //         * this fragment using the provided parameters.

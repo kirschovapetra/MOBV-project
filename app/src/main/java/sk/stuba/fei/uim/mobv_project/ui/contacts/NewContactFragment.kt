@@ -1,14 +1,15 @@
 package sk.stuba.fei.uim.mobv_project.ui.contacts
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import sk.stuba.fei.uim.mobv_project.R
+import sk.stuba.fei.uim.mobv_project.data.entities.Contact
 import sk.stuba.fei.uim.mobv_project.data.view_models.NewContactViewModel
 import sk.stuba.fei.uim.mobv_project.databinding.FragmentNewContactBinding
 
@@ -25,9 +26,8 @@ import sk.stuba.fei.uim.mobv_project.databinding.FragmentNewContactBinding
 class NewContactFragment : Fragment() {
     // TODO: Rename and change types of parameters
 
-    private var CONTACT_ID : Int? = null
-    private var NAME : String? = null
-    private var SOURCE_ACCOUNT : Int? = null
+    private var CONTACT_PARAM_KEY = "contact"
+
 
     private val newContactViewModel: NewContactViewModel by viewModels()
     private lateinit var binding: FragmentNewContactBinding
@@ -35,9 +35,11 @@ class NewContactFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-//            param1 = it.getString(ARG_PARAM1)
-//            param2 = it.getString(ARG_PARAM2)
-//            newContactViewModel.entityId =  1// it.getString(ARG_PARAM1)
+            val contact  = it.getSerializable(CONTACT_PARAM_KEY) as Contact
+
+            newContactViewModel.contactId.postValue(contact.contactId)
+            newContactViewModel.name.postValue(contact.name)
+            newContactViewModel.sourceAccount.postValue(contact.sourceAccount)
         }
 
     }

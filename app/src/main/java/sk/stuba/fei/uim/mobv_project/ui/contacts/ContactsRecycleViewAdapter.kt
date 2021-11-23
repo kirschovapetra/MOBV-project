@@ -9,7 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import sk.stuba.fei.uim.mobv_project.R
 import sk.stuba.fei.uim.mobv_project.data.entities.Contact
 
-class ContactsRecycleViewAdapter(private val contacts: List<Contact>) : RecyclerView.Adapter<ContactsRecycleViewAdapter.ViewHolder>() {
+class ContactsRecycleViewAdapter(
+    private val contacts: List<Contact>,
+    private val listener: OnContactClickListener
+) :
+    RecyclerView.Adapter<ContactsRecycleViewAdapter.ViewHolder>() {
 
     // create new views
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -39,8 +43,23 @@ class ContactsRecycleViewAdapter(private val contacts: List<Contact>) : Recycler
     }
 
     // Holds the views for adding it to image and text
-    class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
-//        val imageView: ImageView = itemView.findViewById(R.id.imageview)
+   inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+//                val imageView: ImageView = itemView.findViewById(R.id.imageview)
         val contactNameTextView: TextView = itemView.findViewById(R.id.contactCardName)
+
+        init {
+            itemView.setOnClickListener(this)
+        }
+
+        override fun onClick(view: View?) {
+            val position = adapterPosition
+            if(position != RecyclerView.NO_POSITION){
+                listener.onContactClick(adapterPosition)
+            }
+        }
+    }
+
+    interface OnContactClickListener {
+        fun onContactClick(position: Int)
     }
 }

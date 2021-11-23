@@ -7,7 +7,7 @@ import sk.stuba.fei.uim.mobv_project.data.entities.Contact
 
 class ContactsViewModel : ViewModel() {
 
-    val contacts = MutableLiveData<ArrayList<Contact>>() // neskor mapa
+    val contacts = MutableLiveData<ArrayList<Contact>>()
 
     val arrayList = ArrayList<Contact>()
 

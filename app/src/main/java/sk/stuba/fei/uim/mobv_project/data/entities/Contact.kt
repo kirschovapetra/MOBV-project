@@ -1,6 +1,7 @@
 package sk.stuba.fei.uim.mobv_project.data.entities
 
 import androidx.room.*
+import java.io.Serializable
 
 @Entity(
     tableName = "contact",
@@ -22,4 +23,4 @@ data class Contact(
     // FK: ref na account
     @ColumnInfo(name = "source_account") val sourceAccount: String?
     // ...
-)
+) : Serializable
