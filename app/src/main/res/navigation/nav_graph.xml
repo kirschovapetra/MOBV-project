@@ -91,6 +91,7 @@
         android:label="NewContactFragment" >
         <argument
             android:name="contact"
-            app:argType="sk.stuba.fei.uim.mobv_project.data.entities.Contact" />
+            app:argType="sk.stuba.fei.uim.mobv_project.data.entities.Contact"
+            app:nullable="true" />
     </fragment>
 </navigation>
