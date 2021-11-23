@@ -92,6 +92,7 @@
         <argument
             android:name="contact"
             app:argType="sk.stuba.fei.uim.mobv_project.data.entities.Contact"
-            app:nullable="true" />
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
 </navigation>

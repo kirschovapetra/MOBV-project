@@ -1,7 +1,6 @@
 package sk.stuba.fei.uim.mobv_project.ui.contacts
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -35,11 +34,19 @@ class NewContactFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            val contact  = it.getSerializable(CONTACT_PARAM_KEY) as Contact
+            val serializedContact  = it.getSerializable(CONTACT_PARAM_KEY) //as Contact
 
-            newContactViewModel.contactId.postValue(contact.contactId)
-            newContactViewModel.name.postValue(contact.name)
-            newContactViewModel.sourceAccount.postValue(contact.sourceAccount)
+            if(serializedContact == null){
+                newContactViewModel.contactId.postValue("")
+                newContactViewModel.name.postValue("")
+                newContactViewModel.sourceAccount.postValue("")
+            } else {
+                val contact = serializedContact as Contact
+                newContactViewModel.contactId.postValue(contact.contactId)
+                newContactViewModel.name.postValue(contact.name)
+                newContactViewModel.sourceAccount.postValue(contact.sourceAccount)
+            }
+
         }
 
     }

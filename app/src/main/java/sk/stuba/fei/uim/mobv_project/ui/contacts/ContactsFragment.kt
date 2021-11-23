@@ -56,6 +56,16 @@ class ContactsFragment : Fragment(), ContactsRecycleViewAdapter.OnContactClickLi
             false
         )
 
+        val clickButtonListener: View.OnClickListener = View.OnClickListener { view -> Unit
+            findNavController().navigate(
+                ContactsFragmentDirections.actionContactsFragmentToNewContactFragment()
+            )
+        }
+
+        binding.newContactButton.setOnClickListener(
+            clickButtonListener
+        )
+
         binding.contactsViewModel = contactsViewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
@@ -71,9 +81,13 @@ class ContactsFragment : Fragment(), ContactsRecycleViewAdapter.OnContactClickLi
         val clickedContact = contactsViewModel.arrayList[position]
         Log.e("MATKYVAJCA", clickedContact.name.toString() + " AHOOOOOOOOOOOOOOOOOOOOOOOj")
         findNavController().navigate(
-            ContactsFragmentDirections.actionContactsFragmentToNewContactFragment(clickedContact)
+            ContactsFragmentDirections.actionContactsFragmentToNewContactFragment().setContact(clickedContact)
         )
         adapter.notifyItemChanged(position)
+    }
+
+    fun setmHoditListener(){
+
     }
 
     //    companion object {
