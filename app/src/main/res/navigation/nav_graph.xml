@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/createPinFragment">
+    app:startDestination="@id/loginFragment">
 
     <fragment
         android:id="@+id/loginFragment"
@@ -77,4 +77,27 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
     </fragment>
+    <fragment
+        android:id="@+id/contactsFragment"
+        android:name="sk.stuba.fei.uim.mobv_project.ui.contacts.ContactsFragment"
+        android:label="ContactsFragment" >
+        <action
+            android:id="@+id/action_contactsFragment_to_newContactFragment"
+            app:destination="@id/newContactFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/newContactFragment"
+        android:name="sk.stuba.fei.uim.mobv_project.ui.contacts.NewContactFragment"
+        android:label="NewContactFragment" >
+        <argument
+            android:name="contact"
+            app:argType="sk.stuba.fei.uim.mobv_project.data.entities.Contact"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
+    <fragment
+        android:id="@+id/myBalanceFragment"
+        android:name="sk.stuba.fei.uim.mobv_project.ui.my_balance.MyBalanceFragment"
+        android:label="fragment_my_balance"
+        tools:layout="@layout/fragment_my_balance" />
 </navigation>

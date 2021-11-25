@@ -50,6 +50,7 @@ class LoginFragment : Fragment() {
         //TODO: if already has a private key then navigate to My Balance
         findNavController().navigate(
             LoginFragmentDirections.actionLoginFragmentToIntroFragment()
+//        LoginFragmentDirections.actionLoginFragmentToContactsFragment()
         )
     }
 

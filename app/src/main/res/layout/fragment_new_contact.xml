@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="newContactViewModel"
+            type="sk.stuba.fei.uim.mobv_project.data.view_models.NewContactViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.contacts.NewContactFragment">
+
+        <!-- WHATEVER YOU DO, NEPRIDAVAJTE SEM AUTOFILL HINTS. NASTANE KONIEC VESMIRU AKO HO POZNAME -->
+        <EditText
+            android:id="@+id/newContactName"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginTop="70dp"
+            android:ems="10"
+            android:hint="@string/contactNameHint"
+            android:inputType="textPersonName"
+            android:minHeight="48dp"
+            android:text="@={newContactViewModel.name}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <EditText
+            android:id="@+id/newContactAccountId"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginTop="50dp"
+            android:ems="10"
+            android:hint="@string/contactAccountIdHint"
+            android:inputType="number"
+            android:minHeight="48dp"
+            android:text="@={newContactViewModel.sourceAccount}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/newContactName" />
+
+        <Button
+            android:id="@+id/addNewContactButtonTitle"
+            android:layout_width="200dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="50dp"
+            android:gravity="center_horizontal"
+            android:text="@string/addNewContactButton"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/newContactAccountId" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
