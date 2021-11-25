@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -84,9 +83,11 @@ class MainActivity : AppCompatActivity() {
             Contact(contactId = jeff.accountId, name = "Bestie", sourceAccount = bill.accountId)
         )
         val balances = listOf(
-            Balances(assetIssuer = bill.accountId, balance = 10000.0, limit = 100.0,
+            Balances(
+                assetIssuer = bill.accountId, balance = 10000.0, limit = 100.0,
                 assetType = Constants.AssetType.native, sourceAccount = bill.accountId),
-            Balances(assetCode="DOGECOIN", assetIssuer = jeff.accountId, balance = 20000.0,
+            Balances(
+                assetCode ="DOGECOIN", assetIssuer = jeff.accountId, balance = 20000.0,
                 limit = 200.0, assetType = Constants.AssetType.native, sourceAccount = jeff.accountId),
         )
         val payments = listOf(

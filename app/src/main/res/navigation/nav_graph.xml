@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/contactsFragment">
+    app:startDestination="@id/loginFragment">
 
     <fragment
         android:id="@+id/loginFragment"
@@ -95,4 +95,9 @@
             app:nullable="true"
             android:defaultValue="@null" />
     </fragment>
+    <fragment
+        android:id="@+id/myBalanceFragment"
+        android:name="sk.stuba.fei.uim.mobv_project.ui.my_balance.MyBalanceFragment"
+        android:label="fragment_my_balance"
+        tools:layout="@layout/fragment_my_balance" />
 </navigation>
