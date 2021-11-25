@@ -1,8 +1,10 @@
 package sk.stuba.fei.uim.mobv_project.data
 
+import android.widget.EditText
+import androidx.databinding.InverseMethod
 import androidx.room.TypeConverter
 
-class Converters {
+object Converters {
 
     // z api by (asi) mali prist datumy ako string takze teraz toto az tak netreba.
     // ale mozno sa zide do buducna
@@ -23,4 +25,16 @@ class Converters {
     @TypeConverter
     fun assetTypeToString(assetType: Constants.AssetType) = assetType.name
 
+    @JvmStatic fun stringToFloat(value: String?): Float?{
+        if(value == null) {
+            return 0.0f
+        }
+        return value.toFloat()
+    }
+    @InverseMethod("stringToFloat")
+    @JvmStatic fun floatToString(value: Float?): String{
+        if(value == null)
+            return ""
+        return value.toString()
+    }
 }

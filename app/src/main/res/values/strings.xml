@@ -47,5 +47,10 @@
     <string name="contactAccountIdHint">123456789</string>
     <string name="addNewContactButton">Add contact</string>
 
-
+    <string name="accountId_hint">Account ID</string>
+    <string name="amount_hint">Amount</string>
+    <string name="sendTransactionButton">Send Transaction</string>
+    <string name="create_new_transaction_fragment_label">New Transaction</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -63,13 +63,6 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
-        <action
-            android:id="@+id/action_createWalletFragment_to_myBalanceFragment"
-            app:destination="@id/myBalanceFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
     <fragment
         android:id="@+id/createPinFragment"
@@ -112,4 +105,9 @@
         android:name="sk.stuba.fei.uim.mobv_project.ui.about.AboutFragment"
         android:label="@string/fragment_about_label"
         tools:layout="@layout/fragment_about" />
+    <fragment
+        android:id="@+id/createNewTransactionFragment"
+        android:name="sk.stuba.fei.uim.mobv_project.ui.transaction.CreateNewTransactionFragment"
+        android:label="@string/create_new_transaction_fragment_label"
+        tools:layout="@layout/fragment_create_new_transaction"/>
 </navigation>
