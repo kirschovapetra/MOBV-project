@@ -39,11 +39,6 @@ class IntroFragment : Fragment(R.layout.fragment_intro) {
             false
         )
         binding.lifecycleOwner = viewLifecycleOwner
-        binding.toMyBalanceButton.setOnClickListener {
-            findNavController().navigate(
-                IntroFragmentDirections.actionCreateWalletFragmentToMyBalanceFragment()
-            );
-        }
         return binding.root
     }
 }

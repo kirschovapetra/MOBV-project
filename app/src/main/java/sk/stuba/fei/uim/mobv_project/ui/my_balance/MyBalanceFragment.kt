@@ -1,7 +1,6 @@
 package sk.stuba.fei.uim.mobv_project.ui.my_balance
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,8 +10,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import sk.stuba.fei.uim.mobv_project.R
 import sk.stuba.fei.uim.mobv_project.data.view_models.my_balance.MyBalanceViewModel
 import sk.stuba.fei.uim.mobv_project.databinding.FragmentMyBalanceBinding
+import sk.stuba.fei.uim.mobv_project.ui.abstracts.NoNavigationUpFragment
 
-class MyBalanceFragment : Fragment() {
+class MyBalanceFragment : NoNavigationUpFragment() {
 
     private val myBalanceViewModel: MyBalanceViewModel by viewModels()
     private lateinit var binding: FragmentMyBalanceBinding

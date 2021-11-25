@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
         bottomNavView.setupWithNavController(navController)
 
         val bottomNavItems = setOf(
-            R.id.aboutFragment,R.id.contactsFragment, R.id.myBalanceFragment
+            R.id.settingsFragment,R.id.contactsFragment, R.id.myBalanceFragment
         )
 
         navController.addOnDestinationChangedListener { _, destination, _ ->

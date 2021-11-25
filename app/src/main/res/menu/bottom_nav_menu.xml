@@ -9,7 +9,7 @@
         android:icon="@drawable/ic_baseline_people_alt_24"
         android:title="Contacts" />
     <item
-        android:id="@+id/aboutFragment"
+        android:id="@+id/settingsFragment"
         android:icon="@drawable/ic_baseline_info_24"
-        android:title="About" />
+        android:title="Settings" />
 </menu>

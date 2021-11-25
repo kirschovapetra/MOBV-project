@@ -8,8 +8,10 @@
     <string name="fragment_import_wallet_label">Import an existing wallet</string>
     <string name="fragment_contacts_label">Contacts</string>
     <string name="fragment_my_balance_label">My Balance</string>
-    <string name="fragment_about_label">About</string>
+    <string name="fragment_settings_label">Settings</string>
     <string name="fragment_create_pin_label">Create pin</string>
+    <string name="fragment_create_new_transaction_label">New Transaction</string>
+    <string name="fragment_new_contact_label">New contact</string>
 
     <!-- Create pin -->
     <string name="create_pin_pin_hint">Enter pin</string>
@@ -34,23 +36,18 @@
     <string name="import_submit_import">Import</string>
 
     <!-- New contact -->
-    <string name="newContactFragmentName">New contact</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="contactNameHint">John Smith</string>
     <string name="contactAccountIdHint">123456789</string>
     <string name="addNewContactButton">Add contact</string>
 
-    <!-- New contact -->
-    <string name="newContactFragmentName">New contact</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="contactNameHint">John Smith</string>
-    <string name="contactAccountIdHint">123456789</string>
-    <string name="addNewContactButton">Add contact</string>
-
+    <!-- Create new transaction -->
     <string name="accountId_hint">Account ID</string>
     <string name="amount_hint">Amount</string>
     <string name="sendTransactionButton">Send Transaction</string>
-    <string name="create_new_transaction_fragment_label">New Transaction</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Save recipient -->
+
+    <!-- Settings -->
+
 </resources>

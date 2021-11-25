@@ -59,8 +59,8 @@ class CreatePinFragment : Fragment() {
     }
 
     private fun onRegistered() {
-        findNavController().navigate(
-            CreatePinFragmentDirections.actionCreatePinFragmentToLoginFragment()
-        )
+//        findNavController().navigate(
+//            CreatePinFragmentDirections.actionCreatePinFragmentToLoginFragment()
+//        )
     }
 }

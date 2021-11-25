@@ -48,10 +48,10 @@ class LoginFragment : Fragment() {
 
     private fun onPinCorrect() {
         //TODO: if already has a private key then navigate to My Balance
-        findNavController().navigate(
-            LoginFragmentDirections.actionLoginFragmentToIntroFragment()
+//        findNavController().navigate(
+//            LoginFragmentDirections.actionLoginFragmentToIntroFragment()
 //        LoginFragmentDirections.actionLoginFragmentToContactsFragment()
-        )
+//        )
     }
 
     private fun onPinIncorrect() {

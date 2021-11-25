@@ -14,6 +14,6 @@ interface AccountDao: EntityDao<Account> {
     fun getById(id: String): LiveData<Account>
 
     @Query("DELETE FROM account")
-    suspend fun clear(): Int
+    suspend fun clear()
 
 }

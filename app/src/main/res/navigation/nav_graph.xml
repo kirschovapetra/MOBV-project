@@ -3,33 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/createPinFragment">
+    app:startDestination="@id/myBalanceFragment">
 
-    <fragment
-        android:id="@+id/loginFragment"
-        android:name="sk.stuba.fei.uim.mobv_project.ui.login.LoginFragment"
-        android:label="@string/fragment_login_label"
-        tools:layout="@layout/fragment_login">
-        <action
-            android:id="@+id/action_loginFragment_to_introFragment"
-            app:destination="@id/introFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
-    </fragment>
     <fragment
         android:id="@+id/createWalletFragment"
         android:name="sk.stuba.fei.uim.mobv_project.ui.intro.create_wallet.CreateWalletFragment"
         android:label="@string/fragment_create_wallet_label"
         tools:layout="@layout/fragment_create_wallet">
         <action
-            android:id="@+id/action_createWalletFragment_to_introFragment"
-            app:destination="@id/introFragment"
-            app:enterAnim="@anim/slide_in_left"
-            app:exitAnim="@anim/slide_out_right"
-            app:popEnterAnim="@anim/slide_in_right"
-            app:popExitAnim="@anim/slide_out_left" />
+            android:id="@+id/action_createWalletFragment_to_myBalanceFragment"
+            app:destination="@id/myBalanceFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
     <fragment
         android:id="@+id/importWalletFragment"
@@ -37,12 +24,12 @@
         android:label="@string/fragment_import_wallet_label"
         tools:layout="@layout/fragment_import_wallet">
         <action
-            android:id="@+id/action_importWalletFragment_to_introFragment"
-            app:destination="@id/introFragment"
-            app:enterAnim="@anim/slide_in_left"
-            app:exitAnim="@anim/slide_out_right"
-            app:popEnterAnim="@anim/slide_in_right"
-            app:popExitAnim="@anim/slide_out_left" />
+            android:id="@+id/action_importWalletFragment_to_myBalanceFragment"
+            app:destination="@id/myBalanceFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
     <fragment
         android:id="@+id/introFragment"
@@ -65,25 +52,16 @@
             app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
-        android:id="@+id/createPinFragment"
-        android:name="sk.stuba.fei.uim.mobv_project.ui.login.CreatePinFragment"
-        android:label="@string/fragment_create_pin_label"
-        tools:layout="@layout/fragment_create_pin">
-        <action
-            android:id="@+id/action_createPinFragment_to_loginFragment"
-            app:destination="@id/introFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
-    </fragment>
-    <fragment
         android:id="@+id/contactsFragment"
         android:name="sk.stuba.fei.uim.mobv_project.ui.contacts.ContactsFragment"
         android:label="ContactsFragment" >
         <action
             android:id="@+id/action_contactsFragment_to_newContactFragment"
-            app:destination="@id/newContactFragment" />
+            app:destination="@id/newContactFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/newContactFragment"
@@ -99,15 +77,48 @@
         android:id="@+id/myBalanceFragment"
         android:name="sk.stuba.fei.uim.mobv_project.ui.my_balance.MyBalanceFragment"
         android:label="fragment_my_balance"
-        tools:layout="@layout/fragment_my_balance" />
+        tools:layout="@layout/fragment_my_balance" >
+        <action
+            android:id="@+id/action_myBalanceFragment_to_createNewTransactionFragment"
+            app:destination="@id/createNewTransactionFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
     <fragment
-        android:id="@+id/aboutFragment"
-        android:name="sk.stuba.fei.uim.mobv_project.ui.about.AboutFragment"
-        android:label="@string/fragment_about_label"
-        tools:layout="@layout/fragment_about" />
+        android:id="@+id/settingsFragment"
+        android:name="sk.stuba.fei.uim.mobv_project.ui.settings.SettingsFragment"
+        android:label="@string/fragment_settings_label"
+        tools:layout="@layout/fragment_settings" >
+        <action
+            android:id="@+id/action_aboutFragment_to_introFragment"
+            app:destination="@id/introFragment" />
+    </fragment>
     <fragment
         android:id="@+id/createNewTransactionFragment"
         android:name="sk.stuba.fei.uim.mobv_project.ui.transaction.CreateNewTransactionFragment"
-        android:label="@string/create_new_transaction_fragment_label"
-        tools:layout="@layout/fragment_create_new_transaction"/>
+        android:label="@string/fragment_create_new_transaction_label"
+        tools:layout="@layout/fragment_create_new_transaction">
+        <action
+            android:id="@+id/action_createNewTransactionFragment_to_saveRecipientFragment"
+            app:destination="@id/saveRecipientFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/saveRecipientFragment"
+        android:name="sk.stuba.fei.uim.mobv_project.ui.transaction.SaveRecipientFragment"
+        android:label="fragment_save_recipient"
+        tools:layout="@layout/fragment_save_recipient" >
+        <action
+            android:id="@+id/action_saveRecipientFragment_to_myBalanceFragment"
+            app:destination="@id/myBalanceFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
 </navigation>

@@ -9,7 +9,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import sk.stuba.fei.uim.mobv_project.data.view_models.event.Event
-import sk.stuba.fei.uim.mobv_project.utils.HashingUtils
 
 class CreatePinViewModel : ViewModel() {
 
@@ -40,10 +39,10 @@ class CreatePinViewModel : ViewModel() {
     private fun savePin() {
         viewModelScope.launch {
             withContext(Dispatchers.Default) {
-                val pinHash: String = HashingUtils.hashString(pin.value.toString())
+//                val pinHash: String = HashingUtils.hashString(pin.value.toString())
 
-                Log.d(this::class.java.simpleName, "hashed pin: $pinHash")
-                Log.d(this::class.java.simpleName, "hash match: ${HashingUtils.verifyHash(pin.value.toString(), pinHash)}")
+//                Log.d(this::class.java.simpleName, "hashed pin: $pinHash")
+//                Log.d(this::class.java.simpleName, "hash match: ${HashingUtils.verifyHash(pin.value.toString(), pinHash)}")
 
                 //TODO: save to DB
 
