@@ -12,7 +12,7 @@ class ContactsViewModel : ViewModel() {
     private val arrayList = ArrayList<Contact>()
 
     init {
-        arrayList.add(Contact("86223", "Jozko", "Vajda", "1"))
+        arrayList.add(Contact("86223", "Jozko Vajda", "1"))
         contacts.postValue(arrayList)
     }
 }
