@@ -20,7 +20,7 @@
 
         <item name="colorPrimary">@color/md_theme_light_primary</item>
         <item name="colorOnPrimary">@color/md_theme_light_onPrimary</item>
-        <item name="colorPrimaryContainer">#83E8B9</item>
+        <item name="colorPrimaryContainer">@color/md_theme_light_primaryContainer</item>
         <item name="colorOnPrimaryContainer">@color/md_theme_light_onPrimaryContainer</item>
         <item name="colorSecondary">@color/md_theme_light_secondary</item>
         <item name="colorOnSecondary">@color/md_theme_light_onSecondary</item>
@@ -49,8 +49,7 @@
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:statusBarColor">@color/md_theme_light_background</item>
 
-        <item name="android:fontFamily">@font/open_sans</item>
-        <!--        <item name="android:fontFamily">sans-serif-smallcaps</item>-->
+        <item name="android:fontFamily">@font/comfortaa_bold</item>
         <item name="android:textStyle">bold</item>
 
 

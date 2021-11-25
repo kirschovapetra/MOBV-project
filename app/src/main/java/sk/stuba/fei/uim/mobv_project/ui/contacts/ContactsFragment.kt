@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,7 +15,7 @@ import sk.stuba.fei.uim.mobv_project.data.view_models.ContactsViewModel
 import sk.stuba.fei.uim.mobv_project.databinding.FragmentContactsBinding
 import sk.stuba.fei.uim.mobv_project.ui.abstracts.NoNavigationUpFragment
 
-class ContactsFragment : NoNavigationUpFragment(), ContactsRecycleViewAdapter.OnContactClickListener {
+class ContactsFragment : Fragment(), ContactsRecycleViewAdapter.OnContactClickListener {
 
     private val contactsViewModel: ContactsViewModel by viewModels()
     private lateinit var binding: FragmentContactsBinding
@@ -93,6 +94,18 @@ class ContactsFragment : NoNavigationUpFragment(), ContactsRecycleViewAdapter.On
 
     fun returnDummyData(): ArrayList<Contact> {
         var arrayList = ArrayList<Contact>()
+        arrayList.add(Contact("1", "Jozko", "1"))
+        arrayList.add(Contact("2", "Betka", "2"))
+        arrayList.add(Contact("3", "Dan", "3"))
+        arrayList.add(Contact("4", "Johny", "4"))
+        arrayList.add(Contact("1", "Soky", "1"))
+        arrayList.add(Contact("2", "Martin", "2"))
+        arrayList.add(Contact("3", "Marek", "3"))
+        arrayList.add(Contact("4", "Zuzka", "4"))
+        arrayList.add(Contact("1", "JAROOO", "1"))
+        arrayList.add(Contact("2", "Matus", "2"))
+        arrayList.add(Contact("3", "Ondo", "3"))
+        arrayList.add(Contact("4", "Huto", "4"))
         arrayList.add(Contact("1", "Jozko", "1"))
         arrayList.add(Contact("2", "Betka", "2"))
         arrayList.add(Contact("3", "Dan", "3"))

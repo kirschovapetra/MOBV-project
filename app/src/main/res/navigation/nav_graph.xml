@@ -76,7 +76,7 @@
     <fragment
         android:id="@+id/myBalanceFragment"
         android:name="sk.stuba.fei.uim.mobv_project.ui.my_balance.MyBalanceFragment"
-        android:label="fragment_my_balance"
+        android:label="@string/fragment_my_balance_label"
         tools:layout="@layout/fragment_my_balance" >
         <action
             android:id="@+id/action_myBalanceFragment_to_createNewTransactionFragment"
