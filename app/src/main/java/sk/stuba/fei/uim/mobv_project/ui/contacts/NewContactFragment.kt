@@ -78,8 +78,8 @@ class NewContactFragment : Fragment() {
     }
 
     private fun attachClickListenerToAddButton(binding: FragmentNewContactBinding){
-        val clickButtonListener: View.OnClickListener = View.OnClickListener { view -> Unit
-            updateContactsViewModel()
+        val clickButtonListener: View.OnClickListener = View.OnClickListener {Unit
+           updateContactsViewModel()
         }
 
         binding.addNewContactButtonTitle.setOnClickListener(
@@ -99,8 +99,8 @@ class NewContactFragment : Fragment() {
         arrayList.add(Contact("1", "Jozko", "1"))
         arrayList.add(Contact("2", "Martin", "2"))
         arrayList.add(Contact("3", "Marek", "3"))
-        contactsViewModel.contacts.postValue(arrayList)
-        Log.e("NEW FRAGMENT", contactsViewModel.contacts.value.toString())
+//        contactsViewModel.contacts.postValue(arrayList)
+//        Log.e("NEW FRAGMENT", contactsViewModel.contacts.value.toString())
     }
 
 //    companion object {

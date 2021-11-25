@@ -76,7 +76,7 @@ class ContactsFragment : Fragment(), ContactsRecycleViewAdapter.OnContactClickLi
     }
 
     private fun attachListerToNewContactButton(binding: FragmentContactsBinding){
-        val clickButtonListener: View.OnClickListener = View.OnClickListener { view -> Unit
+        val clickButtonListener: View.OnClickListener = View.OnClickListener {
             findNavController().navigate(
                 ContactsFragmentDirections.actionContactsFragmentToNewContactFragment()
             )
