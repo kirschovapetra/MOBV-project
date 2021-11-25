@@ -12,7 +12,7 @@
     <color name="md_theme_light_onPrimary">#F1F1F1</color>
     <color name="md_theme_light_primaryContainer">#F1B90E</color>
     <color name="md_theme_light_onPrimaryContainer">#FFFFFF</color>
-    <color name="md_theme_light_secondary">#715C00</color>
+    <color name="md_theme_light_secondary">#DAB619</color>
     <color name="md_theme_light_onSecondary">#FFFFFF</color>
     <color name="md_theme_light_secondaryContainer">@color/md_theme_light_primary</color>
     <color name="md_theme_light_onSecondaryContainer">@color/md_theme_light_onPrimary</color>

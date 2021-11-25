@@ -27,7 +27,7 @@
     <string name="intro_import_wallet_button_text">Already have a wallet?</string>
 
     <!-- Registered -->
-    <string name="registered_warning_text">Please save the displayed Private Key.\nIf you loose your Private Key you won\'t be able to recover your wallet if you change your device or forget you pin code.</string>
+    <string name="registered_warning_text">Please save the displayed Private Key.\nIf you lose your Private Key you won\'t be able to recover your wallet if you change your device or forget your pin code.</string>
     <string name="registered_copy_private_key_button_text">Copy</string>
     <string name="registered_continue_button_text">Continue</string>
 
