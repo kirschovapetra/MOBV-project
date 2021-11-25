@@ -21,8 +21,7 @@ Kontakty riešime asi iba lokálne, v api som nikde nevidela nejaké kontakty. V
 
     - (PK) contactId - public key kontaktu
     - (FK) sourceAccount - public key accountu ktorému patrí kontakt
-    - firstName
-    - lastName
+    - name
 
 ## Payment
 

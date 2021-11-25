@@ -6,6 +6,10 @@
     <string name="fragment_intro_label">Intro</string>
     <string name="fragment_create_wallet_label">Create a new wallet</string>
     <string name="fragment_import_wallet_label">Import an existing wallet</string>
+    <string name="fragment_contacts_label">Contacts</string>
+    <string name="fragment_my_balance_label">My Balance</string>
+    <string name="fragment_about_label">About</string>
+    <string name="fragment_create_pin_label">Create pin</string>
 
     <!-- Create pin -->
     <string name="create_pin_pin_hint">Enter pin</string>
@@ -28,7 +32,13 @@
     <!-- Import -->
     <string name="import_private_key_hint">Enter you private key</string>
     <string name="import_submit_import">Import</string>
-    <string name="fragment_create_pin_label">Create pin</string>
+
+    <!-- New contact -->
+    <string name="newContactFragmentName">New contact</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="contactNameHint">John Smith</string>
+    <string name="contactAccountIdHint">123456789</string>
+    <string name="addNewContactButton">Add contact</string>
 
     <!-- New contact -->
     <string name="newContactFragmentName">New contact</string>

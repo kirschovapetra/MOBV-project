@@ -2,26 +2,24 @@ package sk.stuba.fei.uim.mobv_project
 
 import android.os.Bundle
 import android.util.Log
-import android.view.ViewGroup
-import android.widget.Button
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
 import kotlinx.coroutines.launch
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.analytics.ktx.logEvent
-import com.google.firebase.ktx.Firebase
 import sk.stuba.fei.uim.mobv_project.data.*
 import sk.stuba.fei.uim.mobv_project.data.entities.*
 import sk.stuba.fei.uim.mobv_project.data.repositories.*
+import sk.stuba.fei.uim.mobv_project.databinding.ActivityMainBinding
 
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
+    private lateinit var binding: ActivityMainBinding
 
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() || super.onSupportNavigateUp()
@@ -29,7 +27,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         //TODO: set navigation start by checking whether pin exists in DB
 
@@ -39,39 +38,43 @@ class MainActivity : AppCompatActivity() {
 
         navController = navHostFragment.navController
         setupActionBarWithNavController(navController)
+        setupBottomNav()
+//        var actionBar = binding.actionBar
+////        actionBar.setTitleTextAppearance(this,R.style.ActionBarTitle)
+//        actionBar.setupWithNavController(navController)
+////        setupActionBarWithNavController(navController)
+//        setupBottomNav()
 
         dbCheck()
-//        testCrash()
     }
 
-    private fun testCrash() {
-        val firebaseAnalytics = Firebase.analytics
-        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM) {
-            param(FirebaseAnalytics.Param.ITEM_ID, "test-id")
-            param(FirebaseAnalytics.Param.ITEM_NAME, "trest-name")
-            param(FirebaseAnalytics.Param.CONTENT_TYPE, "image")
-        }
+    private fun setupBottomNav() {
+        val bottomNavView = binding.bottomNavView
+        bottomNavView.setupWithNavController(navController)
 
-        val crashButton = Button(this)
-        crashButton.text = "Test Crash"
-        crashButton.setOnClickListener {
-            throw RuntimeException("Test Crash") // Force a crash
-        }
+        val bottomNavItems = setOf(
+            R.id.aboutFragment,R.id.contactsFragment, R.id.myBalanceFragment
+        )
 
-        addContentView(crashButton, ViewGroup.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT))
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if(bottomNavItems.contains(destination.id)) {
+                bottomNavView.visibility = View.VISIBLE
+            } else {
+                bottomNavView.visibility = View.GONE
+            }
+        }
     }
+
+
+    /*********************** testiky *********************/
 
     private fun dbCheck() {
         // TODO check aby asset_code sedel s asset_type
 
-        val db = AppDatabase.getInstance(this)
-
-        val accountRepo = AccountRepository(db.accountDao)
-        val balanceRepo = BalanceRepository(db.balanceDao)
-        val paymentRepo = PaymentRepository(db.paymentDao)
-        val contactRepo = ContactRepository(db.contactDao)
+        val accountRepo = AccountRepository.getInstance(this)
+        val balanceRepo = BalanceRepository.getInstance(this)
+        val paymentRepo = PaymentRepository.getInstance(this)
+        val contactRepo = ContactRepository.getInstance(this)
 
         val bill = Account("123", "Bill", "Gates", "654321",
             "abcabcabc", "112233")
