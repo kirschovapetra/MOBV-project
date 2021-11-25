@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
         binding.actionBar.setupWithNavController(navController, AppBarConfiguration(topNavItems))
         setupBottomNav()
 
-        dbCheck()
+//        dbCheck()
     }
 
     private fun setupBottomNav() {
