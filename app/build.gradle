@@ -55,7 +55,7 @@ dependencies {
     implementation 'org.signal:argon2:13.1@aar'
 
     // Support Libraries
-    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'com.google.android.material:material:1.5.0-beta01'
     implementation 'androidx.appcompat:appcompat:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
     implementation 'androidx.fragment:fragment-ktx:1.4.0'
