@@ -3,15 +3,16 @@ package sk.stuba.fei.uim.mobv_project.ui.contacts
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import sk.stuba.fei.uim.mobv_project.R
 import sk.stuba.fei.uim.mobv_project.data.entities.Contact
 
 class ContactsRecycleViewAdapter(
-    private val contacts: List<Contact>,
+    private var contacts: List<Contact>,
     private val listener: OnContactClickListener
+
 ) :
     RecyclerView.Adapter<ContactsRecycleViewAdapter.ViewHolder>() {
 
@@ -40,6 +41,13 @@ class ContactsRecycleViewAdapter(
     // return the number of the items in the list
     override fun getItemCount(): Int {
         return contacts.size
+    }
+
+    fun setData(newContacts: List<Contact>){
+        val diffUtil = ContactListDiffUtil(contacts, newContacts)
+        val diffResults = DiffUtil.calculateDiff(diffUtil)
+        contacts = newContacts
+        diffResults.dispatchUpdatesTo(this)
     }
 
     // Holds the views for adding it to image and text

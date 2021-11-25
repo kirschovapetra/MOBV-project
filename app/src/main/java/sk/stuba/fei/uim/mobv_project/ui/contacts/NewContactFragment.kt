@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import sk.stuba.fei.uim.mobv_project.R
 import sk.stuba.fei.uim.mobv_project.data.entities.Contact
 import sk.stuba.fei.uim.mobv_project.data.view_models.NewContactViewModel
@@ -63,10 +64,43 @@ class NewContactFragment : Fragment() {
             false
         )
 
+        attachClickListenerToAddButton(binding)
+
+        val arrayList = ArrayList<Contact>()
+        arrayList.add(Contact("1", "Jozko", "1"))
+        arrayList.add(Contact("2", "Betka", "2"))
+        arrayList.add(Contact("3", "Dan", "3"))
+
         binding.newContactViewModel = newContactViewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
         return binding.root
+    }
+
+    private fun attachClickListenerToAddButton(binding: FragmentNewContactBinding){
+        val clickButtonListener: View.OnClickListener = View.OnClickListener { view -> Unit
+            updateContactsViewModel()
+        }
+
+        binding.addNewContactButtonTitle.setOnClickListener(
+            clickButtonListener
+        )
+    }
+
+    private fun sendRequestToDB(){
+
+    }
+
+    private fun updateContactsViewModel(){ // toto asi nie
+//        var oldContacts = contactsViewModel.arrayList
+        var arrayList = ArrayList<Contact>()
+
+
+        arrayList.add(Contact("1", "Jozko", "1"))
+        arrayList.add(Contact("2", "Martin", "2"))
+        arrayList.add(Contact("3", "Marek", "3"))
+        contactsViewModel.contacts.postValue(arrayList)
+        Log.e("NEW FRAGMENT", contactsViewModel.contacts.value.toString())
     }
 
 //    companion object {

@@ -37,10 +37,8 @@ class ContactsFragment : Fragment(), ContactsRecycleViewAdapter.OnContactClickLi
 //
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-////        arguments?.let {
-////            param1 = it.getString(ARG_PARAM1)
-////            param2 = it.getString(ARG_PARAM2)
-////        }
+
+        setContactsObserver()
         adapter = ContactsRecycleViewAdapter(contactsViewModel.arrayList, this)
     }
 
@@ -56,6 +54,28 @@ class ContactsFragment : Fragment(), ContactsRecycleViewAdapter.OnContactClickLi
             false
         )
 
+        contactsViewModel.contacts.postValue(returnDummyData()) // dotiahnit data na zobrazenie
+
+        attachListerToNewContactButton(binding)
+        attachViewModelToBinding(binding)
+        funInitializeRecycleAdapter(binding)
+
+        return binding.root
+    }
+
+    private fun attachViewModelToBinding(binding: FragmentContactsBinding){
+        binding.contactsViewModel = contactsViewModel
+        binding.lifecycleOwner = viewLifecycleOwner
+    }
+
+    private fun funInitializeRecycleAdapter(binding: FragmentContactsBinding){
+        val contactsRecyclerView = binding.contactsRecyclerView
+
+        contactsRecyclerView.layoutManager = LinearLayoutManager(context)
+        contactsRecyclerView.adapter = adapter
+    }
+
+    private fun attachListerToNewContactButton(binding: FragmentContactsBinding){
         val clickButtonListener: View.OnClickListener = View.OnClickListener { view -> Unit
             findNavController().navigate(
                 ContactsFragmentDirections.actionContactsFragmentToNewContactFragment()
@@ -65,29 +85,42 @@ class ContactsFragment : Fragment(), ContactsRecycleViewAdapter.OnContactClickLi
         binding.newContactButton.setOnClickListener(
             clickButtonListener
         )
+    }
 
-        binding.contactsViewModel = contactsViewModel
-        binding.lifecycleOwner = viewLifecycleOwner
-
-        val contactsRecyclerView = binding.contactsRecyclerView
-
-        contactsRecyclerView.layoutManager = LinearLayoutManager(context)
-        contactsRecyclerView.adapter = adapter
-
-        return binding.root
+    private fun setContactsObserver(){
+        contactsViewModel.contacts.observe(
+            this,
+            { contacts ->
+                contactsViewModel.arrayList = contacts
+                adapter.setData(contacts)
+            }
+        )
     }
 
     override fun onContactClick(position: Int) {
         val clickedContact = contactsViewModel.arrayList[position]
-        Log.e("MATKYVAJCA", clickedContact.name.toString() + " AHOOOOOOOOOOOOOOOOOOOOOOOj")
         findNavController().navigate(
             ContactsFragmentDirections.actionContactsFragmentToNewContactFragment().setContact(clickedContact)
         )
         adapter.notifyItemChanged(position)
+
     }
 
-    fun setmHoditListener(){
-
+    fun returnDummyData(): ArrayList<Contact> {
+        var arrayList = ArrayList<Contact>()
+        arrayList.add(Contact("1", "Jozko", "1"))
+        arrayList.add(Contact("2", "Betka", "2"))
+        arrayList.add(Contact("3", "Dan", "3"))
+        arrayList.add(Contact("4", "Johny", "4"))
+        arrayList.add(Contact("1", "Soky", "1"))
+        arrayList.add(Contact("2", "Martin", "2"))
+        arrayList.add(Contact("3", "Marek", "3"))
+        arrayList.add(Contact("4", "Zuzka", "4"))
+        arrayList.add(Contact("1", "JAROOO", "1"))
+        arrayList.add(Contact("2", "Matus", "2"))
+        arrayList.add(Contact("3", "Ondo", "3"))
+        arrayList.add(Contact("4", "Huto", "4"))
+        return arrayList
     }
 
     //    companion object {

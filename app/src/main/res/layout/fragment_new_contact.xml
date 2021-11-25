@@ -55,7 +55,6 @@
             android:layout_height="48dp"
             android:layout_marginTop="50dp"
             android:gravity="center_horizontal"
-            android:onClick="@{() -> newContactViewModel.addToContacts()}"
             android:text="@string/addNewContactButton"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintLeft_toLeftOf="parent"
