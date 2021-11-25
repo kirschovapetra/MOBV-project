@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/createPinFragment">
+    app:startDestination="@id/createNewTransactionFragment">
 
     <fragment
         android:id="@+id/loginFragment"
@@ -77,4 +77,9 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
     </fragment>
+    <fragment
+        android:id="@+id/createNewTransactionFragment"
+        android:name="sk.stuba.fei.uim.mobv_project.ui.transaction.CreateNewTransactionFragment"
+        android:label="@string/create_new_transaction_fragment_label"
+        tools:layout="@layout/fragment_create_new_transaction"/>
 </navigation>

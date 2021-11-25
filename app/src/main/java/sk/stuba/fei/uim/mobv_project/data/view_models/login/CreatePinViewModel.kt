@@ -10,7 +10,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import sk.stuba.fei.uim.mobv_project.data.view_models.event.Event
 import sk.stuba.fei.uim.mobv_project.utils.HashingUtils
-import sk.stuba.fei.uim.mobv_project.utils.SecurityContext
 
 class CreatePinViewModel : ViewModel() {
 
