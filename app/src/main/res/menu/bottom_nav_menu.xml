@@ -3,13 +3,13 @@
     <item
         android:id="@+id/myBalanceFragment"
         android:icon="@drawable/ic_baseline_account_balance_wallet_24"
-        android:title="My Balance" />
+        android:title="@string/bottom_nav_my_balance" />
     <item
         android:id="@+id/contactsFragment"
         android:icon="@drawable/ic_baseline_people_alt_24"
-        android:title="Contacts" />
+        android:title="@string/bottom_nav_contacts" />
     <item
         android:id="@+id/settingsFragment"
-        android:icon="@drawable/ic_baseline_info_24"
-        android:title="Settings" />
+        android:icon="@drawable/ic_baseline_settings_24"
+        android:title="@string/bottom_nav_settings" />
 </menu>

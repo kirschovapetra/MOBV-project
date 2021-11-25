@@ -8,20 +8,6 @@
         android:layout_height="match_parent"
         tools:context=".ui.intro.IntroFragment">
 
-        <!-- testovacie purposes -->
-        <Button
-            android:id="@+id/to_my_balance_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="#BFBFBF"
-            android:text="My Balance (tmp)"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.333" />
-
         <Button
             android:id="@+id/createNewWalletButton"
             android:layout_width="wrap_content"

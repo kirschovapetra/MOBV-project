@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import kotlinx.coroutines.launch
 import sk.stuba.fei.uim.mobv_project.data.*
@@ -37,15 +37,13 @@ class MainActivity : AppCompatActivity() {
         ) as NavHostFragment
 
         navController = navHostFragment.navController
-        setupActionBarWithNavController(navController)
+        val topNavItems = setOf(
+            R.id.introFragment, R.id.settingsFragment, R.id.contactsFragment, R.id.myBalanceFragment
+        )
+        binding.actionBar.setupWithNavController(navController, AppBarConfiguration(topNavItems))
         setupBottomNav()
-//        var actionBar = binding.actionBar
-////        actionBar.setTitleTextAppearance(this,R.style.ActionBarTitle)
-//        actionBar.setupWithNavController(navController)
-////        setupActionBarWithNavController(navController)
-//        setupBottomNav()
 
-        dbCheck()
+//        dbCheck()
     }
 
     private fun setupBottomNav() {
