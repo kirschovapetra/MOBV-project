@@ -1,21 +1,28 @@
 package sk.stuba.fei.uim.mobv_project.ui.settings
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import sk.stuba.fei.uim.mobv_project.R
-import sk.stuba.fei.uim.mobv_project.databinding.FragmentContactsBinding
+import sk.stuba.fei.uim.mobv_project.data.repositories.AccountRepository
+import sk.stuba.fei.uim.mobv_project.data.utils.ViewModelFactory
+import sk.stuba.fei.uim.mobv_project.data.view_models.settings.SettingsViewModel
 import sk.stuba.fei.uim.mobv_project.databinding.FragmentSettingsBinding
-import sk.stuba.fei.uim.mobv_project.ui.contacts.ContactsFragmentDirections
 
-class SettingsFragment : Fragment(R.layout.fragment_settings) {
+class SettingsFragment : Fragment() {
+
     private lateinit var binding: FragmentSettingsBinding
+
+    private val settingsViewModel: SettingsViewModel by viewModels {
+        ViewModelFactory(AccountRepository.getInstance(context!!))
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -23,17 +30,20 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         savedInstanceState: Bundle?,
     ): View? {
 
-//        binding = (FragmentSettingsBinding) DataBindingUtil.inflate(
-//            inflater, R.layout.fragment_settings,container,false
-//        )
-
-        binding = FragmentSettingsBinding.inflate(inflater)
+        binding = DataBindingUtil.inflate(
+            inflater,
+            R.layout.fragment_settings,
+            container,
+            false
+        )
+        binding.settingsViewModel = settingsViewModel
+        binding.lifecycleOwner = viewLifecycleOwner
 
         binding.unlinkButton.setOnClickListener {
             showDialog()
         }
-//
-        return binding.root//inflater.inflate(R.layout.fragment_settings, container, false)
+
+        return binding.root
     }
 
     private fun showDialog() {

@@ -3,11 +3,10 @@ package sk.stuba.fei.uim.mobv_project.data.repositories
 import android.content.Context
 import androidx.lifecycle.LiveData
 import sk.stuba.fei.uim.mobv_project.data.AppDatabase
-import sk.stuba.fei.uim.mobv_project.data.dao.AccountDao
 import sk.stuba.fei.uim.mobv_project.data.dao.BalanceDao
 import sk.stuba.fei.uim.mobv_project.data.entities.Balances
 
-class BalanceRepository(private val dao: BalanceDao) {
+class BalanceRepository(private val dao: BalanceDao): AppDbRepository() {
 
     companion object {
         const val TAG = "BalanceRepository"

@@ -31,4 +31,4 @@ data class Balances(
     // FK: ref na account
     @ColumnInfo(name = "source_account") val sourceAccount: String?,
     // ...
-)
+) : AppDbEntity()

@@ -1,8 +1,8 @@
 package sk.stuba.fei.uim.mobv_project.data
 
-import android.widget.EditText
 import androidx.databinding.InverseMethod
 import androidx.room.TypeConverter
+import shadow.com.google.gson.Gson
 
 object Converters {
 
@@ -36,5 +36,16 @@ object Converters {
         if(value == null)
             return ""
         return value.toString()
+    }
+
+    @TypeConverter
+    fun listToJson(value: List<String>?): String {
+        return Gson().toJson(value)
+    }
+
+    @TypeConverter
+    fun jsonToList(value: String): List<String>? {
+        val objects = Gson().fromJson(value, Array<String>::class.java) as Array<String>
+        return objects.toList()
     }
 }

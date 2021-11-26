@@ -43,6 +43,16 @@ class MainActivity : AppCompatActivity() {
         binding.actionBar.setupWithNavController(navController, AppBarConfiguration(topNavItems))
         setupBottomNav()
 
+        // Checkujem ci sa zmenily accounty v db
+        val owner = this
+        val accountRepo = AccountRepository.getInstance(this)
+        accountRepo.getAllAccounts().observe(
+            owner,
+            { accAll ->
+                Log.i("TERAZ SA ZMENILI DATA", "Vsetky accounty: $accAll")
+                Log.i("TERAZ SA ZMENILI DATA", "pocet accountov: " + accAll.size)
+            }
+        )
 //        dbCheck()
     }
 
