@@ -6,7 +6,7 @@ import sk.stuba.fei.uim.mobv_project.data.AppDatabase
 import sk.stuba.fei.uim.mobv_project.data.dao.*
 import sk.stuba.fei.uim.mobv_project.data.entities.*
 
-class AccountRepository(private val dao: AccountDao) {
+class AccountRepository(private val dao: AccountDao): AppDbRepository() {
 
 
     companion object {
@@ -28,26 +28,6 @@ class AccountRepository(private val dao: AccountDao) {
         }
 
     }
-
-    /*
-     fun getInstance(context: Context): AppDatabase {
-            synchronized(this) {
-                var instance = INSTANCE
-                if (instance == null) {
-                    instance = databaseBuilder(
-                        context.applicationContext,
-                        AppDatabase::class.java,
-                        "app_db"
-                    )
-                    INSTANCE = instance
-                }
-                return instance
-            }
-        }
-        */
-
-
-
 
     fun getAllAccounts(): LiveData<List<Account>> = dao.getAll()
     fun getAccountById(id: String): LiveData<Account> = dao.getById(id)

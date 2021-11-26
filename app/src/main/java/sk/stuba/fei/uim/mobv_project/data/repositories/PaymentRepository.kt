@@ -3,11 +3,10 @@ package sk.stuba.fei.uim.mobv_project.data.repositories
 import android.content.Context
 import androidx.lifecycle.LiveData
 import sk.stuba.fei.uim.mobv_project.data.AppDatabase
-import sk.stuba.fei.uim.mobv_project.data.dao.ContactDao
 import sk.stuba.fei.uim.mobv_project.data.dao.PaymentDao
 import sk.stuba.fei.uim.mobv_project.data.entities.Payment
 
-class PaymentRepository(private val dao: PaymentDao) {
+class PaymentRepository(private val dao: PaymentDao): AppDbRepository() {
 
 
     companion object {

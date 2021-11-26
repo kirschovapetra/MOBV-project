@@ -11,5 +11,5 @@ data class Account(
     @ColumnInfo(name = "private_key") val privateKey: String?,
     @ColumnInfo(name = "sequence") val sequence: String?,
     // + dalsie veci ak by bolo treba
-    )
+    ) : AppDbEntity()
 

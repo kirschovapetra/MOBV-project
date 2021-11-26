@@ -23,4 +23,4 @@ data class Contact(
     // FK: ref na account
     @ColumnInfo(name = "source_account") val sourceAccount: String?
     // ...
-) : Serializable
+) : Serializable, AppDbEntity()
