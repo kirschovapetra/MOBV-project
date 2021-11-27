@@ -10,10 +10,15 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import kotlinx.coroutines.launch
+import org.stellar.sdk.KeyPair
 import sk.stuba.fei.uim.mobv_project.data.*
 import sk.stuba.fei.uim.mobv_project.data.entities.*
 import sk.stuba.fei.uim.mobv_project.data.repositories.*
 import sk.stuba.fei.uim.mobv_project.databinding.ActivityMainBinding
+import android.os.StrictMode
+import android.os.StrictMode.ThreadPolicy
+import shadow.com.google.gson.Gson
+import sk.stuba.fei.uim.mobv_project.api.StellarApi
 
 
 class MainActivity : AppCompatActivity() {
@@ -43,16 +48,15 @@ class MainActivity : AppCompatActivity() {
         binding.actionBar.setupWithNavController(navController, AppBarConfiguration(topNavItems))
         setupBottomNav()
 
-        // Checkujem ci sa zmenily accounty v db
-        val owner = this
-        val accountRepo = AccountRepository.getInstance(this)
-        accountRepo.getAllAccounts().observe(
-            owner,
-            { accAll ->
-                Log.i("TERAZ SA ZMENILI DATA", "Vsetky accounty: $accAll")
-                Log.i("TERAZ SA ZMENILI DATA", "pocet accountov: " + accAll.size)
-            }
-        )
+        // lebo kotlin je retardovany (testing purposes)
+        // https://stackoverflow.com/questions/6343166/how-can-i-fix-android-os-networkonmainthreadexception
+        val policy = ThreadPolicy.Builder().permitAll().build()
+        StrictMode.setThreadPolicy(policy)
+        // ...
+
+        createAccountAndGetInfo()
+
+//        trackAccountDbChanges()
 //        dbCheck()
     }
 
@@ -75,6 +79,39 @@ class MainActivity : AppCompatActivity() {
 
 
     /*********************** testiky *********************/
+
+
+    private fun createAccountAndGetInfo() {
+
+        val api = StellarApi.getInstance(this)
+        val accRepo = AccountRepository.getInstance(this)
+
+        // 1. vygenerujem klucovy par
+        val pair = KeyPair.random()
+        Log.i("KEYPAIR", "Secret: ${pair.secretSeed}, Public Key: ${pair.accountId}")
+
+        // 2. od friendbota si vypytam 10000 peniazkov
+        val resp = api.createStellarAccount(pair.accountId)
+        Log.i("CREATE_ACC", resp.toString())
+
+        // 3. getnem si data o accounte
+        val acc = api.getStellarAccount(pair.accountId)
+        Log.i("ACCOUNT_INFO", Gson().toJson(acc))
+    }
+
+    // Checkujem ci sa zmenili accounty v db
+    private fun trackAccountDbChanges() {
+        val owner = this
+        val accountRepo = AccountRepository.getInstance(this)
+
+        accountRepo.getAllAccounts().observe(
+            owner,
+            { accAll ->
+                Log.i("TERAZ SA ZMENILI DATA", "Vsetky accounty: $accAll")
+                Log.i("TERAZ SA ZMENILI DATA", "pocet accountov: " + accAll.size)
+            }
+        )
+    }
 
     private fun dbCheck() {
         // TODO check aby asset_code sedel s asset_type
