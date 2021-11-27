@@ -9,7 +9,7 @@
 
         <variable
             name="contactsViewModel"
-            type="sk.stuba.fei.uim.mobv_project.data.view_models.ContactsViewModel" />
+            type="sk.stuba.fei.uim.mobv_project.data.view_models.contacts.ContactsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

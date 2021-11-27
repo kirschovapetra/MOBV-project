@@ -10,7 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import sk.stuba.fei.uim.mobv_project.R
 import sk.stuba.fei.uim.mobv_project.data.entities.Contact
-import sk.stuba.fei.uim.mobv_project.data.view_models.NewContactViewModel
+import sk.stuba.fei.uim.mobv_project.data.view_models.contacts.NewContactViewModel
 import sk.stuba.fei.uim.mobv_project.databinding.FragmentNewContactBinding
 
 // TODO: Rename parameter arguments, choose names that match

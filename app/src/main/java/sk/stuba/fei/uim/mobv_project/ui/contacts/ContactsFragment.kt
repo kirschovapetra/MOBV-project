@@ -11,7 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import sk.stuba.fei.uim.mobv_project.R
 import sk.stuba.fei.uim.mobv_project.data.entities.Contact
-import sk.stuba.fei.uim.mobv_project.data.view_models.ContactsViewModel
+import sk.stuba.fei.uim.mobv_project.data.view_models.contacts.ContactsViewModel
 import sk.stuba.fei.uim.mobv_project.databinding.FragmentContactsBinding
 import sk.stuba.fei.uim.mobv_project.ui.abstracts.NoNavigationUpFragment
 

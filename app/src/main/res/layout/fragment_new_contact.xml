@@ -7,7 +7,7 @@
     <data>
         <variable
             name="newContactViewModel"
-            type="sk.stuba.fei.uim.mobv_project.data.view_models.NewContactViewModel" />
+            type="sk.stuba.fei.uim.mobv_project.data.view_models.contacts.NewContactViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
