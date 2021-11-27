@@ -12,9 +12,8 @@ class MyBalanceViewModel : ViewModel() {
     var exportBalances = ArrayList<Balances>()
 
     init {
-        exportBalances.add(Balances("1",
-            "Jozko",Constants.AssetType.credit_alphanum12
-            ,  Double.MAX_VALUE, Double.MAX_VALUE,"84654"))
+        exportBalances.add(Balances("1", Double.MAX_VALUE.toString(),
+            Double.MAX_VALUE.toString(),"84654"))
         balances.postValue(exportBalances)
     }
 }

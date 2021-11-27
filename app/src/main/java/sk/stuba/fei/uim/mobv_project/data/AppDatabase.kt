@@ -13,7 +13,7 @@ import androidx.room.RoomDatabase
     version = 1,
     exportSchema = false // true
 )
-@TypeConverters(Converters::class)
+//@TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract val accountDao: AccountDao
     abstract val balanceDao: BalanceDao
@@ -34,7 +34,6 @@ abstract class AppDatabase : RoomDatabase() {
                         "app_db"
                     )
                         .fallbackToDestructiveMigration()
-//                        .allowMainThreadQueries() // toto iba na testing
                         .build()
                     INSTANCE = instance
                 }

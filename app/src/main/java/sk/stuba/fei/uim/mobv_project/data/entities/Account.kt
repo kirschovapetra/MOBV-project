@@ -2,14 +2,19 @@ package sk.stuba.fei.uim.mobv_project.data.entities
 
 import androidx.room.*
 
-@Entity(tableName = "account")
+@Entity(
+    tableName = "account",
+    indices = [
+        Index(value = ["account_id"], unique = true)
+    ]
+)
 data class Account(
-    @PrimaryKey @ColumnInfo(name = "account_id") val accountId: String,
-    @ColumnInfo(name = "first_name") val firstName: String?,
-    @ColumnInfo(name = "last_name") val lastName: String?,
-    @ColumnInfo(name = "pin") val pin: String?,
-    @ColumnInfo(name = "private_key") val privateKey: String?,
-    @ColumnInfo(name = "sequence") val sequence: String?,
+    @PrimaryKey @ColumnInfo(name = "account_id") var accountId: String,
+    @ColumnInfo(name = "first_name") var firstName: String?,
+    @ColumnInfo(name = "last_name") var lastName: String?,
+    @ColumnInfo(name = "pin") var pin: String?,
+    @ColumnInfo(name = "private_key") var privateKey: String?,
+    @ColumnInfo(name = "sequence") var sequence: Long?,
     // + dalsie veci ak by bolo treba
-    ) : AppDbEntity()
+) : AppDbEntity()
 

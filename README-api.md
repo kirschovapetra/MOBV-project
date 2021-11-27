@@ -38,22 +38,15 @@ Z toho čo som pochopila, tak pre fellas zo stellaru je Payment = Operation a Tr
     - transactionHash
     - transactionSuccessful
     - createdAt
-    - assetType - môžu byť 4 druhy:
-        - native = lumeny - default mena stellaru
-        - credit_alphanum4 = max 4-znakový asset_code
-        - credit_alphanum12 = max 12-znakový asset_code
-        - liquidity_pool_shares = nemám šajnu, asi môžeme ignorovať :D
     - assetCode - **kuk dole
-    - assetIssuer - **kuk dole
     - from - public key odosielateľa (a.k.a. to isté ako v sourceAccount... ale api by mala vracať aj to aj to tak nech sú FK jednotné ako sourceAccount)
     - to - public key prijímateľa
     - amount
 
-\*\* Tuto sa to kinda komplikuje, lebo:
-
-- ak je asset_type = 'native', tak pri buildovaní transakcie netreba špecifikovať asset_code ani asset_issuer. Ani api to pre native platby cez get nevracia. Ale lokálne by som do db aj tak ukladala asset_code = "native" a asset_issuer = náš public key aby sa to dalo potom použiť pre balances
-
-- ak je asset_type niečo iné tak treba špecifikovať asset_code aj asset_issuer. 
+\*\* 
+- ak je asset_type = 'native', tak asset_code bude "Lumens"
+    - tuto asset_code a asset_issuer neexistuje cize treba dat hodnotu napevno
+- inak sa vysklada "{asset_code}:{asset_issuer}"
     - asset_code by mal byť názov meny (eur, usd, magické fazulky, ...) 
     - asset_issuer asi môžeme použiť náš public key. Ak to teda správne chápem, vieme vytvárať vlastné typy assetov a konkrétny asset je identifikovaný s asset_code + asset_issuer.  
     
@@ -66,19 +59,6 @@ Z toho čo som pochopila, tak pre fellas zo stellaru je Payment = Operation a Tr
 Account by mal obsahovať zvlášť "balance" pre každý asset a.k.a každú kombináciu asset_code + asset_issuer. Teda máme 1 balance pre natívne platby, 1 na usd atď. Teda basically jeden view v tom myBalance patrí jednej mene.
 
     - (PK part1) assetCode
-    - (PK part2) assetIssuer
     - (FK) sourceAccount
-    - assetType
     - balance
     - limit
-
-## BalanceHistory (?)
-
-Toto je nateraz optional ale ak by sme chceli vykreslovať fancy graf s pohybmi na účte, sem by sme si mali ukladať priebežné balancy. Toto by sme mali iba lokálne.
-
-    - (PK) balanceId
-    - (FK) assetCode
-    - (FK) assetIssuer
-    - balance
-
-\+ bolo by potom cool odniekiaľ vytiahnuť aj nejaký timestamp kedy došlo k zmene..  v tom balance objekte som nič také nevidela

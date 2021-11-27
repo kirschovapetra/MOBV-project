@@ -14,13 +14,14 @@ import java.io.Serializable
         )
     ],
     indices = [
-        Index(value= ["source_account" ], unique= true)
+        Index(value = ["source_account"], unique = false),
+        Index(value = ["contact_id"], unique = true),
     ]
 )
 data class Contact(
-    @PrimaryKey @ColumnInfo(name = "contact_id") val contactId: String,
-    @ColumnInfo(name = "name") val name: String?,
+    @PrimaryKey @ColumnInfo(name = "contact_id") var contactId: String,
+    @ColumnInfo(name = "name") var name: String?,
     // FK: ref na account
-    @ColumnInfo(name = "source_account") val sourceAccount: String?
+    @ColumnInfo(name = "source_account") var sourceAccount: String?
     // ...
 ) : Serializable, AppDbEntity()

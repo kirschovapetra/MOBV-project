@@ -5,17 +5,17 @@ import androidx.room.*
 import sk.stuba.fei.uim.mobv_project.data.entities.Contact
 
 @Dao
-interface ContactDao: EntityDao<Contact>  {
+abstract class  ContactDao: EntityDao<Contact>()  {
 
     @Query("SELECT * FROM contact")
-    fun getAll(): LiveData<List<Contact>>
+    abstract fun getAll(): LiveData<List<Contact>>
 
     @Query("SELECT * FROM contact WHERE contact_id = :id")
-    fun getById(id: String): LiveData<Contact>
+    abstract fun getById(id: String): LiveData<Contact>
 
     @Query("SELECT * FROM contact WHERE source_account = :accountId")
-    fun getBySourceAccount(accountId: String): LiveData<List<Contact>>
+    abstract fun getBySourceAccount(accountId: String): LiveData<List<Contact>>
 
     @Query("DELETE FROM contact")
-     suspend fun clear(): Int
+    abstract suspend fun clear(): Int
 }
