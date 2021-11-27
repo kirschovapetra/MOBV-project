@@ -32,7 +32,8 @@ class BalancesRecycleViewAdapter(
 //        holder.imageView.setImageResource(ItemsViewModel.image)
 
         // sets the text to the textview from our itemHolder class
-        holder.balanceContactNameTextView.text = balancesViewModel.assetIssuer
+//        holder.balanceContactNameTextView.text = balancesViewModel.assetIssuer // assetIssuer pojde prec a bude sucastou assetCode
+        holder.balanceContactNameTextView.text = balancesViewModel.assetCode
     }
 
     override fun getItemCount(): Int {

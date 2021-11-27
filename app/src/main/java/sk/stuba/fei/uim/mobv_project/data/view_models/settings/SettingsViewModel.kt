@@ -13,12 +13,10 @@ class SettingsViewModel(private val accountRepo: AccountRepository) : ViewModel(
     fun insertAccountToDb(){
         viewModelScope.launch {
             accountRepo.insertAccount(
-                Account("666", "Severus", "Snape", "666666",
-                "QWERTYUIOP", "222222")
+                Account("666", "Severus", "Snape", "666666", "QWERTYUIOP", 222222)
             )
             accountRepo.insertAccount(
-                Account("22", "Taylor", "Swift", "122112",
-                    "POIUYTREWQ", "111111")
+                Account("22", "Taylor", "Swift", "122112", "POIUYTREWQ", 111111)
             )
         }
     }

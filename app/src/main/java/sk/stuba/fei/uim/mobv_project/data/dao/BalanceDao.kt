@@ -5,24 +5,17 @@ import androidx.room.*
 import sk.stuba.fei.uim.mobv_project.data.entities.Balances
 
 @Dao
-interface BalanceDao: EntityDao<Balances> {
+abstract class BalanceDao : EntityDao<Balances>() {
 
     @Query("SELECT * FROM balances")
-    fun getAll(): LiveData<List<Balances>>
+    abstract fun getAll(): LiveData<List<Balances>>
 
     @Query("SELECT * FROM balances WHERE asset_code = :code")
-    fun getByAssetCode(code: String): LiveData<Balances>
-
-    @Query("SELECT * FROM balances WHERE asset_issuer = :issuer")
-    fun getByAssetIssuer(issuer: String): LiveData<Balances>
-
-    @Query("SELECT * FROM balances WHERE asset_code = :code AND asset_issuer = :issuer")
-    fun getByAssetCodeAndIssuer(code: String, issuer: String): LiveData<Balances>
+    abstract fun getByAssetCode(code: String): LiveData<Balances>
 
     @Query("SELECT * FROM balances WHERE source_account = :accountId")
-    fun getBySourceAccount(accountId: String): LiveData<List<Balances>>
+    abstract fun getBySourceAccount(accountId: String): LiveData<List<Balances>>
 
     @Query("DELETE FROM balances")
-    suspend fun clear(): Int
-
+    abstract suspend fun clear(): Int
 }

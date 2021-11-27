@@ -3,11 +3,13 @@ package sk.stuba.fei.uim.mobv_project.api
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
+import org.stellar.sdk.KeyPair
 import org.stellar.sdk.Server
 import org.stellar.sdk.responses.AccountResponse
 import sk.stuba.fei.uim.mobv_project.data.Converters
 import java.net.URL
 import java.util.*
+import org.stellar.sdk.responses.operations.PaymentOperationResponse
 
 class StellarApi(private val context: Context) {
 
@@ -50,20 +52,34 @@ class StellarApi(private val context: Context) {
         return null
     }
 
+    // GET https://horizon-testnet.stellar.org/accounts/{accountId}
     fun getStellarAccount(accountId: String): AccountResponse? {
         return server.accounts().account(accountId)
-//        Log.i("BALANCE", "BALANCES FOR ACCOUNT: ${pair.accountId}")
-//        for (balance in account.balances) {
-//            Log.i("BALANCE",
-//                "Type: ${balance.assetType}, " +
-//                        "Code: ${balance.assetCode}, " +
-//                        "Balance: ${balance.balance}")
-//        }
     }
 
+    // GET https://horizon-testnet.stellar.org/accounts/{accountId}/payments
+    fun getStellarPayments(accountId: String): List<PaymentOperationResponse>? {
+        val pair = KeyPair.fromAccountId(accountId)
+        val paymentsRequest = server.payments().forAccount(pair.accountId)
+        try {
+            val operations = paymentsRequest.execute().records
+            var payments = ArrayList<PaymentOperationResponse>()
+            operations.forEach { operation ->
+                if (operation is PaymentOperationResponse)
+                    payments.add(operation)
+//                else
+//                    Log.i("GET_PAYMENTS", "Nasla sa operacia ${operation.type}")
+            }
+            Log.i("GET_PAYMENTS",
+                if (payments.isEmpty()) "Nenasla sa ziadna platba pre $accountId"
+                else "Success $accountId")
 
+            return payments
+        } catch (e: Exception) {
+            Log.e("GET_PAYMENTS", e.message!!)
+        }
+        return null
+    }
 }
-
-
 
 

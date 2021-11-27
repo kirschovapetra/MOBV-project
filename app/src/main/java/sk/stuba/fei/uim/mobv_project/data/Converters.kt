@@ -1,17 +1,13 @@
 package sk.stuba.fei.uim.mobv_project.data
 
 import androidx.databinding.InverseMethod
-import androidx.room.TypeConverter
+import org.stellar.sdk.Asset
+import org.stellar.sdk.AssetTypeCreditAlphaNum
+import org.stellar.sdk.AssetTypeNative
 import shadow.com.google.gson.Gson
 import shadow.com.google.gson.internal.LinkedTreeMap
 
 object Converters {
-
-    @TypeConverter
-    fun strToAssetType(value: String) = enumValueOf<Constants.AssetType>(value)
-
-    @TypeConverter
-    fun assetTypeToString(assetType: Constants.AssetType) = assetType.name
 
     @JvmStatic fun stringToFloat(value: String?): Float?{
         if(value == null) {
@@ -31,8 +27,24 @@ object Converters {
         return Gson().fromJson(jsonText, map.javaClass)
     }
 
+    @JvmStatic fun assetToAssetCode(asset: Asset?): String {
+        var assetCode = "Lumens"
+
+        if (asset != null && asset != AssetTypeNative()) {
+            val tmpAsset = asset as AssetTypeCreditAlphaNum
+            assetCode = "${tmpAsset.code}:${tmpAsset.issuer}"
+        }
+        return assetCode
+    }
+
 
 //    TODO odkomentujem ak to bude treba
+//    @TypeConverter
+//    fun strToAssetType(value: String) = enumValueOf<Constants.AssetType>(value)
+//
+//    @TypeConverter
+//    fun assetTypeToString(assetType: Constants.AssetType) = assetType.name
+
 //    @TypeConverter
 //    fun listToJson(value: List<String>?): String {
 //        return Gson().toJson(value)
