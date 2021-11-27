@@ -53,6 +53,10 @@ class PaymentRepository(
         dao.delete(payment)
     }
 
+    suspend fun clearPayments() {
+        dao.clear()
+    }
+
     /********************* API *********************/
 
     suspend fun syncPayments(sourceAccount: String) {
@@ -71,16 +75,36 @@ class PaymentRepository(
                         from = payment.from,
                         to = payment.to,
                         amount = payment.amount,
-                        sourceAccount=sourceAccount
+                        sourceAccount = payment.sourceAccount
                     )
                 )
             }
 
-        Log.i("UPDATE_PAYMENTS", "Success $sourceAccount")
+            Log.i("UPDATE_PAYMENTS", "Success $sourceAccount")
 
-    } catch (e: java.lang.Exception)
-    {
-        Log.e("UPDATE_PAYMENTS", e.message!!)
+        } catch (e: java.lang.Exception) {
+            Log.e("UPDATE_PAYMENTS", e.message!!)
+        }
     }
-}
+
+    suspend fun sendPayment(
+        sourcePublicKey: String,
+        sourcePrivateKey: String,
+        destinationPublicKey: String,
+        amount: String,
+        memo: String = "",
+    ) {
+        try {
+            val transactionResponse = api.sendStellarTransaction(
+                sourcePrivateKey, destinationPublicKey, amount, memo
+            )
+
+            syncPayments(sourcePublicKey)
+            syncPayments(destinationPublicKey)
+
+            Log.i("SEND_PAYMENT", "Success SRC=$sourcePublicKey DST=$destinationPublicKey")
+        } catch (e: java.lang.Exception) {
+            Log.e("SEND_PAYMENT", e.message!!)
+        }
+    }
 }

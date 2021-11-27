@@ -19,9 +19,9 @@ import java.io.Serializable
     ]
 )
 data class Contact(
-    @PrimaryKey @ColumnInfo(name = "contact_id") var contactId: String,
-    @ColumnInfo(name = "name") var name: String?,
+    @PrimaryKey @ColumnInfo(name = "contact_id") var contactId: String = "",
+    @ColumnInfo(name = "name") var name: String? = "",
     // FK: ref na account
-    @ColumnInfo(name = "source_account") var sourceAccount: String?
+    @ColumnInfo(name = "source_account") var sourceAccount: String? = "",
     // ...
 ) : Serializable, AppDbEntity()

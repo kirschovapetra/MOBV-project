@@ -10,13 +10,10 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import kotlinx.coroutines.launch
-import org.stellar.sdk.KeyPair
 import sk.stuba.fei.uim.mobv_project.data.entities.*
 import sk.stuba.fei.uim.mobv_project.data.repositories.*
 import sk.stuba.fei.uim.mobv_project.databinding.ActivityMainBinding
-import android.os.StrictMode
-import android.os.StrictMode.ThreadPolicy
-import sk.stuba.fei.uim.mobv_project.api.StellarApi
+import kotlinx.coroutines.GlobalScope
 
 
 class MainActivity : AppCompatActivity() {
@@ -46,12 +43,11 @@ class MainActivity : AppCompatActivity() {
         binding.actionBar.setupWithNavController(navController, AppBarConfiguration(topNavItems))
         setupBottomNav()
 
-        // lebo kotlin je retardovany (testing purposes)
-        // https://stackoverflow.com/questions/6343166/how-can-i-fix-android-os-networkonmainthreadexception
-        val policy = ThreadPolicy.Builder().permitAll().build()
-        StrictMode.setThreadPolicy(policy)
+//        ked sa da volanie api do GlobalScope tak je vsetko zahojene
+//        val policy = ThreadPolicy.Builder().permitAll().build()
+//        StrictMode.setThreadPolicy(policy)
 
-        apiWithDbTest()
+//        apiWithDbTest()
 
 //        createDummyDbData()
         trackDbChanges()
@@ -81,29 +77,29 @@ class MainActivity : AppCompatActivity() {
 
     private fun apiWithDbTest() {
 
-        val api = StellarApi.getInstance(this)
-        val accRepo = AccountRepository.getInstance(this)
-        val balRepo = BalanceRepository.getInstance(this)
-        val payRepo = PaymentRepository.getInstance(this)
+        val accountRepo = AccountRepository.getInstance(this)
+        val balanceRepo = BalanceRepository.getInstance(this)
+        val paymentRepo = PaymentRepository.getInstance(this)
 
-        lifecycleScope.launch {
+        GlobalScope.launch {
+            val ss = accountRepo.createNewAccount("Severus", "Snape")
+            val hp = accountRepo.createNewAccount( "Harry", "Potter")
 
-            // 1. vygenerujem klucovy par
-            val pair = KeyPair.random()
-            Log.i("KEYPAIR", "Secret: ${pair.secretSeed}, Public Key: ${pair.accountId}")
+            if (ss == null || hp == null) return@launch
 
-            // 2. od friendbota si vypytam 10000 peniazkov
-            val resp = api.createStellarAccount(pair.accountId)
-            Log.i("CREATE_ACC", resp.toString())
+            balanceRepo.syncBalances(ss.accountId)
+            balanceRepo.syncBalances(hp.accountId)
 
-            // 3. syncnem account
-            val newAccount = Account(pair.accountId, "King of", "Hell", "666666",
-                pair.accountId, null)
-            accRepo.syncAccount(newAccount)
+            Log.i("BULLSHIT_LOG", "Platba Severus Snape -> Harry Potter")
+            paymentRepo.sendPayment(
+                sourcePublicKey = ss.accountId, sourcePrivateKey = String(ss.secretSeed),
+                destinationPublicKey = hp.accountId, amount = "20", memo = "Mistah Pottah")
 
-            // 4. syncnem balances a payments
-            balRepo.syncBalances(newAccount.accountId)
-            payRepo.syncPayments(newAccount.accountId)
+            balanceRepo.syncBalances(ss.accountId)
+            balanceRepo.syncBalances(hp.accountId)
+
+            paymentRepo.syncPayments(ss.accountId)
+            paymentRepo.syncPayments(hp.accountId)
         }
     }
 
@@ -152,10 +148,8 @@ class MainActivity : AppCompatActivity() {
         val paymentRepo = PaymentRepository.getInstance(this)
         val contactRepo = ContactRepository.getInstance(this)
 
-        val bill = Account("123", "Bill", "Gates", "654321",
-            "abcabcabc", 112233)
-        val jeff = Account("321", "Jeff", "Bezos", "123456",
-            "cbacbacba", 445566)
+        val bill = Account("123", "Bill", "Gates")
+        val jeff = Account("321", "Jeff", "Bezos", "123456")
 
         val accounts = listOf(bill, jeff)
         val contacts = listOf(

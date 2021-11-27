@@ -51,6 +51,9 @@ class BalanceRepository(
     suspend fun deleteBalance(balance: Balances) {
         dao.delete(balance)
     }
+    suspend fun clearBalances() {
+        dao.clear()
+    }
 
     /********************* API *********************/
 

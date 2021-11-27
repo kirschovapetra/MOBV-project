@@ -14,19 +14,17 @@ import androidx.room.*
         )
     ],
     primaryKeys = [
-        "asset_code"//, "asset_issuer"
+        "asset_code", "source_account"
     ],
     indices = [
+        Index(value = ["asset_code", "source_account"], unique = true),
         Index(value = ["source_account"], unique = false),
-        Index(value = ["asset_code"], unique = true),
     ]
 )
 data class Balances(
 
     @NonNull @ColumnInfo(name = "asset_code") var assetCode: String = "Lumens",
-    @ColumnInfo(name = "balance") var balance: String?,
-    @ColumnInfo(name = "limit") var limit: String?,
-    // FK: ref na account
-    @ColumnInfo(name = "source_account") var sourceAccount: String?,
-    // ...
+    @NonNull @ColumnInfo(name = "source_account") var sourceAccount: String = "", // FK: ref na account
+    @ColumnInfo(name = "balance") var balance: String? = "",
+    @ColumnInfo(name = "limit") var limit: String? = "",
 ) : AppDbEntity()

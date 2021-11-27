@@ -1,5 +1,6 @@
 package sk.stuba.fei.uim.mobv_project.ui.settings
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,16 +13,25 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import sk.stuba.fei.uim.mobv_project.R
 import sk.stuba.fei.uim.mobv_project.data.repositories.AccountRepository
+import sk.stuba.fei.uim.mobv_project.data.repositories.BalanceRepository
+import sk.stuba.fei.uim.mobv_project.data.repositories.ContactRepository
+import sk.stuba.fei.uim.mobv_project.data.repositories.PaymentRepository
 import sk.stuba.fei.uim.mobv_project.data.utils.ViewModelFactory
 import sk.stuba.fei.uim.mobv_project.data.view_models.settings.SettingsViewModel
 import sk.stuba.fei.uim.mobv_project.databinding.FragmentSettingsBinding
+
 
 class SettingsFragment : Fragment() {
 
     private lateinit var binding: FragmentSettingsBinding
 
     private val settingsViewModel: SettingsViewModel by viewModels {
-        ViewModelFactory(AccountRepository.getInstance(context!!))
+        ViewModelFactory(
+            AccountRepository.getInstance(context!!),
+            BalanceRepository.getInstance(context!!),
+            ContactRepository.getInstance(context!!),
+            PaymentRepository.getInstance(context!!),
+        )
     }
 
     override fun onCreateView(
@@ -40,25 +50,22 @@ class SettingsFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
 
         binding.unlinkButton.setOnClickListener {
-            showDialog()
+            showDialog(context!!)
         }
 
         return binding.root
     }
 
-    private fun showDialog() {
-
-        MaterialAlertDialogBuilder(requireContext(), R.style.CustomMaterialAlertDialog)
+    private fun showDialog(context: Context) {
+        MaterialAlertDialogBuilder(context, R.style.CustomMaterialAlertDialog)
             .setTitle("Are you sure?")
             .setMessage("If you lose your Private Key you won't be able to recover your wallet if you change your device or forget your pin code.")
             .setIcon(R.drawable.ic_baseline_warning_24)
-
-            .setNegativeButton("No, go back") { dialog, _ -> dialog.cancel() }
             .setPositiveButton("Yes, unlink account") { _, _ ->
                 findNavController().navigate(
                     SettingsFragmentDirections.actionAboutFragmentToIntroFragment()
                 )
-                // TODO iba presmerovanie ci nieco speci?
+                settingsViewModel.clearDatabase()
                 view?.let {
                     Snackbar.make(it,
                         "You have been successfully logged out",
@@ -66,5 +73,7 @@ class SettingsFragment : Fragment() {
                         .show()
                 }
             }
+            .setNegativeButton("No, go back") { _, _ -> }
+            .show()
     }
 }

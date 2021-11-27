@@ -38,14 +38,16 @@ class NewContactFragment : Fragment() {
             val serializedContact  = it.getSerializable(CONTACT_PARAM_KEY) //as Contact
 
             if(serializedContact == null){
-                newContactViewModel.contactId.postValue("")
-                newContactViewModel.name.postValue("")
-                newContactViewModel.sourceAccount.postValue("")
+                newContactViewModel.contact.value = Contact()
+//                newContactViewModel.contactId.postValue("")
+//                newContactViewModel.name.postValue("")
+//                newContactViewModel.sourceAccount.postValue("")
             } else {
                 val contact = serializedContact as Contact
-                newContactViewModel.contactId.postValue(contact.contactId)
-                newContactViewModel.name.postValue(contact.name)
-                newContactViewModel.sourceAccount.postValue(contact.sourceAccount)
+                newContactViewModel.contact.value = contact
+//                newContactViewModel.contactId.postValue(contact.contactId)
+//                newContactViewModel.name.postValue(contact.name)
+//                newContactViewModel.sourceAccount.postValue(contact.sourceAccount)
             }
 
         }
@@ -84,6 +86,7 @@ class NewContactFragment : Fragment() {
 
         binding.addNewContactButtonTitle.setOnClickListener(
             clickButtonListener
+
         )
     }
 

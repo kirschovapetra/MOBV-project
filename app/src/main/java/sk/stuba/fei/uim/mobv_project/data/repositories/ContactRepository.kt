@@ -3,7 +3,6 @@ package sk.stuba.fei.uim.mobv_project.data.repositories
 import android.content.Context
 import androidx.lifecycle.LiveData
 import sk.stuba.fei.uim.mobv_project.data.AppDatabase
-import sk.stuba.fei.uim.mobv_project.data.dao.BalanceDao
 import sk.stuba.fei.uim.mobv_project.data.dao.ContactDao
 import sk.stuba.fei.uim.mobv_project.data.entities.Contact
 
@@ -39,5 +38,8 @@ class ContactRepository(private val dao: ContactDao): AppDbRepository() {
     }
     suspend fun deleteContact(contact: Contact){
         dao.delete(contact)
+    }
+    suspend fun clearContacts() {
+        dao.clear()
     }
 }

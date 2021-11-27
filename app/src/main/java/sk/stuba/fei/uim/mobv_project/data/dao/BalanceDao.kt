@@ -16,6 +16,9 @@ abstract class BalanceDao : EntityDao<Balances>() {
     @Query("SELECT * FROM balances WHERE source_account = :accountId")
     abstract fun getBySourceAccount(accountId: String): LiveData<List<Balances>>
 
+    @Query("SELECT DISTINCT asset_code FROM balances WHERE source_account = :accountId")
+    abstract fun getAccountAssetCodes(accountId: String): LiveData<List<String>>
+
     @Query("DELETE FROM balances")
     abstract suspend fun clear(): Int
 }

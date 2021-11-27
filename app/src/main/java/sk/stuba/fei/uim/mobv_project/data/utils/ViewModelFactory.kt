@@ -1,8 +1,7 @@
 package sk.stuba.fei.uim.mobv_project.data.utils
 
 import androidx.lifecycle.*
-import sk.stuba.fei.uim.mobv_project.data.repositories.AccountRepository
-import sk.stuba.fei.uim.mobv_project.data.repositories.AppDbRepository
+import sk.stuba.fei.uim.mobv_project.data.repositories.*
 import sk.stuba.fei.uim.mobv_project.data.view_models.contacts.*
 import sk.stuba.fei.uim.mobv_project.data.view_models.login.*
 import sk.stuba.fei.uim.mobv_project.data.view_models.my_balance.*
@@ -11,14 +10,18 @@ import sk.stuba.fei.uim.mobv_project.data.view_models.transaction.*
 
 // TODO odkomentovat /*repository*/ ked budeme mat take konstruktory
 
-class ViewModelFactory(private val repository: AppDbRepository) : ViewModelProvider.Factory {
+class ViewModelFactory(private vararg val repository: AppDbRepository) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
 
         // settings
         if (modelClass.isAssignableFrom(SettingsViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return SettingsViewModel(repository as AccountRepository) as T
+            return SettingsViewModel(
+                repository[0] as AccountRepository,
+                repository[1] as BalanceRepository,
+                repository[2] as ContactRepository,
+                repository[3] as PaymentRepository) as T
         }
 
         if (modelClass.isAssignableFrom(ContactsViewModel::class.java)) {

@@ -3,6 +3,7 @@ package sk.stuba.fei.uim.mobv_project.data.repositories
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
+import org.stellar.sdk.KeyPair
 import sk.stuba.fei.uim.mobv_project.api.StellarApi
 import sk.stuba.fei.uim.mobv_project.data.AppDatabase
 import sk.stuba.fei.uim.mobv_project.data.dao.*
@@ -51,23 +52,35 @@ class AccountRepository(
         dao.delete(account)
     }
 
+    suspend fun clearAccounts() {
+        dao.clear()
+    }
+
     /********************* API *********************/
 
-    suspend fun syncAccount(account: Account) {
+    suspend fun createNewAccount(firstName: String, lastName: String): KeyPair? {
+
         try {
-            val response = api.getStellarAccount(account.accountId)!!
-            Log.i("GET_STELLAR_ACCOUNT", "Success accountId=${response.accountId}")
+            // 1. vygenerujem klucovy par
+            val pair = KeyPair.random()
+            Log.i("CREATE_ACCOUNT",
+                "Keypair = Secret: ${String(pair.secretSeed)}, Public Key: ${pair.accountId}")
 
-            // asi iba sequence number sa bude z api updatovat
-            // pin, kluce atd su stale tie iste a meno + priezvisko mame iba lokalne
-            account.sequence = response.sequenceNumber
-            dao.insertOrUpdate(account)
+            // 2. od friendbota si vypytam 10000 peniazkov
+            val resp = api.createStellarAccount(pair.accountId)
 
-            Log.i("SYNC_ACCOUNT", "Success ${account.accountId}")
+            // 3. syncnem account
+            dao.insertOrUpdate(
+                Account(pair.accountId, firstName, lastName, String(pair.secretSeed))
+            )
+
+            Log.i("CREATE_ACCOUNT", "Success ${pair.accountId}")
+            return pair
 
         } catch (e: java.lang.Exception) {
-            Log.e("SYNC_ACCOUNT", e.message!!)
+            Log.e("CREATE_ACCOUNT", e.message!!)
         }
+        return null
     }
 
 }
