@@ -27,6 +27,10 @@ object Converters {
         return Gson().fromJson(jsonText, map.javaClass)
     }
 
+    @JvmStatic fun objectToJson(obj: Any?): String?{
+        return Gson().toJson(obj)
+    }
+
     @JvmStatic fun assetToAssetCode(asset: Asset?): String {
         var assetCode = "Lumens"
 

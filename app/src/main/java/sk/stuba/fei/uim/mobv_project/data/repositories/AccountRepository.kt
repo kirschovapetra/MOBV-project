@@ -58,13 +58,11 @@ class AccountRepository(
 
     /********************* API *********************/
 
-    suspend fun createNewAccount(firstName: String, lastName: String): KeyPair? {
+    suspend fun createAndSyncAccount(firstName: String, lastName: String): KeyPair? {
 
         try {
             // 1. vygenerujem klucovy par
             val pair = KeyPair.random()
-            Log.i("CREATE_ACCOUNT",
-                "Keypair = Secret: ${String(pair.secretSeed)}, Public Key: ${pair.accountId}")
 
             // 2. od friendbota si vypytam 10000 peniazkov
             val resp = api.createStellarAccount(pair.accountId)
@@ -74,13 +72,44 @@ class AccountRepository(
                 Account(pair.accountId, firstName, lastName, String(pair.secretSeed))
             )
 
-            Log.i("CREATE_ACCOUNT", "Success ${pair.accountId}")
+            Log.i(TAG, "createNewAccount: " +
+                            "Success Private key: ${String(pair.secretSeed)}, " +
+                            "Public Key: ${pair.accountId}")
+
             return pair
 
-        } catch (e: java.lang.Exception) {
-            Log.e("CREATE_ACCOUNT", e.message!!)
+        } catch (e: Exception) {
+            Log.e(TAG, "createNewAccount: ${e.message}")
         }
         return null
+    }
+
+    suspend fun syncAccount(accountId: String, privateKey: String,
+                            firstName: String,  lastName: String,
+    ): Boolean {
+        try {
+            // check ci kluc dava zmysel
+            val keyPair = KeyPair.fromSecretSeed(privateKey)
+            val keyPair2 = KeyPair.fromAccountId(accountId)
+
+            if (keyPair.accountId != keyPair2.accountId) {
+               throw java.lang.Exception("invalid accountId + privateKey combination")
+            }
+
+            // check ci existuje account
+            val account = api.getStellarAccount(accountId)
+
+            dao.insertOrUpdate(
+                Account(accountId, firstName, lastName, privateKey)
+            )
+            Log.i(TAG, "syncAccount: Success $accountId")
+            return true
+        }
+        catch (e: Exception){
+            Log.e(TAG, "syncAccount: ${e.message}")
+            return false
+        }
+
     }
 
 }

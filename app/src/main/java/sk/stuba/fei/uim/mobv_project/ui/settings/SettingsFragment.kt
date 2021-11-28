@@ -2,20 +2,14 @@ package sk.stuba.fei.uim.mobv_project.ui.settings
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.*
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import sk.stuba.fei.uim.mobv_project.R
-import sk.stuba.fei.uim.mobv_project.data.repositories.AccountRepository
-import sk.stuba.fei.uim.mobv_project.data.repositories.BalanceRepository
-import sk.stuba.fei.uim.mobv_project.data.repositories.ContactRepository
-import sk.stuba.fei.uim.mobv_project.data.repositories.PaymentRepository
+import sk.stuba.fei.uim.mobv_project.data.repositories.*
 import sk.stuba.fei.uim.mobv_project.data.utils.ViewModelFactory
 import sk.stuba.fei.uim.mobv_project.data.view_models.settings.SettingsViewModel
 import sk.stuba.fei.uim.mobv_project.databinding.FragmentSettingsBinding
@@ -27,10 +21,10 @@ class SettingsFragment : Fragment() {
 
     private val settingsViewModel: SettingsViewModel by viewModels {
         ViewModelFactory(
-            AccountRepository.getInstance(context!!),
-            BalanceRepository.getInstance(context!!),
-            ContactRepository.getInstance(context!!),
-            PaymentRepository.getInstance(context!!),
+            AccountRepository.getInstance(requireContext()),
+            BalanceRepository.getInstance(requireContext()),
+            ContactRepository.getInstance(requireContext()),
+            PaymentRepository.getInstance(requireContext()),
         )
     }
 
@@ -50,7 +44,7 @@ class SettingsFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
 
         binding.unlinkButton.setOnClickListener {
-            showDialog(context!!)
+            showDialog(requireContext())
         }
 
         return binding.root

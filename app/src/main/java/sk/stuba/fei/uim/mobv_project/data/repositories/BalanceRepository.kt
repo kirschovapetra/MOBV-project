@@ -3,6 +3,7 @@ package sk.stuba.fei.uim.mobv_project.data.repositories
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
+import org.stellar.sdk.Asset
 import sk.stuba.fei.uim.mobv_project.api.StellarApi
 import sk.stuba.fei.uim.mobv_project.data.AppDatabase
 import sk.stuba.fei.uim.mobv_project.data.Converters
@@ -57,23 +58,47 @@ class BalanceRepository(
 
     /********************* API *********************/
 
-    suspend fun syncBalances(sourceAccount: String) {
+    suspend fun syncBalances(sourceAccount: String): Boolean {
         try {
-            val response = api.getStellarAccount(sourceAccount)!!
-            response.balances.forEach { balance ->
+            val accountResp = api.getStellarAccount(sourceAccount)
+            accountResp?.balances?.forEach { balance ->
 
                 dao.insertOrUpdate(
                     Balances(
                         assetCode = Converters.assetToAssetCode(balance.asset.orNull()),
                         balance = balance.balance,
                         limit = balance.limit,
-                        sourceAccount = sourceAccount
+                        sourceAccount = accountResp.accountId
                     ))
             }
-            Log.i("UPDATE_BALANCES", "Success $sourceAccount")
+            Log.i(TAG, "syncBalances: Success $sourceAccount")
+            return true
 
         } catch (e: java.lang.Exception) {
-            Log.e("UPDATE_BALANCES", e.message!!)
+            Log.e(TAG, "syncBalances: ${e.message}")
+            return false
+        }
+    }
+
+    suspend fun addAndSyncTrustedAsset(
+        accountId: String,
+        privateKey: String,
+        assetCode: String,
+        assetIssuer: String,
+        limit: String = "10000",
+    ): Boolean {
+
+        try {
+            val asset = Asset.createNonNativeAsset(assetCode, assetIssuer)
+            val res = api.changeTrust(asset,accountId, privateKey, limit)
+
+            Log.i(TAG, "addTrustedAsset: Success ${Converters.objectToJson(res)}")
+
+            return syncBalances(accountId)
+
+        } catch (e: Exception) {
+            Log.e(TAG, "addTrustedAsset:  ${e.message}")
+            return false
         }
     }
 }
