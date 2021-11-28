@@ -134,12 +134,19 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_createNewTransactionFragment_to_myBalanceFragment"
+            app:destination="@id/myBalanceFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/saveRecipientFragment"
         android:name="sk.stuba.fei.uim.mobv_project.ui.transaction.SaveRecipientFragment"
-        android:label="fragment_save_recipient"
-        tools:layout="@layout/fragment_save_recipient" >
+        android:label="@string/fragment_save_recipient_label"
+        tools:layout="@layout/fragment_save_recipient">
         <action
             android:id="@+id/action_saveRecipientFragment_to_myBalanceFragment"
             app:destination="@id/myBalanceFragment"
@@ -147,5 +154,8 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <argument
+            android:name="accountId"
+            app:argType="string" />
     </fragment>
 </navigation>

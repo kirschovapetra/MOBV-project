@@ -46,12 +46,12 @@ class ViewModelFactory(private vararg val repository: AppDbRepository) : ViewMod
 
         if (modelClass.isAssignableFrom(CreateNewTransactionViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return CreateNewTransactionViewModel(/*repository as ...Repository */) as T
+            return CreateNewTransactionViewModel(repository[0] as ContactRepository) as T
         }
 
-        if (modelClass.isAssignableFrom(CreateNewTransactionViewModel::class.java)) {
+        if (modelClass.isAssignableFrom(SaveRecipientViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return CreateNewTransactionViewModel(/*repository as ...Repository */) as T
+            return SaveRecipientViewModel(/*repository[0] as ContactRepository*/) as T
         }
 
         throw IllegalArgumentException("Unknown ViewModel class")

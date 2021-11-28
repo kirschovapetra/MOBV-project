@@ -5,56 +5,45 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import sk.stuba.fei.uim.mobv_project.R
+import sk.stuba.fei.uim.mobv_project.data.repositories.AccountRepository
+import sk.stuba.fei.uim.mobv_project.data.repositories.ContactRepository
+import sk.stuba.fei.uim.mobv_project.data.utils.ViewModelFactory
+import sk.stuba.fei.uim.mobv_project.data.view_models.contacts.NewContactViewModel
+import sk.stuba.fei.uim.mobv_project.data.view_models.transaction.CreateNewTransactionViewModel
+import sk.stuba.fei.uim.mobv_project.data.view_models.transaction.SaveRecipientViewModel
+import sk.stuba.fei.uim.mobv_project.databinding.FragmentCreateNewTransactionBinding
+import sk.stuba.fei.uim.mobv_project.databinding.FragmentSaveRecipientBinding
+import sk.stuba.fei.uim.mobv_project.ui.transaction.SaveRecipientFragmentDirections.actionSaveRecipientFragmentToMyBalanceFragment
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [SaveRecipientFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class SaveRecipientFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    // TODO replace with NewContactViewModel
+    private val args: SaveRecipientFragmentArgs by navArgs()
+    private val viewModel: SaveRecipientViewModel by viewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var binding: FragmentSaveRecipientBinding
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_save_recipient, container, false)
-    }
-
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment SaveRecipientFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            SaveRecipientFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+        binding = DataBindingUtil.inflate(
+            inflater,
+            R.layout.fragment_save_recipient,
+            container,
+            false
+        )
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.addSkipButton.setOnClickListener {
+            findNavController().navigate(actionSaveRecipientFragmentToMyBalanceFragment())
+        }
+        viewModel.accountId.value = args.accountId
+        return binding.root
     }
 }
