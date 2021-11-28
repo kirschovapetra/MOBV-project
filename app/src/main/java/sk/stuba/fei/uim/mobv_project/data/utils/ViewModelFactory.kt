@@ -3,7 +3,7 @@ package sk.stuba.fei.uim.mobv_project.data.utils
 import androidx.lifecycle.*
 import sk.stuba.fei.uim.mobv_project.data.repositories.*
 import sk.stuba.fei.uim.mobv_project.data.view_models.contacts.*
-import sk.stuba.fei.uim.mobv_project.data.view_models.login.*
+import sk.stuba.fei.uim.mobv_project.data.view_models.intro.CreateWalletViewModel
 import sk.stuba.fei.uim.mobv_project.data.view_models.my_balance.*
 import sk.stuba.fei.uim.mobv_project.data.view_models.settings.SettingsViewModel
 import sk.stuba.fei.uim.mobv_project.data.view_models.transaction.*
@@ -37,16 +37,6 @@ class ViewModelFactory(private vararg val repository: AppDbRepository) : ViewMod
                 repository[0] as ContactRepository,
                 repository[1] as AccountRepository
             ) as T
-        }
-
-        if (modelClass.isAssignableFrom(CreatePinViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return CreatePinViewModel(/*repository as ...Repository  */) as T
-        }
-
-        if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return LoginViewModel(/*repository as ...Repository  */) as T
         }
 
         if (modelClass.isAssignableFrom(MyBalanceViewModel::class.java)) {

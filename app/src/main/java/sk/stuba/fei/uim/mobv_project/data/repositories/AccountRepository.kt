@@ -41,6 +41,8 @@ class AccountRepository(
     fun getAccountById(id: String): LiveData<Account> = dao.getById(id)
     fun getAccountButDead(id: String): List<Account> = dao.getByIdButDead(id)
 
+    fun getFirstAccount(): Account? = dao.getFirstAccount()
+
     suspend fun insertAccount(account: Account) {
         dao.insert(account)
     }

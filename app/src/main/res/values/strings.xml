@@ -13,22 +13,25 @@
     <string name="fragment_create_new_transaction_label">New Transaction</string>
     <string name="fragment_new_contact_label">Contact</string>
 
-    <!-- Create pin -->
-    <string name="create_pin_pin_hint">Enter pin</string>
-    <string name="create_pin_submit_button_text">Confirm pin</string>
-    <string name="create_pin_confirmation_hint">Repeat your pin</string>
-
-    <!-- Login -->
-    <string name="login_pin_hint">Enter pin</string>
-    <string name="login_submit_button_text">Log in</string>
-
     <!-- Intro -->
+    <string name="intro_first_name_hint">First name</string>
+    <string name="intro_last_name_hint">Last name</string>
+    <string name="intro_pin_pin_hint">Enter pin</string>
+    <string name="intro_pin_confirmation_hint">Repeat your pin</string>
     <string name="intro_create_new_wallet_button_text">Create a new wallet</string>
     <string name="intro_import_wallet_button_text">Already have a wallet?</string>
+    <string name="intro_pin_mismatch_text">Pins do not match</string>
+    <string name="intro_pin_invalid_text">Invalid or missing pin. Please enter at least 8 characters</string>
+    <string name="intro_private_key_label_text">Private key:</string>
 
     <!-- Registered -->
-    <string name="registered_warning_text">Please save the displayed Private Key.\nIf you lose your Private Key you won\'t be able to recover your wallet if you change your device or forget your pin code.</string>
+    <string name="registered_warning_popup_title">You are about to leave this screen</string>
+    <string name="registered_warning_popup_text">Are you sure you have copied and saved the displayed Private Key?\nOtherwise it will be lost forever.</string>
+    <string name="registered_warning_popup_answer_positive">Yes, take me away</string>
+    <string name="registered_warning_popup_answer_negative">No, go back</string>
+    <string name="registered_warning_text">Please save the displayed Private Key.\nIf you lose your Private Key you won\'t be able to recover your wallet when you change your device or forget your pin code.</string>
     <string name="registered_copy_private_key_button_text">Copy</string>
+    <string name="registered_copy_private_key_toast_text">Private key copied</string>
     <string name="registered_continue_button_text">Continue</string>
 
     <!-- Import -->

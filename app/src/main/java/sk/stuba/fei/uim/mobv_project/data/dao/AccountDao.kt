@@ -10,6 +10,9 @@ abstract class AccountDao : EntityDao<Account>() {
     @Query("SELECT * FROM account")
     abstract fun getAll(): LiveData<List<Account>>
 
+    @Query("SELECT * FROM account LIMIT 1")
+    abstract fun getFirstAccount(): Account?
+
     @Query("SELECT * FROM account WHERE account_id = :id")
     abstract fun getById(id: String): LiveData<Account>
 

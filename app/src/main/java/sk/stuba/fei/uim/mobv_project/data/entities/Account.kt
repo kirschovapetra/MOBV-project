@@ -12,6 +12,7 @@ data class Account(
     @PrimaryKey @ColumnInfo(name = "account_id") var accountId: String = "",
     @ColumnInfo(name = "first_name") var firstName: String? = "",
     @ColumnInfo(name = "last_name") var lastName: String? = "",
-//    @ColumnInfo(name = "pin") var pin: String?,
     @ColumnInfo(name = "private_key") var privateKey: String? = "",
+    @ColumnInfo(name = "salt") var salt: String? = "",
+    @ColumnInfo(name = "iv") var iv: String? = ""
 ) : AppDbEntity()

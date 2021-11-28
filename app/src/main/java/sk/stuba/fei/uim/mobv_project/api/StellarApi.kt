@@ -38,7 +38,6 @@ class StellarApi(private val context: Context) {
         }
     }
 
-    // accountId == private key
     // posle sa request friendbotovi ktory nam da 10000 lumenov na acc
     @Suppress("BlockingMethodInNonBlockingContext")
     suspend fun createStellarAccount(accountId: String): Map<String?, Any?>? {

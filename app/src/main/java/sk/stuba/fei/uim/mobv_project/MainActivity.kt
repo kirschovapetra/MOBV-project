@@ -9,11 +9,12 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import sk.stuba.fei.uim.mobv_project.data.entities.*
 import sk.stuba.fei.uim.mobv_project.data.repositories.*
 import sk.stuba.fei.uim.mobv_project.databinding.ActivityMainBinding
-import kotlinx.coroutines.GlobalScope
+import sk.stuba.fei.uim.mobv_project.utils.SecurityContext
 
 
 class MainActivity : AppCompatActivity() {
@@ -30,11 +31,28 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //TODO: set navigation start by checking whether pin exists in DB
-
         val navHostFragment = supportFragmentManager.findFragmentById(
             R.id.nav_host_fragment
         ) as NavHostFragment
+        val navInflater = navHostFragment.navController.navInflater
+        val graph = navInflater.inflate(R.navigation.nav_graph)
+
+        // run once and comment it out to start at My Balance
+        // reason: it runs truncate and inserts in a coroutine, so I guess its not
+        //          really in sync with query run in main thread
+//        createDummyDbData()
+
+        val accountRepository = AccountRepository.getInstance(this)
+        val account = accountRepository.getFirstAccount()
+
+        if (account == null) {
+            graph.startDestination = R.id.introFragment
+        }
+        else {
+            SecurityContext.account = account
+            graph.startDestination = R.id.myBalanceFragment
+        }
+        navHostFragment.navController.graph = graph
 
         navController = navHostFragment.navController
         val topNavItems = setOf(
@@ -49,7 +67,6 @@ class MainActivity : AppCompatActivity() {
 
 //        apiWithDbTest()
 
-        createDummyDbData()
 //        trackDbChanges()
 
     }

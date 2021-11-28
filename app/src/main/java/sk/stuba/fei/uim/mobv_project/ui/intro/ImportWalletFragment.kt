@@ -1,4 +1,4 @@
-package sk.stuba.fei.uim.mobv_project.ui.intro.import_wallet
+package sk.stuba.fei.uim.mobv_project.ui.intro
 
 import androidx.fragment.app.Fragment
 import sk.stuba.fei.uim.mobv_project.R

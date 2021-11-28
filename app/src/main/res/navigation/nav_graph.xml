@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/myBalanceFragment">
+    app:startDestination="@id/introFragment">
 
     <fragment
         android:id="@+id/createWalletFragment"
-        android:name="sk.stuba.fei.uim.mobv_project.ui.intro.create_wallet.CreateWalletFragment"
+        android:name="sk.stuba.fei.uim.mobv_project.ui.intro.CreateWalletFragment"
         android:label="@string/fragment_create_wallet_label"
         tools:layout="@layout/fragment_create_wallet">
         <action
@@ -17,10 +17,20 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
+        <argument
+            android:name="firstName"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="lastName"
+            app:argType="string"
+            app:nullable="true" />
+        <argument android:name="pin"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/importWalletFragment"
-        android:name="sk.stuba.fei.uim.mobv_project.ui.intro.import_wallet.ImportWalletFragment"
+        android:name="sk.stuba.fei.uim.mobv_project.ui.intro.ImportWalletFragment"
         android:label="@string/fragment_import_wallet_label"
         tools:layout="@layout/fragment_import_wallet">
         <action
@@ -30,6 +40,17 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
+        <argument
+            android:name="firstName"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="lastName"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="pin"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/introFragment"
