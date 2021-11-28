@@ -54,7 +54,7 @@
     <fragment
         android:id="@+id/contactsFragment"
         android:name="sk.stuba.fei.uim.mobv_project.ui.contacts.ContactsFragment"
-        android:label="ContactsFragment" >
+        android:label="@string/fragment_contacts_label">
         <action
             android:id="@+id/action_contactsFragment_to_newContactFragment"
             app:destination="@id/newContactFragment"
@@ -66,12 +66,18 @@
     <fragment
         android:id="@+id/newContactFragment"
         android:name="sk.stuba.fei.uim.mobv_project.ui.contacts.NewContactFragment"
-        android:label="NewContactFragment" >
+        android:label="@string/fragment_new_contact_label">
         <argument
             android:name="contact"
+            android:defaultValue="@null"
             app:argType="sk.stuba.fei.uim.mobv_project.data.entities.Contact"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_newContactFragment_to_contactsFragment"
+            app:destination="@id/contactsFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_left" />
     </fragment>
     <fragment
         android:id="@+id/myBalanceFragment"

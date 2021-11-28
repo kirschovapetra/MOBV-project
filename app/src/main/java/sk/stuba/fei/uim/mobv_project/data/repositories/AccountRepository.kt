@@ -39,6 +39,7 @@ class AccountRepository(
 
     fun getAllAccounts(): LiveData<List<Account>> = dao.getAll()
     fun getAccountById(id: String): LiveData<Account> = dao.getById(id)
+    fun getAccountButDead(id: String): List<Account> = dao.getByIdButDead(id)
 
     suspend fun insertAccount(account: Account) {
         dao.insert(account)

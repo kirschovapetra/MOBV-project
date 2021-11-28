@@ -49,8 +49,8 @@ class MainActivity : AppCompatActivity() {
 
 //        apiWithDbTest()
 
-//        createDummyDbData()
-        trackDbChanges()
+        createDummyDbData()
+//        trackDbChanges()
 
     }
 
@@ -148,12 +148,27 @@ class MainActivity : AppCompatActivity() {
         val paymentRepo = PaymentRepository.getInstance(this)
         val contactRepo = ContactRepository.getInstance(this)
 
-        val bill = Account("123", "Bill", "Gates")
-        val jeff = Account("321", "Jeff", "Bezos", "123456")
+        val bill = Account("1", "Bill", "Gates")
+        val jeff = Account("2", "Jeff", "Bezos", "123456")
+        val elon = Account("3", "Elon", "Musk", "123456")
+        val wozniak = Account("4", "Wozi", "Nejaky", "123456")
+        val jobs = Account("5", "Steve", "Robotny", "123456")
+        val edison = Account("6", "Thomas", "Edison", "123456")
+        val newton = Account("7", "Newton", "Bohvieaky", "123456")
+        val kirchof = Account("8", "Kirchof", "TiezNeviem", "123456")
+        val einstein = Account("9", "Albert", "Einstein", "123456")
+        val rockefeler = Account("10", "Rockefeler", "Bezos", "123456")
 
-        val accounts = listOf(bill, jeff)
+        val accounts = listOf(bill,jeff,elon,wozniak,jobs,edison,newton,kirchof,einstein,rockefeler)
         val contacts = listOf(
-            Contact(contactId = jeff.accountId, name = "Bestie", sourceAccount = bill.accountId)
+            Contact(contactId = jeff.accountId, name = "Bestie", sourceAccount = bill.accountId),
+            Contact(contactId = elon.accountId, name = "Jeffie", sourceAccount = bill.accountId),
+            Contact(contactId = wozniak.accountId, name = "Wozi", sourceAccount = bill.accountId),
+            Contact(contactId = jobs.accountId, name = "Gauner", sourceAccount = bill.accountId),
+            Contact(contactId = edison.accountId, name = "Edie", sourceAccount = bill.accountId),
+            Contact(contactId = newton.accountId, name = "Newton", sourceAccount = bill.accountId),
+            Contact(contactId = kirchof.accountId, name = "Kirchof", sourceAccount = bill.accountId),
+            Contact(contactId = einstein.accountId, name = "Einstein", sourceAccount = bill.accountId),
         )
         val balances = listOf(
             Balances(balance = "10000.0", limit = "100.0", sourceAccount = bill.accountId),
@@ -168,6 +183,7 @@ class MainActivity : AppCompatActivity() {
         )
 
         lifecycleScope.launch {
+            accountRepo.clearAccounts()
             accounts.forEach { accountRepo.insertAccount(it) }
             contacts.forEach { contactRepo.insertContact(it) }
             balances.forEach { balanceRepo.insertBalance(it) }

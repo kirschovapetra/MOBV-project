@@ -40,8 +40,9 @@
             android:layout_height="48dp"
             android:layout_marginTop="50dp"
             android:ems="10"
-            android:hint="@string/contactAccountIdHint"
             android:inputType="number"
+            android:enabled="@{newContactViewModel.isNew}"
+            android:hint="@string/contactAccountIdHint"
             android:minHeight="48dp"
             android:text="@={newContactViewModel.contact.contactId}"
             app:layout_constraintEnd_toEndOf="parent"
@@ -59,7 +60,6 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            android:onClick="@{() -> newContactViewModel.addToContacts()}"
             app:layout_constraintTop_toBottomOf="@+id/newContactAccountId" />
 
 

@@ -10,7 +10,7 @@ import androidx.room.RoomDatabase
 
 @Database(
     entities = [Account::class, Balances::class, Contact::class, Payment::class],
-    version = 1,
+    version = 2,
     exportSchema = false // true
 )
 //@TypeConverters(Converters::class)
@@ -34,6 +34,7 @@ abstract class AppDatabase : RoomDatabase() {
                         "app_db"
                     )
                         .fallbackToDestructiveMigration()
+                        .allowMainThreadQueries()
                         .build()
                     INSTANCE = instance
                 }

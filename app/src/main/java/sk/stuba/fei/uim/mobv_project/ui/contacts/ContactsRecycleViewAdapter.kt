@@ -10,7 +10,7 @@ import sk.stuba.fei.uim.mobv_project.R
 import sk.stuba.fei.uim.mobv_project.data.entities.Contact
 
 class ContactsRecycleViewAdapter(
-    private var contacts: List<Contact>,
+    var contacts: List<Contact>,
     private val listener: OnContactClickListener
 
 ) :

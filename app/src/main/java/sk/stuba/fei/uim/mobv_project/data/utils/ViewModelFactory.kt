@@ -26,12 +26,17 @@ class ViewModelFactory(private vararg val repository: AppDbRepository) : ViewMod
 
         if (modelClass.isAssignableFrom(ContactsViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return ContactsViewModel(/*repository as ...Repository */) as T
+            return ContactsViewModel(
+                repository[0] as ContactRepository
+            ) as T
         }
 
         if (modelClass.isAssignableFrom(NewContactViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return NewContactViewModel(/*repository as ...Repository */) as T
+            return NewContactViewModel(
+                repository[0] as ContactRepository,
+                repository[1] as AccountRepository
+            ) as T
         }
 
         if (modelClass.isAssignableFrom(CreatePinViewModel::class.java)) {

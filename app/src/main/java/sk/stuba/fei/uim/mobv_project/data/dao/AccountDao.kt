@@ -13,6 +13,9 @@ abstract class AccountDao : EntityDao<Account>() {
     @Query("SELECT * FROM account WHERE account_id = :id")
     abstract fun getById(id: String): LiveData<Account>
 
+    @Query("SELECT * FROM account WHERE account_id = :id")
+    abstract fun getByIdButDead(id: String): List<Account>
+
     @Query("DELETE FROM account")
     abstract suspend fun clear()
 }
