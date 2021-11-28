@@ -59,11 +59,19 @@ class PaymentRepository(
 
     /********************* API *********************/
 
-    suspend fun syncPayments(sourceAccount: String) {
+    suspend fun syncPayments(sourceAccount: String): Boolean {
         try {
-            val paymentsResponse = api.getStellarPayments(sourceAccount)!!
+            val paymentsResponse = api.getStellarPayments(sourceAccount)
 
-            paymentsResponse.forEach { payment ->
+            paymentsResponse?.forEach { payment ->
+
+                val paymentType = when {
+                    // odoslana platba
+                    payment.from == sourceAccount -> {"credit"}
+                    // prijata platba
+                    payment.to == sourceAccount -> {"debit"}
+                    else -> {"invalid"}
+                }
 
                 dao.insertOrUpdate(
                     Payment(
@@ -75,36 +83,40 @@ class PaymentRepository(
                         from = payment.from,
                         to = payment.to,
                         amount = payment.amount,
-                        sourceAccount = payment.sourceAccount
+                        paymentType = paymentType,
+                        sourceAccount = sourceAccount
                     )
                 )
             }
 
-            Log.i("UPDATE_PAYMENTS", "Success $sourceAccount")
+            Log.i(TAG, "syncPayments: Success $sourceAccount")
+            return true
 
         } catch (e: java.lang.Exception) {
-            Log.e("UPDATE_PAYMENTS", e.message!!)
+            Log.e(TAG, "syncPayments: ${e.message}")
+            return false
         }
+
     }
 
-    suspend fun sendPayment(
+    suspend fun sendAndSyncPayment(
         sourcePublicKey: String,
         sourcePrivateKey: String,
         destinationPublicKey: String,
+        assetCode: String = "Lumens",
+        assetIssuer: String = "",
         amount: String,
         memo: String = "",
-    ) {
+    ): Boolean {
         try {
             val transactionResponse = api.sendStellarTransaction(
-                sourcePrivateKey, destinationPublicKey, amount, memo
-            )
-
+                sourcePrivateKey, destinationPublicKey, assetCode, assetIssuer, amount, memo)
             syncPayments(sourcePublicKey)
-            syncPayments(destinationPublicKey)
-
-            Log.i("SEND_PAYMENT", "Success SRC=$sourcePublicKey DST=$destinationPublicKey")
-        } catch (e: java.lang.Exception) {
-            Log.e("SEND_PAYMENT", e.message!!)
+            Log.i(TAG, "sendPayment: Success SRC=$sourcePublicKey DST=$destinationPublicKey")
+            return true
+        } catch (e: Exception) {
+            Log.e(TAG, "sendPayment: ${e.message}")
+            return false
         }
     }
 }
