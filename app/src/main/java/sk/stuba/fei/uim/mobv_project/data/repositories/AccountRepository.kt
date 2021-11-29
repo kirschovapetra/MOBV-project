@@ -6,9 +6,10 @@ import androidx.lifecycle.LiveData
 import org.stellar.sdk.KeyPair
 import sk.stuba.fei.uim.mobv_project.api.StellarApi
 import sk.stuba.fei.uim.mobv_project.data.AppDatabase
-import sk.stuba.fei.uim.mobv_project.data.dao.*
+import sk.stuba.fei.uim.mobv_project.data.dao.AccountDao
 import sk.stuba.fei.uim.mobv_project.data.entities.Account
 import sk.stuba.fei.uim.mobv_project.data.utils.Validation
+import sk.stuba.fei.uim.mobv_project.utils.CipherUtils
 
 class AccountRepository(
     private val api: StellarApi,
@@ -62,26 +63,26 @@ class AccountRepository(
 
     /********************* API *********************/
 
-    suspend fun createAndSyncAccount(firstName: String, lastName: String): KeyPair? {
+    suspend fun createAndSyncAccount(firstName: String, lastName: String, pin: String, pair: KeyPair): Account {
 
-        // 1. vygenerujem klucovy par
-        val pair = KeyPair.random()
-
-        // 2. od friendbota si vypytam 10000 peniazkov
+        // 1. od friendbota si vypytam 10000 peniazkov
         val resp = api.createStellarAccount(pair.accountId)
 
-        // 3. syncnem account
+        // 2. syncnem account
+        val salt = CipherUtils.getSalt()
+        val iv = CipherUtils.getIv()
+        val encryptedSecretSeed = CipherUtils.encrypt(String(pair.secretSeed), pin, salt, iv)
+
+        val account = Account(pair.accountId, firstName, lastName, encryptedSecretSeed, salt, iv)
         dao.insertOrUpdate(
-            Account(pair.accountId, firstName, lastName, String(pair.secretSeed))
+            account
         )
 
         Log.i(TAG, "createNewAccount: " +
                 "Success Private key: ${String(pair.secretSeed)}, " +
                 "Public Key: ${pair.accountId}")
 
-        return pair
-
-
+        return account
     }
 
     suspend fun syncAccount(

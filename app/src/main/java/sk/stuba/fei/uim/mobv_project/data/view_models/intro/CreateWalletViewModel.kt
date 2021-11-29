@@ -1,14 +1,15 @@
 package sk.stuba.fei.uim.mobv_project.data.view_models.intro
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.stellar.sdk.KeyPair
 import sk.stuba.fei.uim.mobv_project.data.repositories.AccountRepository
 import sk.stuba.fei.uim.mobv_project.data.view_models.event.Event
 import sk.stuba.fei.uim.mobv_project.ui.intro.CreateWalletFragmentArgs
+import sk.stuba.fei.uim.mobv_project.utils.SecurityContext
 
 class CreateWalletViewModel(
     private val accountRepository: AccountRepository,
@@ -38,9 +39,18 @@ class CreateWalletViewModel(
     }
 
     fun createLocalAccount() {
-        //TODO: call StellarApi.createStellarAccount
-        //TODO: save Account into DB
-        _eventLocalAccountCreated.value = Event(true)
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val account = accountRepository.createAndSyncAccount(
+                    args.firstName.orEmpty(),
+                    args.lastName.orEmpty(),
+                    args.pin,
+                    keyPair.value!!
+                )
+                SecurityContext.account = account
+                _eventLocalAccountCreated.value = Event(true)
+            }
+        }
     }
 
     fun continueToMyBalance() {
