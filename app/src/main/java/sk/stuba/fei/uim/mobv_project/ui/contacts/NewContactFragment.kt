@@ -1,6 +1,7 @@
 package sk.stuba.fei.uim.mobv_project.ui.contacts
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -41,11 +42,13 @@ class NewContactFragment : Fragment() {
             val serializedContact  = it.getSerializable(CONTACT_PARAM_KEY) //as Contact
 
             if(serializedContact == null){
-                newContactViewModel.contact.value = Contact()
+                newContactViewModel.contactName.value = ""
+                newContactViewModel.contactAccountId.value = ""
                 newContactViewModel.isNew.value = true
             } else {
                 val contact = serializedContact as Contact
-                newContactViewModel.contact.value = contact
+                newContactViewModel.contactName.value = contact.name
+                newContactViewModel.contactAccountId.value = contact.contactId
                 newContactViewModel.isNew.value = false
             }
 
@@ -80,9 +83,13 @@ class NewContactFragment : Fragment() {
     }
 
     private fun updateContacts(){
-        var contact = newContactViewModel.contact.value
+        val contact = Contact(
+            newContactViewModel.contactAccountId.value!!,
+            newContactViewModel.contactName.value!!,
+            newContactViewModel.MainAccountID
+        )
 
-        if(!isValid(contact!!)){
+        if(!isValid(contact)){
             return
         }
         insertOrUpdateContact(contact)
@@ -107,15 +114,7 @@ class NewContactFragment : Fragment() {
     }
 
     private suspend fun insertContact(contact: Contact){
-        val locatUserId = "1"
-
-        // todo duplicity can occur. Fix it
-        val accountWithSelectedId =
-            newContactViewModel.accountRepo.getAccountButDead(newContactViewModel.contact.value!!.contactId)
-
-        if(accountWithSelectedId.isEmpty()){ showToast("Account with this id is not registered!") }
-
-        contact.sourceAccount = locatUserId // todo LocalUser
+        contact.sourceAccount = newContactViewModel.MainAccountID // todo LocalUser
         newContactViewModel.contactRepo.insertContact(contact)
         navigateToContactsAndMakeToast("Contact added!")
     }
@@ -128,17 +127,24 @@ class NewContactFragment : Fragment() {
 
     private fun isValid(contact: Contact) : Boolean {
         if(contact.name == "") {
-            showToast("Invalid name! Text can only contain")
+            showToast("Invalid name! Text can only contain") // todo. setnut nejaky regex
             return false
         }
         if(contact.contactId == ""){
             showToast("You have to set existing contact id")
             return false
         }
+        if (newContactViewModel.isNew.value!! &&
+            newContactViewModel.accountWithProvidedIdNotRegistered.value!!) {
+            showToast("Account with this id is not registered!")
+            return false
+        }
+        if (newContactViewModel.isNew.value!! &&
+            newContactViewModel.duplicatedContact.value!!.isNotEmpty()) {
+            val duplicatedContactName = newContactViewModel.duplicatedContact.value!![0].name
+            showToast("You already have contact with this id! Name: $duplicatedContactName")
+            return false
+        }
         return true
     }
-
-
-
-
 }

@@ -29,6 +29,7 @@ class ContactRepository(private val dao: ContactDao): AppDbRepository() {
     fun getAllContacts(): LiveData<List<Contact>> = dao.getAll()
     fun getContactById(id: String): LiveData<Contact> = dao.getById(id)
     fun getAccountContacts(id: String): LiveData<List<Contact>> = dao.getBySourceAccount(id)
+    fun getDeadContactByIdAndSourceAccount(contactId: String, sourceAccountId: String): List<Contact> = dao.getByContactIdAndSourceAccount(contactId, sourceAccountId)
 
     suspend fun insertContact(contact: Contact){
         dao.insert(contact)

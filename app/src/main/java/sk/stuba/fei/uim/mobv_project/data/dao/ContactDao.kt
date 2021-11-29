@@ -16,6 +16,9 @@ abstract class  ContactDao: EntityDao<Contact>()  {
     @Query("SELECT * FROM contact WHERE source_account = :accountId")
     abstract fun getBySourceAccount(accountId: String): LiveData<List<Contact>>
 
+    @Query("SELECT * FROM contact WHERE contact_id = :contactId and source_account = :sourceAccountId")
+    abstract fun getByContactIdAndSourceAccount(contactId: String, sourceAccountId: String): List<Contact>
+
     @Query("DELETE FROM contact")
     abstract suspend fun clear(): Int
 }
