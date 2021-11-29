@@ -10,9 +10,11 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import sk.stuba.fei.uim.mobv_project.R
+import sk.stuba.fei.uim.mobv_project.data.repositories.BalanceRepository
+import sk.stuba.fei.uim.mobv_project.data.repositories.PaymentRepository
+import sk.stuba.fei.uim.mobv_project.data.utils.ViewModelFactory
 import sk.stuba.fei.uim.mobv_project.data.view_models.my_balance.MyBalanceViewModel
 import sk.stuba.fei.uim.mobv_project.databinding.FragmentMyBalanceBinding
 import sk.stuba.fei.uim.mobv_project.ui.abstracts.NoNavigationUpFragment
@@ -21,15 +23,20 @@ import sk.stuba.fei.uim.mobv_project.ui.abstracts.NoNavigationUpFragment
 //todo ked chalan otoci telefon, tak by sa mohla zachovat value selectnuta v spinneri
 class MyBalanceFragment : NoNavigationUpFragment(), AdapterView.OnItemSelectedListener {
 
-    private val myBalanceViewModel: MyBalanceViewModel by viewModels()
+    private val myBalanceViewModel: MyBalanceViewModel by viewModels {
+        ViewModelFactory(
+            BalanceRepository.getInstance(requireContext()),
+            PaymentRepository.getInstance(requireContext()),
+        )
+    }
     private lateinit var binding: FragmentMyBalanceBinding
-    private lateinit var adapter: BalancesRecycleViewAdapter
+    private lateinit var adapter: PaymentsRecycleViewAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setBalancesObserver()
-        adapter = BalancesRecycleViewAdapter(myBalanceViewModel.exportBalances)
+        adapter = PaymentsRecycleViewAdapter(myBalanceViewModel.exportPayments)
     }
 
     override fun onCreateView(
@@ -46,10 +53,6 @@ class MyBalanceFragment : NoNavigationUpFragment(), AdapterView.OnItemSelectedLi
 
         attachObserverToSpinner()
 
-//        myBalanceViewModel.tokenOptions = myBalanceViewModel.tmpOptions
-//        myBalanceViewModel.tokenOptions.postValue(getDummyTokens()) // tpm todo dat het
-
-
 //        attachListerToNewTransactionButton(binding)
         attachViewModelToBinding(binding)
         funInitializeRecycleAdapter(binding)
@@ -58,16 +61,16 @@ class MyBalanceFragment : NoNavigationUpFragment(), AdapterView.OnItemSelectedLi
     }
 
     private fun attachObserverToSpinner(){
-        myBalanceViewModel.tokenOptions.observe(
+        myBalanceViewModel.assetOptions.observe(
             this,
-            { tokenOptions ->
-                setSpinnerAdapter(tokenOptions.toMutableList())
+            { assetOptions ->
+                setSpinnerAdapter(assetOptions.toMutableList())
             }
         )
     }
 
     private fun setSpinnerAdapter(options: MutableList<String>){
-        val spinner: Spinner = binding.tokenOptionsSpinner
+        val spinner: Spinner = binding.assetOptionsSpinner
         val adapter: ArrayAdapter<String> = ArrayAdapter<String>(
             context!!,
             android.R.layout.simple_spinner_item,
@@ -83,10 +86,10 @@ class MyBalanceFragment : NoNavigationUpFragment(), AdapterView.OnItemSelectedLi
     }
 
     private fun funInitializeRecycleAdapter(binding: FragmentMyBalanceBinding) {
-        val balancesRecycleView = binding.balancesRecyclerView
+        val paymentsRecycleView = binding.paymentsRecyclerView
 
-        balancesRecycleView.layoutManager = LinearLayoutManager(context)
-        balancesRecycleView.adapter = adapter
+        paymentsRecycleView.layoutManager = LinearLayoutManager(context)
+        paymentsRecycleView.adapter = adapter
     }
 
     private fun attachViewModelToBinding(binding: FragmentMyBalanceBinding) {
@@ -109,11 +112,11 @@ class MyBalanceFragment : NoNavigationUpFragment(), AdapterView.OnItemSelectedLi
     }
 
     private fun setBalancesObserver(){
-        myBalanceViewModel.balances.observe(
+        myBalanceViewModel.selectedPayments.observe(
             this,
-            { balances ->
-                myBalanceViewModel.exportBalances = balances
-                adapter.setData(balances)
+            { selectedPayments ->
+                myBalanceViewModel.exportPayments = selectedPayments
+                adapter.setData(selectedPayments)
             }
         )
     }

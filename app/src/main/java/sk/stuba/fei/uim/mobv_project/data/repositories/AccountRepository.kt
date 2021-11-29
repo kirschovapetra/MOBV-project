@@ -8,7 +8,10 @@ import sk.stuba.fei.uim.mobv_project.api.StellarApi
 import sk.stuba.fei.uim.mobv_project.data.AppDatabase
 import sk.stuba.fei.uim.mobv_project.data.dao.AccountDao
 import sk.stuba.fei.uim.mobv_project.data.entities.Account
+import sk.stuba.fei.uim.mobv_project.data.exceptions.TransactionFailedException
+import sk.stuba.fei.uim.mobv_project.data.exceptions.ValidationException
 import sk.stuba.fei.uim.mobv_project.data.utils.Validation
+import kotlin.jvm.Throws
 import sk.stuba.fei.uim.mobv_project.utils.CipherUtils
 
 class AccountRepository(
@@ -63,6 +66,7 @@ class AccountRepository(
 
     /********************* API *********************/
 
+    @Throws(TransactionFailedException::class)
     suspend fun createAndSyncAccount(firstName: String, lastName: String, pin: String, pair: KeyPair): Account {
 
         // 1. od friendbota si vypytam 10000 peniazkov
@@ -85,6 +89,7 @@ class AccountRepository(
         return account
     }
 
+    @Throws(ValidationException::class)
     suspend fun syncAccount(
         accountId: String, privateKey: String,
         firstName: String, lastName: String,

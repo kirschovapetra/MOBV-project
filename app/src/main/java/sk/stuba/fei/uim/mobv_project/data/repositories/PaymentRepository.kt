@@ -8,6 +8,10 @@ import sk.stuba.fei.uim.mobv_project.data.AppDatabase
 import sk.stuba.fei.uim.mobv_project.data.utils.Converters
 import sk.stuba.fei.uim.mobv_project.data.dao.PaymentDao
 import sk.stuba.fei.uim.mobv_project.data.entities.Payment
+import sk.stuba.fei.uim.mobv_project.data.exceptions.ApiException
+import sk.stuba.fei.uim.mobv_project.data.exceptions.TransactionFailedException
+import sk.stuba.fei.uim.mobv_project.data.exceptions.ValidationException
+import kotlin.jvm.Throws
 
 class PaymentRepository(
     private val api: StellarApi,
@@ -39,7 +43,8 @@ class PaymentRepository(
 
     fun getAllPayments(): LiveData<List<Payment>> = dao.getAll()
     fun getPaymentById(id: String): LiveData<Payment> = dao.getById(id)
-    fun getAccountPayments(id: String): LiveData<List<Payment>> = dao.getBySourceAccount(id)
+    fun getAccountPayments(id: String?): LiveData<List<Payment>> = dao.getBySourceAccount(id)
+    fun getAccountPaymentsByAssetCode(id: String?, assetCode:String?): LiveData<List<Payment>> = dao.getBySourceAccountAssetCode(id, assetCode)
 
     suspend fun insertPayment(payment: Payment) {
         dao.insert(payment)
@@ -59,6 +64,7 @@ class PaymentRepository(
 
     /********************* API *********************/
 
+    @Throws(ValidationException::class,ApiException::class)
     suspend fun syncPayments(sourceAccount: String) {
 
         val paymentsResponse = api.getStellarPayments(sourceAccount)
@@ -91,7 +97,7 @@ class PaymentRepository(
 
 
     }
-
+    @Throws(ValidationException::class, TransactionFailedException::class, ApiException::class)
     suspend fun sendAndSyncPayment(
         sourcePublicKey: String,
         sourcePrivateKey: String,

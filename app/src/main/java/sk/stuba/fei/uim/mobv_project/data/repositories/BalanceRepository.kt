@@ -9,6 +9,10 @@ import sk.stuba.fei.uim.mobv_project.data.AppDatabase
 import sk.stuba.fei.uim.mobv_project.data.utils.Converters
 import sk.stuba.fei.uim.mobv_project.data.dao.BalanceDao
 import sk.stuba.fei.uim.mobv_project.data.entities.Balances
+import sk.stuba.fei.uim.mobv_project.data.exceptions.ApiException
+import sk.stuba.fei.uim.mobv_project.data.exceptions.TransactionFailedException
+import sk.stuba.fei.uim.mobv_project.data.exceptions.ValidationException
+import kotlin.jvm.Throws
 
 class BalanceRepository(
     private val api: StellarApi,
@@ -41,6 +45,9 @@ class BalanceRepository(
     fun getBalancesByAssetCode(code: String): LiveData<Balances> = dao.getByAssetCode(code)
     fun getAccountBalances(id: String): LiveData<List<Balances>> = dao.getBySourceAccount(id)
 
+    fun getAccountAssetCodes(id: String?): LiveData<List<String>> = dao.getAccountAssetCodes(id)
+    fun getAccountBalanceAmounts(id: String?): LiveData<List<String>> = dao.getAccountBalanceAmounts(id)
+
     suspend fun insertBalance(balance: Balances) {
         dao.insert(balance)
     }
@@ -59,6 +66,7 @@ class BalanceRepository(
 
     /********************* API *********************/
 
+    @Throws(ValidationException::class)
     suspend fun syncBalances(sourceAccount: String) {
 
         // + check ci existuje
@@ -77,6 +85,7 @@ class BalanceRepository(
         Log.i(TAG, "syncBalances: Success $sourceAccount")
     }
 
+    @Throws(ValidationException::class, TransactionFailedException::class, ApiException::class)
     suspend fun addAndSyncTrustedAsset(
         accountId: String,
         privateKey: String,
