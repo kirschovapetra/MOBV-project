@@ -11,9 +11,11 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.stellar.sdk.KeyPair
 import sk.stuba.fei.uim.mobv_project.data.entities.*
 import sk.stuba.fei.uim.mobv_project.data.repositories.*
 import sk.stuba.fei.uim.mobv_project.databinding.ActivityMainBinding
+import sk.stuba.fei.uim.mobv_project.utils.CipherUtils
 import sk.stuba.fei.uim.mobv_project.utils.SecurityContext
 
 
@@ -95,16 +97,14 @@ class MainActivity : AppCompatActivity() {
         val paymentRepo = PaymentRepository.getInstance(this)
 
         GlobalScope.launch {
-            val ss = accountRepo.createAndSyncAccount("Severus", "Snape")
-            val hp = accountRepo.createAndSyncAccount( "Harry", "Potter")
-
-            if (ss == null || hp == null) return@launch
+            val ss = accountRepo.createAndSyncAccount("Severus", "Snape", "1234", KeyPair.random())
+            val hp = accountRepo.createAndSyncAccount( "Harry", "Potter", "5678", KeyPair.random())
 
             balanceRepo.syncBalances(ss.accountId)
             balanceRepo.syncBalances(hp.accountId)
 
             paymentRepo.sendAndSyncPayment(
-                sourcePublicKey = ss.accountId, sourcePrivateKey = String(ss.secretSeed),
+                sourcePublicKey = ss.accountId, sourcePrivateKey = CipherUtils.decrypt(ss.privateKey!!, "1234", ss.salt!!, ss.iv!!),
                 destinationPublicKey = hp.accountId, amount = "20", memo = "Mistah Pottah")
 
             balanceRepo.syncBalances(ss.accountId)

@@ -86,7 +86,7 @@
             android:layout_marginBottom="8dp"
             android:onClick="@{() -> viewModel.copyPrivateKeyToClipboard()}"
             android:text="@string/registered_copy_private_key_button_text"
-            app:style="@style/Widget.Material3.Button.TextButton"
+            style="@style/Widget.Material3.Button.TextButton"
             app:layout_constraintBottom_toTopOf="@+id/continueButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
