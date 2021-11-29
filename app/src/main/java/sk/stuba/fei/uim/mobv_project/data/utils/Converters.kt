@@ -1,9 +1,10 @@
-package sk.stuba.fei.uim.mobv_project.data
+package sk.stuba.fei.uim.mobv_project.data.utils
 
 import androidx.databinding.InverseMethod
 import org.stellar.sdk.Asset
 import org.stellar.sdk.AssetTypeCreditAlphaNum
 import org.stellar.sdk.AssetTypeNative
+import org.stellar.sdk.responses.SubmitTransactionResponse
 import shadow.com.google.gson.Gson
 import shadow.com.google.gson.internal.LinkedTreeMap
 
@@ -41,6 +42,30 @@ object Converters {
         return assetCode
     }
 
+    @JvmStatic
+    fun resultCodesToReason(resultCodes: SubmitTransactionResponse.Extras.ResultCodes): String {
+
+        val opCodes = resultCodes.operationsResultCodes
+        val results = ArrayList<String>()
+
+        for (opCode in opCodes) {
+            when (opCode) {
+                "op_no_source_account" -> results.add("You did not specify the source account")
+                "op_no_destination" -> results.add("You did not specify the destination account")
+                "op_src_no_trust" -> results.add("Source account does not trust this asset")
+                "op_no_trust" -> results.add("Destination account does not trust this asset")
+                "op_src_not_authorized" -> results.add("Could not authorize the source account")
+                "op_not_authorized" -> results.add("Could not authorize the destination account")
+                "op_underfunded" -> results.add("You do not have enough balance")
+                "op_no_issuer" -> results.add("You did not specify the asset issuer")
+                else -> {
+                    continue
+                }
+            }
+        }
+        return if (results.isEmpty()) "Other failure" else results.joinToString(", ")
+    }
+
 
 //    TODO odkomentujem ak to bude treba
 //    @TypeConverter
@@ -58,18 +83,6 @@ object Converters {
 //    fun jsonToList(value: String): List<String> {
 //        val objects = Gson().fromJson(value, Array<String>::class.java) as Array<String>
 //        return objects.toList()
-//    }
-//
-// z api by (asi) mali prist datumy ako string takze teraz toto az tak netreba.
-// ale mozno sa zide do buducna
-//    @TypeConverter
-//    fun timestampToDate(value: Long?): Date? {
-//        return value?.let { Date(it) }
-//    }
-//
-//    @TypeConverter
-//    fun dateToTimestamp(date: Date?): Long? {
-//        return date?.time?.toLong()
 //    }
 
 }

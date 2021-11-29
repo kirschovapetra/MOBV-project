@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData
 import org.stellar.sdk.Asset
 import sk.stuba.fei.uim.mobv_project.api.StellarApi
 import sk.stuba.fei.uim.mobv_project.data.AppDatabase
-import sk.stuba.fei.uim.mobv_project.data.Converters
+import sk.stuba.fei.uim.mobv_project.data.utils.Converters
 import sk.stuba.fei.uim.mobv_project.data.dao.BalanceDao
 import sk.stuba.fei.uim.mobv_project.data.entities.Balances
 
@@ -52,32 +52,29 @@ class BalanceRepository(
     suspend fun deleteBalance(balance: Balances) {
         dao.delete(balance)
     }
+
     suspend fun clearBalances() {
         dao.clear()
     }
 
     /********************* API *********************/
 
-    suspend fun syncBalances(sourceAccount: String): Boolean {
-        try {
-            val accountResp = api.getStellarAccount(sourceAccount)
-            accountResp?.balances?.forEach { balance ->
+    suspend fun syncBalances(sourceAccount: String) {
 
-                dao.insertOrUpdate(
-                    Balances(
-                        assetCode = Converters.assetToAssetCode(balance.asset.orNull()),
-                        balance = balance.balance,
-                        limit = balance.limit,
-                        sourceAccount = accountResp.accountId
-                    ))
-            }
-            Log.i(TAG, "syncBalances: Success $sourceAccount")
-            return true
+        // + check ci existuje
+        val accountResp = api.getStellarAccount(sourceAccount)
 
-        } catch (e: java.lang.Exception) {
-            Log.e(TAG, "syncBalances: ${e.message}")
-            return false
+        accountResp.balances?.forEach { balance ->
+
+            dao.insertOrUpdate(
+                Balances(
+                    assetCode = Converters.assetToAssetCode(balance.asset.orNull()),
+                    balance = balance.balance,
+                    limit = balance.limit,
+                    sourceAccount = accountResp.accountId
+                ))
         }
+        Log.i(TAG, "syncBalances: Success $sourceAccount")
     }
 
     suspend fun addAndSyncTrustedAsset(
@@ -86,19 +83,14 @@ class BalanceRepository(
         assetCode: String,
         assetIssuer: String,
         limit: String = "10000",
-    ): Boolean {
+    ) {
 
-        try {
-            val asset = Asset.createNonNativeAsset(assetCode, assetIssuer)
-            val res = api.changeTrust(asset,accountId, privateKey, limit)
+        val asset = Asset.createNonNativeAsset(assetCode, assetIssuer)
+        val res = api.changeTrust(asset, accountId, privateKey, limit)
 
-            Log.i(TAG, "addTrustedAsset: Success ${Converters.objectToJson(res)}")
+        Log.i(TAG, "addTrustedAsset: Success ${Converters.objectToJson(res)}")
 
-            return syncBalances(accountId)
+        syncBalances(accountId)
 
-        } catch (e: Exception) {
-            Log.e(TAG, "addTrustedAsset:  ${e.message}")
-            return false
-        }
     }
 }

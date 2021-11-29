@@ -8,6 +8,7 @@ import sk.stuba.fei.uim.mobv_project.api.StellarApi
 import sk.stuba.fei.uim.mobv_project.data.AppDatabase
 import sk.stuba.fei.uim.mobv_project.data.dao.*
 import sk.stuba.fei.uim.mobv_project.data.entities.Account
+import sk.stuba.fei.uim.mobv_project.data.utils.Validation
 
 class AccountRepository(
     private val api: StellarApi,
@@ -63,55 +64,42 @@ class AccountRepository(
 
     suspend fun createAndSyncAccount(firstName: String, lastName: String): KeyPair? {
 
-        try {
-            // 1. vygenerujem klucovy par
-            val pair = KeyPair.random()
+        // 1. vygenerujem klucovy par
+        val pair = KeyPair.random()
 
-            // 2. od friendbota si vypytam 10000 peniazkov
-            val resp = api.createStellarAccount(pair.accountId)
+        // 2. od friendbota si vypytam 10000 peniazkov
+        val resp = api.createStellarAccount(pair.accountId)
 
-            // 3. syncnem account
-            dao.insertOrUpdate(
-                Account(pair.accountId, firstName, lastName, String(pair.secretSeed))
-            )
+        // 3. syncnem account
+        dao.insertOrUpdate(
+            Account(pair.accountId, firstName, lastName, String(pair.secretSeed))
+        )
 
-            Log.i(TAG, "createNewAccount: " +
-                            "Success Private key: ${String(pair.secretSeed)}, " +
-                            "Public Key: ${pair.accountId}")
+        Log.i(TAG, "createNewAccount: " +
+                "Success Private key: ${String(pair.secretSeed)}, " +
+                "Public Key: ${pair.accountId}")
 
-            return pair
+        return pair
 
-        } catch (e: Exception) {
-            Log.e(TAG, "createNewAccount: ${e.message}")
-        }
-        return null
+
     }
 
-    suspend fun syncAccount(accountId: String, privateKey: String,
-                            firstName: String,  lastName: String,
-    ): Boolean {
-        try {
-            // check ci kluc dava zmysel
-            val keyPair = KeyPair.fromSecretSeed(privateKey)
-            val keyPair2 = KeyPair.fromAccountId(accountId)
+    suspend fun syncAccount(
+        accountId: String, privateKey: String,
+        firstName: String, lastName: String,
+    ) {
 
-            if (keyPair.accountId != keyPair2.accountId) {
-               throw java.lang.Exception("invalid accountId + privateKey combination")
-            }
+        // check ci kluce matchuju k rovnakemu accountu
+        val kp = Validation.doKeysMatch(accountId, privateKey)
 
-            // check ci existuje account
-            val account = api.getStellarAccount(accountId)
+        // check ci existuje account
+        val acc = api.getStellarAccount(kp.accountId)
 
-            dao.insertOrUpdate(
-                Account(accountId, firstName, lastName, privateKey)
-            )
-            Log.i(TAG, "syncAccount: Success $accountId")
-            return true
-        }
-        catch (e: Exception){
-            Log.e(TAG, "syncAccount: ${e.message}")
-            return false
-        }
+        dao.insertOrUpdate(
+            Account(acc.accountId, firstName, lastName, String(kp.secretSeed))
+        )
+        Log.i(TAG, "syncAccount: Success ${acc.accountId}")
+
 
     }
 
