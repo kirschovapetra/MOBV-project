@@ -5,7 +5,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import sk.stuba.fei.uim.mobv_project.api.StellarApi
 import sk.stuba.fei.uim.mobv_project.data.AppDatabase
-import sk.stuba.fei.uim.mobv_project.data.Converters
+import sk.stuba.fei.uim.mobv_project.data.utils.Converters
 import sk.stuba.fei.uim.mobv_project.data.dao.PaymentDao
 import sk.stuba.fei.uim.mobv_project.data.entities.Payment
 
@@ -60,51 +60,52 @@ class PaymentRepository(
     /********************* API *********************/
 
     suspend fun syncPayments(sourceAccount: String) {
-        try {
-            val paymentsResponse = api.getStellarPayments(sourceAccount)!!
 
-            paymentsResponse.forEach { payment ->
+        val paymentsResponse = api.getStellarPayments(sourceAccount)
 
-                dao.insertOrUpdate(
-                    Payment(
-                        paymentId = payment.id,
-                        transactionHash = payment.transactionHash,
-                        transactionSuccessful = payment.isTransactionSuccessful,
-                        createdAt = payment.createdAt,
-                        assetCode = Converters.assetToAssetCode(payment.asset),
-                        from = payment.from,
-                        to = payment.to,
-                        amount = payment.amount,
-                        sourceAccount = payment.sourceAccount
-                    )
-                )
+        paymentsResponse.forEach { payment ->
+
+            val paymentType = when {
+                // odoslana platba
+                payment.from == sourceAccount -> {"credit"}
+                // prijata platba
+                payment.to == sourceAccount -> {"debit"}
+                else -> {"invalid"}
             }
 
-            Log.i("UPDATE_PAYMENTS", "Success $sourceAccount")
-
-        } catch (e: java.lang.Exception) {
-            Log.e("UPDATE_PAYMENTS", e.message!!)
+            dao.insertOrUpdate(
+                Payment(
+                    paymentId = payment.id,
+                    transactionHash = payment.transactionHash,
+                    transactionSuccessful = payment.isTransactionSuccessful,
+                    createdAt = payment.createdAt,
+                    assetCode = Converters.assetToAssetCode(payment.asset),
+                    from = payment.from,
+                    to = payment.to,
+                    amount = payment.amount,
+                    paymentType = paymentType,
+                    sourceAccount = sourceAccount
+                )
+            )
         }
+
+
     }
 
-    suspend fun sendPayment(
+    suspend fun sendAndSyncPayment(
         sourcePublicKey: String,
         sourcePrivateKey: String,
         destinationPublicKey: String,
+        assetCode: String = "Lumens",
+        assetIssuer: String = "",
         amount: String,
         memo: String = "",
     ) {
-        try {
-            val transactionResponse = api.sendStellarTransaction(
-                sourcePrivateKey, destinationPublicKey, amount, memo
-            )
 
-            syncPayments(sourcePublicKey)
-            syncPayments(destinationPublicKey)
+        val transactionResponse = api.sendStellarTransaction(
+            sourcePrivateKey, destinationPublicKey, assetCode, assetIssuer, amount, memo)
+        syncPayments(sourcePublicKey)
+        Log.i(TAG, "sendPayment: Success SRC=$sourcePublicKey DST=$destinationPublicKey")
 
-            Log.i("SEND_PAYMENT", "Success SRC=$sourcePublicKey DST=$destinationPublicKey")
-        } catch (e: java.lang.Exception) {
-            Log.e("SEND_PAYMENT", e.message!!)
-        }
     }
 }

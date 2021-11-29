@@ -3,9 +3,10 @@ package sk.stuba.fei.uim.mobv_project.data.repositories
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
+import org.stellar.sdk.Asset
 import sk.stuba.fei.uim.mobv_project.api.StellarApi
 import sk.stuba.fei.uim.mobv_project.data.AppDatabase
-import sk.stuba.fei.uim.mobv_project.data.Converters
+import sk.stuba.fei.uim.mobv_project.data.utils.Converters
 import sk.stuba.fei.uim.mobv_project.data.dao.BalanceDao
 import sk.stuba.fei.uim.mobv_project.data.entities.Balances
 
@@ -51,6 +52,7 @@ class BalanceRepository(
     suspend fun deleteBalance(balance: Balances) {
         dao.delete(balance)
     }
+
     suspend fun clearBalances() {
         dao.clear()
     }
@@ -58,22 +60,37 @@ class BalanceRepository(
     /********************* API *********************/
 
     suspend fun syncBalances(sourceAccount: String) {
-        try {
-            val response = api.getStellarAccount(sourceAccount)!!
-            response.balances.forEach { balance ->
 
-                dao.insertOrUpdate(
-                    Balances(
-                        assetCode = Converters.assetToAssetCode(balance.asset.orNull()),
-                        balance = balance.balance,
-                        limit = balance.limit,
-                        sourceAccount = sourceAccount
-                    ))
-            }
-            Log.i("UPDATE_BALANCES", "Success $sourceAccount")
+        // + check ci existuje
+        val accountResp = api.getStellarAccount(sourceAccount)
 
-        } catch (e: java.lang.Exception) {
-            Log.e("UPDATE_BALANCES", e.message!!)
+        accountResp.balances?.forEach { balance ->
+
+            dao.insertOrUpdate(
+                Balances(
+                    assetCode = Converters.assetToAssetCode(balance.asset.orNull()),
+                    balance = balance.balance,
+                    limit = balance.limit,
+                    sourceAccount = accountResp.accountId
+                ))
         }
+        Log.i(TAG, "syncBalances: Success $sourceAccount")
+    }
+
+    suspend fun addAndSyncTrustedAsset(
+        accountId: String,
+        privateKey: String,
+        assetCode: String,
+        assetIssuer: String,
+        limit: String = "10000",
+    ) {
+
+        val asset = Asset.createNonNativeAsset(assetCode, assetIssuer)
+        val res = api.changeTrust(asset, accountId, privateKey, limit)
+
+        Log.i(TAG, "addTrustedAsset: Success ${Converters.objectToJson(res)}")
+
+        syncBalances(accountId)
+
     }
 }

@@ -61,13 +61,9 @@ class MainActivity : AppCompatActivity() {
         binding.actionBar.setupWithNavController(navController, AppBarConfiguration(topNavItems))
         setupBottomNav()
 
-//        ked sa da volanie api do GlobalScope tak je vsetko zahojene
-//        val policy = ThreadPolicy.Builder().permitAll().build()
-//        StrictMode.setThreadPolicy(policy)
-
 //        apiWithDbTest()
-
-//        trackDbChanges()
+        createDummyDbData()
+        trackDbChanges()
 
     }
 
@@ -99,16 +95,15 @@ class MainActivity : AppCompatActivity() {
         val paymentRepo = PaymentRepository.getInstance(this)
 
         GlobalScope.launch {
-            val ss = accountRepo.createNewAccount("Severus", "Snape")
-            val hp = accountRepo.createNewAccount( "Harry", "Potter")
+            val ss = accountRepo.createAndSyncAccount("Severus", "Snape")
+            val hp = accountRepo.createAndSyncAccount( "Harry", "Potter")
 
             if (ss == null || hp == null) return@launch
 
             balanceRepo.syncBalances(ss.accountId)
             balanceRepo.syncBalances(hp.accountId)
 
-            Log.i("BULLSHIT_LOG", "Platba Severus Snape -> Harry Potter")
-            paymentRepo.sendPayment(
+            paymentRepo.sendAndSyncPayment(
                 sourcePublicKey = ss.accountId, sourcePrivateKey = String(ss.secretSeed),
                 destinationPublicKey = hp.accountId, amount = "20", memo = "Mistah Pottah")
 
@@ -133,28 +128,28 @@ class MainActivity : AppCompatActivity() {
         accountRepo.getAllAccounts().observe(
             owner,
             { accAll ->
-                Log.i("$tag ACC", "Vsetky accounty: $accAll")
+                Log.i(tag, "Vsetky accounty: $accAll")
             }
         )
 
         contactRepo.getAllContacts().observe(
             owner,
             { contAll ->
-                Log.i("$tag CONT", "Vsetky kontakty: $contAll")
+                Log.i(tag, "Vsetky kontakty: $contAll")
             }
         )
 
         paymentRepo.getAllPayments().observe(
             owner,
             { paymAll ->
-                Log.i("$tag PAYM", "Vsetky paymenty: $paymAll")
+                Log.i(tag, "Vsetky paymenty: $paymAll")
             }
         )
 
         balanceRepo.getAllBalances().observe(
             owner,
             { balAll ->
-                Log.i("$tag BAL", "Vsetky balances: $balAll")
+                Log.i(tag, "Vsetky balances: $balAll")
             }
         )
     }

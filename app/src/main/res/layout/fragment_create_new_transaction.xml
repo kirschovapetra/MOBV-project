@@ -7,7 +7,7 @@
         <variable
             name="viewModel"
             type="sk.stuba.fei.uim.mobv_project.data.view_models.transaction.CreateNewTransactionViewModel" />
-        <import type="sk.stuba.fei.uim.mobv_project.data.Converters"/>
+        <import type="sk.stuba.fei.uim.mobv_project.data.utils.Converters"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

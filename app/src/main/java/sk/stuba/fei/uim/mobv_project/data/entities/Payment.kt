@@ -26,6 +26,7 @@ data class Payment(
     @ColumnInfo(name = "from") var from: String? = "",
     @ColumnInfo(name = "to") var to: String? = "",
     @ColumnInfo(name = "amount") var amount: String? = "",
+    @ColumnInfo(name = "paymentType") var paymentType: String? = "",
     // FK: ref na account
     @ColumnInfo(name = "source_account") var sourceAccount: String? = ""
 ) : AppDbEntity() {

@@ -1,17 +1,19 @@
 package sk.stuba.fei.uim.mobv_project.data.view_models.settings
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import sk.stuba.fei.uim.mobv_project.data.entities.Account
+import sk.stuba.fei.uim.mobv_project.data.entities.Contact
+import sk.stuba.fei.uim.mobv_project.data.exceptions.ApiException
+import sk.stuba.fei.uim.mobv_project.data.exceptions.TransactionFailedException
+import sk.stuba.fei.uim.mobv_project.data.exceptions.ValidationException
 import sk.stuba.fei.uim.mobv_project.data.repositories.AccountRepository
 import sk.stuba.fei.uim.mobv_project.data.repositories.BalanceRepository
 import sk.stuba.fei.uim.mobv_project.data.repositories.ContactRepository
 import sk.stuba.fei.uim.mobv_project.data.repositories.PaymentRepository
+import java.lang.Exception
 
 
 class SettingsViewModel(
@@ -21,41 +23,76 @@ class SettingsViewModel(
     private val paymentRepo: PaymentRepository,
 ) : ViewModel() {
 
-    val accounts = accountRepo.getAllAccounts()
+    // tento ma trusted native a dogecoin
+    val senderPublic = "GAL7TYW3AMA5PNK37FBA4BRN44OJDLEW42G5EZZ4TIHT5HX5SIQZD33J"
+    val senderSecret = "SC35HCUFX5NF3TEDP2P5D4PVCUT4MHK5KMMGSDHQYQHRABEYMOEOX3ZI"
 
-    // Naviazane na Test button v SettingsFragmente - insertne novy accound do db
+    // tento ma trusted native, dogecoin, usd
+    // ale neviem jeho privateKey takze ten je iba kontakt
+    val contactPublic = "GAVDLPPKCQLKPDP5N3LZXJVJGMJ7VRX2LLTKZO6R62EG53A3EZP3GH53"
+
+    val dogecoinAssetCode = "DOGECOIN"
+    val dogecoinAssetIssuer = "GB46LWKQW65CZ7AMEY7JD4Z4ADX2CA4XYQBAJK6VTIUP6MWQUKCRQDJF"
+
+    // "asset_code": "DOGECOIN", "asset_issuer": "GB46LWKQW65CZ7AMEY7JD4Z4ADX2CA4XYQBAJK6VTIUP6MWQUKCRQDJF"
+    // "asset_code": "USD", "asset_issuer": "GA234B7P5ME6FTFLZ77PBYMRUJ3L33I6UPNYZ3XAUY4NNT7QWIAV7GL5"
+
     fun insertAccountToDb() {
         GlobalScope.launch {
-            val ss = accountRepo.createNewAccount("Severus", "Snape")
-            val hp = accountRepo.createNewAccount( "Harry", "Potter")
+//            val ss = accountRepo.createAndSyncAccount("Ahoj", "Nazdar")
+            try {
+                accountRepo.syncAccount(senderPublic, senderSecret, "Jozko", "Mrkvicka")
 
-            if (ss == null || hp == null) return@launch
+                // pridam sourcu dogecoin
+//             balanceRepo.addAndSyncTrustedAsset(
+//                 senderPublic, senderSecret, dogecoinAssetCode, dogecoinAssetIssuer,"200000")
 
-            balanceRepo.syncBalances(ss.accountId)
-            balanceRepo.syncBalances(hp.accountId)
+                // treba syncnut api s db pre kazdu tabulku zvlast
+                balanceRepo.syncBalances(senderPublic)
+                paymentRepo.syncPayments(senderPublic)
 
-            Log.i("BULLSHIT_LOG", "Platba Severus Snape -> Harry Potter")
-            paymentRepo.sendPayment(
-                sourcePublicKey = ss.accountId, sourcePrivateKey = String(ss.secretSeed),
-                destinationPublicKey = hp.accountId, amount = "20", memo = "Mistah Pottah")
+                contactRepo.insertContact(
+                    Contact(contactPublic, "Moj najlepsi kamko", senderPublic)
+                )
 
-            balanceRepo.syncBalances(ss.accountId)
-            balanceRepo.syncBalances(hp.accountId)
+                // native platba - v Lumenoch
+//                paymentRepo.sendAndSyncPayment(
+//                    sourcePublicKey = senderPublic, sourcePrivateKey = senderSecret,
+//                    destinationPublicKey = contactPublic, amount = "50", memo = "Serus bruh")
 
-            paymentRepo.syncPayments(ss.accountId)
-            paymentRepo.syncPayments(hp.accountId)
+                // custom platba - v dogecoinoch (jediny rozdiel ze sa zada assetCode a issuer)
+                // failne lebo nemame ziadne dogecoiny :(
+                paymentRepo.sendAndSyncPayment(
+                    sourcePublicKey = senderPublic, sourcePrivateKey = senderSecret,
+                    destinationPublicKey = contactPublic, assetCode = dogecoinAssetCode,
+                    assetIssuer = dogecoinAssetIssuer, amount = "100", memo = "tak nic")
 
+                balanceRepo.syncBalances(senderPublic)
+                paymentRepo.syncPayments(senderPublic)
+            }
+            catch (e: ValidationException) {
+                Log.e("SettingsViewModel", "ValidationException: ${e.message}")
+            }
+            catch (e: TransactionFailedException) {
+                Log.e("SettingsViewModel", "TransactionFailedException: ${e.message}")
+            }
+            catch (e: ApiException) {
+                Log.e("SettingsViewModel", "ApiException: ${e.message}")
+            }
+            catch (e: Exception) {
+                Log.e("SettingsViewModel", "Nieco sa ale ze brutalne posralo ${e.message}")
+            }
         }
     }
 
     fun clearDatabase() {
-        GlobalScope.launch {
+        viewModelScope.launch {
             accountRepo.clearAccounts()
             balanceRepo.clearBalances()
             contactRepo.clearContacts()
             paymentRepo.clearPayments()
 
-            Log.i("CLEAR_DB", "Databaza je vymazana")
+            Log.i("SettingsViewModel", "Databaza je vymazana")
         }
     }
 }

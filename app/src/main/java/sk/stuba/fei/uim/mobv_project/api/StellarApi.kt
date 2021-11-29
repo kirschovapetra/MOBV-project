@@ -2,14 +2,15 @@ package sk.stuba.fei.uim.mobv_project.api
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
 import org.stellar.sdk.*
 import org.stellar.sdk.responses.AccountResponse
-import sk.stuba.fei.uim.mobv_project.data.Converters
+import sk.stuba.fei.uim.mobv_project.data.utils.Converters
 import java.net.URL
 import java.util.*
 import org.stellar.sdk.responses.operations.PaymentOperationResponse
 import org.stellar.sdk.responses.SubmitTransactionResponse
+import sk.stuba.fei.uim.mobv_project.data.exceptions.*
+import sk.stuba.fei.uim.mobv_project.data.utils.Validation
 
 // TODO krajsejsie logy a error handling
 
@@ -42,73 +43,112 @@ class StellarApi(private val context: Context) {
     @Suppress("BlockingMethodInNonBlockingContext")
     suspend fun createStellarAccount(accountId: String): Map<String?, Any?>? {
         val fundingUrl = "${FRIENDBOT_URL}/?addr=${accountId}"
-        val stream = URL(fundingUrl).openStream()
-
         try {
+            val stream = URL(fundingUrl).openStream()
             val jsonText = Scanner(stream, "UTF-8").useDelimiter("\\A").next()
-            Log.i("CREATE_STELLAR_ACCOUNT", "Success")
+            stream.close()
             return Converters.jsonToMap(jsonText)
         } catch (e: Exception) {
-            Log.e("CREATE_STELLAR_ACCOUNT", e.message!!)
-        } finally {
-            stream.close()
+            throw TransactionFailedException("Unable to create a new account")
         }
-        return null
     }
 
     // GET https://horizon-testnet.stellar.org/accounts/{accountId}
     @Suppress("BlockingMethodInNonBlockingContext")
-    suspend fun getStellarAccount(accountId: String): AccountResponse? {
-        return server.accounts().account(accountId)
+    suspend fun getStellarAccount(accountId: String): AccountResponse {
+        return Validation.doesAccountExist(server, accountId)
     }
 
     // GET https://horizon-testnet.stellar.org/accounts/{accountId}/payments
     @Suppress("BlockingMethodInNonBlockingContext")
-    suspend fun getStellarPayments(accountId: String): List<PaymentOperationResponse>? {
+    suspend fun getStellarPayments(accountId: String): List<PaymentOperationResponse> {
 
-        val pair = KeyPair.fromAccountId(accountId)
-        val paymentsRequest = server.payments().forAccount(pair.accountId)
+        // check ci dava zmysel accountId
+        val pair = Validation.validateAccountId(accountId)
+
         try {
+            // get payments
+            val paymentsRequest = server.payments().forAccount(pair.accountId)
             val operations = paymentsRequest.execute().records
+
             val payments = ArrayList<PaymentOperationResponse>()
             operations.forEach { operation ->
                 if (operation is PaymentOperationResponse)
                     payments.add(operation)
-//                else
-//                    Log.i("GET_PAYMENTS", "Nasla sa operacia ${operation.type}")
             }
-            Log.i("GET_PAYMENTS",
-                if (payments.isEmpty()) "Nenasla sa ziadna platba pre $accountId"
-                else "Success $accountId")
-
             return payments
         } catch (e: Exception) {
-            Log.e("GET_PAYMENTS", e.message!!)
+            throw ApiException("Error while getting payments")
         }
-        return null
     }
 
-    @Suppress("BlockingMethodInNonBlockingContext")
+
     suspend fun sendStellarTransaction(
+        sourcePrivateKey: String,
+        destinationPublicKey: String,
+        assetCode: String = "Lumens",
+        assetIssuer: String = "",
+        amount: String,
+        memo: String = "",
+    ): SubmitTransactionResponse {
+
+        return if (assetCode == "Lumens") {
+            sendNativeTransaction(
+                sourcePrivateKey, destinationPublicKey, amount, memo)
+        } else {
+            sendCustomAssetTransaction(
+                sourcePrivateKey, destinationPublicKey, assetCode, assetIssuer, amount, memo)
+        }
+    }
+
+    private suspend fun sendNativeTransaction(
         sourcePrivateKey: String,
         destinationPublicKey: String,
         amount: String,
         memo: String = "",
-    ): SubmitTransactionResponse? {
-        // check ci kluce davaju zmysel i guess
-        val srcKeyPair = KeyPair.fromSecretSeed(sourcePrivateKey)
-        val dstKeyPair = KeyPair.fromAccountId(destinationPublicKey)
+    ): SubmitTransactionResponse {
+        // check ci kluce davaju zmysel
+        val srcKeyPair = Validation.validatePrivateKey(sourcePrivateKey)
+        val dstKeyPair = Validation.validateAccountId(destinationPublicKey)
 
         // check ci existuju accounty
         val sourceAccount = getStellarAccount(srcKeyPair.accountId)
         val destAccount = getStellarAccount(dstKeyPair.accountId)
 
+        val response: SubmitTransactionResponse
+        try {
+            // posleme peniaze
+            response =
+                payment(srcKeyPair, sourceAccount, destAccount, AssetTypeNative(), amount, memo)
+
+        } catch (e: Exception) {
+            throw ApiException("Error while creating Payment transaction")
+        }
+
+        if (response.isSuccess) {
+            return response
+        } else {
+            val reason = Converters.resultCodesToReason(response.extras.resultCodes)
+            throw TransactionFailedException("Payment failed: $reason")
+        }
+    }
+
+
+    @Suppress("BlockingMethodInNonBlockingContext")
+    private suspend fun payment(
+        srcKeyPair: KeyPair?,
+        sourceAccount: AccountResponse?,
+        destAccount: AccountResponse?,
+        asset: Asset?,
+        amount: String?,
+        memo: String? = "",
+    ): SubmitTransactionResponse {
+
         // vytvorenie paymentu
         val paymentOperation = PaymentOperation.Builder(
-            dstKeyPair.accountId,
-            AssetTypeNative(),
+            destAccount?.accountId,
+            asset,
             amount).build()
-
 
         // vytvorenie transakcie
         val transaction = Transaction.Builder(sourceAccount, Network.TESTNET)
@@ -123,15 +163,85 @@ class StellarApi(private val context: Context) {
         // podpis
         transaction.sign(srcKeyPair)
 
-        try {
-            val response: SubmitTransactionResponse = server.submitTransaction(transaction)
-            Log.i("STELLAR_TRANSACTION", "Success $response")
-            return response
-        } catch (e: java.lang.Exception) {
-            Log.e("STELLAR_TRANSACTION", e.message!!)
-        }
-        return null
+        return server.submitTransaction(transaction)
     }
+
+    @Suppress("BlockingMethodInNonBlockingContext")
+    suspend fun changeTrust(
+        asset: Asset, accountId: String, privateKey: String, limit: String = "1000",
+    ): SubmitTransactionResponse {
+
+        // check ci kluc dava zmysel
+        val keyPair = Validation.validatePrivateKey(privateKey)
+        // check ci existuje account
+        val account = getStellarAccount(accountId)
+
+        // build changeTrust transakciu
+        val response: SubmitTransactionResponse
+        try {
+            val changeTrustOperation = ChangeTrustOperation.Builder(
+                ChangeTrustAsset.Wrapper(asset), limit)
+                .build()
+
+            val transaction = Transaction.Builder(account, Network.TESTNET)
+                .addOperation(changeTrustOperation)
+                .setTimeout(180)
+                .setBaseFee(Transaction.MIN_BASE_FEE)
+                .build()
+
+            transaction.sign(keyPair)
+            response = server.submitTransaction(transaction)
+
+        } catch (e: Exception) {
+            throw ApiException("Error while creating Change Trust transaction")
+        }
+
+        if (response.isSuccess) {
+            return response
+        } else {
+            val reason = Converters.resultCodesToReason(response.extras.resultCodes)
+            throw TransactionFailedException("Change Trust failed: $reason")
+        }
+
+    }
+
+
+    private suspend fun sendCustomAssetTransaction(
+        sourcePrivateKey: String,
+        destinationPublicKey: String,
+        assetCode: String,
+        assetIssuer: String,
+        amount: String,
+        memo: String = "",
+    ): SubmitTransactionResponse {
+
+        // check ci kluce davaju zmysel
+        val srcKeyPair = Validation.validatePrivateKey(sourcePrivateKey)
+        val dstKeyPair = Validation.validateAccountId(destinationPublicKey)
+
+        // check ci existuju accounty
+        val sourceAccount = getStellarAccount(srcKeyPair.accountId)
+        val destAccount = getStellarAccount(dstKeyPair.accountId)
+
+        val response: SubmitTransactionResponse
+        try {
+            // posleme peniaze v assetovej mene
+            val asset = Asset.createNonNativeAsset(assetCode, assetIssuer) as AssetTypeCreditAlphaNum
+            response = payment(srcKeyPair, sourceAccount, destAccount, asset, amount, memo)
+
+        } catch (e: Exception) {
+            throw ApiException("Error while creating Payment transaction")
+        }
+
+        if (response.isSuccess) {
+            return response
+        } else {
+            val reason = Converters.resultCodesToReason(response.extras.resultCodes)
+            throw TransactionFailedException("Payment failed: $reason")
+        }
+    }
+
+
 }
 
 
