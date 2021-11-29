@@ -3,7 +3,6 @@ package sk.stuba.fei.uim.mobv_project.data.utils
 import androidx.lifecycle.*
 import sk.stuba.fei.uim.mobv_project.data.repositories.*
 import sk.stuba.fei.uim.mobv_project.data.view_models.contacts.*
-import sk.stuba.fei.uim.mobv_project.data.view_models.intro.CreateWalletViewModel
 import sk.stuba.fei.uim.mobv_project.data.view_models.my_balance.*
 import sk.stuba.fei.uim.mobv_project.data.view_models.settings.SettingsViewModel
 import sk.stuba.fei.uim.mobv_project.data.view_models.transaction.*
@@ -41,7 +40,9 @@ class ViewModelFactory(private vararg val repository: AppDbRepository) : ViewMod
 
         if (modelClass.isAssignableFrom(MyBalanceViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return MyBalanceViewModel(/*repository as ...Repository  */) as T
+            return MyBalanceViewModel(
+                repository[0] as BalanceRepository,
+                repository[1] as PaymentRepository) as T
         }
 
         if (modelClass.isAssignableFrom(CreateNewTransactionViewModel::class.java)) {

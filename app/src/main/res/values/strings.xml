@@ -56,6 +56,8 @@
     <string name="addSkipButton">Skip</string>
     <string name="sentTransactionSaveContact">Transaction has been successfully sent. Would you like to save the recipient as a new contact?</string>
     <string name="fragment_save_recipient_label">Create contact from transaction</string>
+    <string name="asset_options_description">Asset options</string>
+    <string name="create_transaction_description">Create transaction</string>
 
     <!-- Save recipient -->
 

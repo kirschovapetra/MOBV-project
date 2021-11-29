@@ -11,6 +11,7 @@ import org.stellar.sdk.responses.operations.PaymentOperationResponse
 import org.stellar.sdk.responses.SubmitTransactionResponse
 import sk.stuba.fei.uim.mobv_project.data.exceptions.*
 import sk.stuba.fei.uim.mobv_project.data.utils.Validation
+import kotlin.jvm.Throws
 
 // TODO krajsejsie logy a error handling
 
@@ -41,6 +42,7 @@ class StellarApi(private val context: Context) {
 
     // posle sa request friendbotovi ktory nam da 10000 lumenov na acc
     @Suppress("BlockingMethodInNonBlockingContext")
+    @Throws(TransactionFailedException::class)
     suspend fun createStellarAccount(accountId: String): Map<String?, Any?>? {
         val fundingUrl = "${FRIENDBOT_URL}/?addr=${accountId}"
         try {
@@ -55,12 +57,14 @@ class StellarApi(private val context: Context) {
 
     // GET https://horizon-testnet.stellar.org/accounts/{accountId}
     @Suppress("BlockingMethodInNonBlockingContext")
+    @Throws(ValidationException::class)
     suspend fun getStellarAccount(accountId: String): AccountResponse {
         return Validation.doesAccountExist(server, accountId)
     }
 
     // GET https://horizon-testnet.stellar.org/accounts/{accountId}/payments
     @Suppress("BlockingMethodInNonBlockingContext")
+    @Throws(ValidationException::class, ApiException::class)
     suspend fun getStellarPayments(accountId: String): List<PaymentOperationResponse> {
 
         // check ci dava zmysel accountId
@@ -82,7 +86,7 @@ class StellarApi(private val context: Context) {
         }
     }
 
-
+    @Throws(ValidationException::class, TransactionFailedException::class, ApiException::class)
     suspend fun sendStellarTransaction(
         sourcePrivateKey: String,
         destinationPublicKey: String,
@@ -101,6 +105,7 @@ class StellarApi(private val context: Context) {
         }
     }
 
+    @Throws(ValidationException::class, TransactionFailedException::class, ApiException::class)
     private suspend fun sendNativeTransaction(
         sourcePrivateKey: String,
         destinationPublicKey: String,
@@ -167,6 +172,7 @@ class StellarApi(private val context: Context) {
     }
 
     @Suppress("BlockingMethodInNonBlockingContext")
+    @Throws(ValidationException::class,TransactionFailedException::class, ApiException::class)
     suspend fun changeTrust(
         asset: Asset, accountId: String, privateKey: String, limit: String = "1000",
     ): SubmitTransactionResponse {
@@ -205,7 +211,7 @@ class StellarApi(private val context: Context) {
 
     }
 
-
+    @Throws(ValidationException::class, TransactionFailedException::class, ApiException::class)
     private suspend fun sendCustomAssetTransaction(
         sourcePrivateKey: String,
         destinationPublicKey: String,
