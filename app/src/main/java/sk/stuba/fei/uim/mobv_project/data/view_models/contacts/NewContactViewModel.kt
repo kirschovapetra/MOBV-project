@@ -14,6 +14,15 @@ class NewContactViewModel(
     val accountRepo: AccountRepository
 ) : ViewModel(){
 
+    enum class FormStatus {
+        OK,
+        INVALID_NAME,
+        INVALID_CONTACT_ID,
+        NON_EXISTING_ACCOUNT,
+        DUPLICATED_ACCOUNT,
+        ADDING_YOURSELF
+    }
+
     val MainAccountID = "1" // todo spravit static usera
 
     // UI
@@ -23,15 +32,63 @@ class NewContactViewModel(
     // DATA
     var isNew = MutableLiveData<Boolean>()
 
-    var accountWithProvidedIdNotRegistered = MutableLiveData<Boolean>()
-    var duplicatedContact = MutableLiveData<List<Contact>>()
+    private var accountWithProvidedIdNotRegistered = MutableLiveData<Boolean>()
+    private var duplicatedContact = MutableLiveData<List<Contact>>()
 
 
     // OBSERVER
-    var contactIdObserver = Unit
+    private var contactIdObserver = Unit
 
     init {
         createContactAccountIdObserver()
+        initEmptyData()
+    }
+
+    fun setContact(contact: Contact){
+        contactName.value = contact.name!!
+        contactAccountId.value = contact.contactId
+        isNew.value = false
+    }
+
+    fun getContact() : Contact {
+        return Contact(
+            contactAccountId.value!!,
+            contactName.value!!,
+            MainAccountID
+        )
+    }
+
+    suspend fun insertContact(contact: Contact){
+        contact.sourceAccount = MainAccountID // todo LocalUser
+        contactRepo.insertContact(contact)
+    }
+
+     fun returnStatusOfTheForm() : FormStatus {
+        val contact = Contact(
+            contactAccountId.value!!,
+            contactName.value!!,
+            MainAccountID
+        )
+
+        return validateFields(contact)
+    }
+
+    fun getToasterMessage(formStatus : FormStatus) : String{
+        return when (formStatus) {
+            FormStatus.INVALID_NAME -> { "Invalid name! Text can only contain" }
+            FormStatus.INVALID_CONTACT_ID -> "You have to set existing contact id"
+            FormStatus.NON_EXISTING_ACCOUNT -> "Account with this id is not registered"
+            FormStatus.DUPLICATED_ACCOUNT ->
+                "You already have contact with this id! Name: ${duplicatedContact.value!![0].name}"
+            FormStatus.ADDING_YOURSELF -> "You can not add yourself!"
+            else -> ""
+        }
+    }
+
+    private fun initEmptyData(){
+        contactName.value = ""
+        contactAccountId.value = ""
+        isNew.value = true
     }
 
     override fun onCleared() {
@@ -56,5 +113,23 @@ class NewContactViewModel(
                 fetchContactDuplicity(accountId)
             }
         }
+    }
+
+    private fun validateFields(contact: Contact): FormStatus {
+       return when {
+           contact.name == "" -> FormStatus.INVALID_NAME
+
+           contact.contactId == "" -> FormStatus.INVALID_CONTACT_ID
+
+           isNew.value!! && accountWithProvidedIdNotRegistered.value!!
+                -> FormStatus.NON_EXISTING_ACCOUNT
+
+           isNew.value!! && duplicatedContact.value!!.isNotEmpty()
+                -> FormStatus.DUPLICATED_ACCOUNT
+
+           contact.contactId == MainAccountID -> FormStatus.ADDING_YOURSELF
+
+           else -> FormStatus.OK
+       }
     }
 }

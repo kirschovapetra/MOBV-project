@@ -1,7 +1,6 @@
 package sk.stuba.fei.uim.mobv_project.ui.contacts
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +13,7 @@ import sk.stuba.fei.uim.mobv_project.data.entities.Contact
 import sk.stuba.fei.uim.mobv_project.data.repositories.ContactRepository
 import sk.stuba.fei.uim.mobv_project.data.utils.ViewModelFactory
 import sk.stuba.fei.uim.mobv_project.data.view_models.contacts.NewContactViewModel
+import sk.stuba.fei.uim.mobv_project.data.view_models.contacts.NewContactViewModel.FormStatus
 import sk.stuba.fei.uim.mobv_project.databinding.FragmentNewContactBinding
 import android.view.Gravity
 import androidx.lifecycle.lifecycleScope
@@ -21,10 +21,7 @@ import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.launch
 import sk.stuba.fei.uim.mobv_project.data.repositories.AccountRepository
 
-
-//todo set action bar title to ADD or EDIT
 class NewContactFragment : Fragment() {
-    // TODO: Rename and change types of parameters
 
     private var CONTACT_PARAM_KEY = "contact"
 
@@ -41,17 +38,9 @@ class NewContactFragment : Fragment() {
         arguments?.let {
             val serializedContact  = it.getSerializable(CONTACT_PARAM_KEY) //as Contact
 
-            if(serializedContact == null){
-                newContactViewModel.contactName.value = ""
-                newContactViewModel.contactAccountId.value = ""
-                newContactViewModel.isNew.value = true
-            } else {
-                val contact = serializedContact as Contact
-                newContactViewModel.contactName.value = contact.name
-                newContactViewModel.contactAccountId.value = contact.contactId
-                newContactViewModel.isNew.value = false
+            if(serializedContact != null){
+                newContactViewModel.setContact(serializedContact as Contact)
             }
-
         }
     }
 
@@ -82,23 +71,22 @@ class NewContactFragment : Fragment() {
         binding.addNewContactButtonTitle.setOnClickListener(clickButtonListener)
     }
 
-    private fun updateContacts(){
-        val contact = Contact(
-            newContactViewModel.contactAccountId.value!!,
-            newContactViewModel.contactName.value!!,
-            newContactViewModel.MainAccountID
-        )
+    private fun updateContacts() {
+        val formStatus = newContactViewModel.returnStatusOfTheForm()
 
-        if(!isValid(contact)){
+        if (formStatus != FormStatus.OK) {
+            showToast(newContactViewModel.getToasterMessage(formStatus))
             return
         }
-        insertOrUpdateContact(contact)
+
+        insertOrUpdateContact(newContactViewModel.getContact())
     }
 
     private fun insertOrUpdateContact(contact: Contact){
         lifecycleScope.launch{
             if(newContactViewModel.isNew.value!!){
-                insertContact(contact)
+                newContactViewModel.insertContact(contact)
+                navigateToContactsAndMakeToast("Contact added!")
             } else {
                 newContactViewModel.contactRepo.updateContact(contact)
                 navigateToContactsAndMakeToast("Contact updated!")
@@ -113,38 +101,9 @@ class NewContactFragment : Fragment() {
         showToast(message)
     }
 
-    private suspend fun insertContact(contact: Contact){
-        contact.sourceAccount = newContactViewModel.MainAccountID // todo LocalUser
-        newContactViewModel.contactRepo.insertContact(contact)
-        navigateToContactsAndMakeToast("Contact added!")
-    }
-
     private fun showToast(message: String){
         var toast = Toast.makeText(context, message, Toast.LENGTH_LONG)
         toast.setGravity(Gravity.TOP, 0, 150)
         toast.show()
-    }
-
-    private fun isValid(contact: Contact) : Boolean {
-        if(contact.name == "") {
-            showToast("Invalid name! Text can only contain") // todo. setnut nejaky regex
-            return false
-        }
-        if(contact.contactId == ""){
-            showToast("You have to set existing contact id")
-            return false
-        }
-        if (newContactViewModel.isNew.value!! &&
-            newContactViewModel.accountWithProvidedIdNotRegistered.value!!) {
-            showToast("Account with this id is not registered!")
-            return false
-        }
-        if (newContactViewModel.isNew.value!! &&
-            newContactViewModel.duplicatedContact.value!!.isNotEmpty()) {
-            val duplicatedContactName = newContactViewModel.duplicatedContact.value!![0].name
-            showToast("You already have contact with this id! Name: $duplicatedContactName")
-            return false
-        }
-        return true
     }
 }
