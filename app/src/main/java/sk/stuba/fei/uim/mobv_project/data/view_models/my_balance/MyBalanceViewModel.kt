@@ -37,7 +37,7 @@ class MyBalanceViewModel(balanceRepo: BalanceRepository, paymentRepo: PaymentRep
     var selectedPayments: LiveData<List<Payment>>
 
     // export budu asi tie platby ktore patria sourceAccountu a maju assetCode taky aky bol selectnuty
-    var exportPayments: List<Payment> = ArrayList()
+//    var exportPayments: List<Payment> = ArrayList()
 
     init {
 
@@ -49,9 +49,9 @@ class MyBalanceViewModel(balanceRepo: BalanceRepository, paymentRepo: PaymentRep
         selectedAsset.value = assetOptions.value?.get(0)
         selectedPayments = paymentRepo.getAccountPaymentsByAssetCode(MAIN_ACCOUNT.accountId, selectedAsset.value)
 
-        exportPayments =
-            if (selectedPayments.value != null) selectedPayments.value!!
-            else ArrayList()
+//        exportPayments =
+//            if (selectedPayments.value != null) selectedPayments.value!!
+//            else ArrayList()
 
         Log.i("MyBalanceViewModel", "selectedAsset: ${selectedAsset.value}")
         Log.i("MyBalanceViewModel", "MAIN_ACCOUNT: $MAIN_ACCOUNT")

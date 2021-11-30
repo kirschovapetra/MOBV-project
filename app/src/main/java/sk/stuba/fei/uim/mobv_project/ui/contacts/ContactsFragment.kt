@@ -77,8 +77,7 @@ class ContactsFragment : Fragment(), ContactsRecycleViewAdapter.OnContactClickLi
     }
 
     private fun setContactObserver(){
-
-        contactsViewModel.contactRepo.getAllContacts().observe(
+        contactsViewModel.contactRepo.getAccountContacts("1").observe(
             this,
             { contacts ->
                 adapter.setData(contacts)

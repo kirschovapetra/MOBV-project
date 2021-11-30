@@ -35,8 +35,8 @@ class MyBalanceFragment : NoNavigationUpFragment(), AdapterView.OnItemSelectedLi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setBalancesObserver()
-        adapter = PaymentsRecycleViewAdapter(myBalanceViewModel.exportPayments)
+        setPaymentsObserver()
+        adapter = PaymentsRecycleViewAdapter(listOf())
     }
 
     override fun onCreateView(
@@ -111,11 +111,11 @@ class MyBalanceFragment : NoNavigationUpFragment(), AdapterView.OnItemSelectedLi
         )
     }
 
-    private fun setBalancesObserver(){
+    private fun setPaymentsObserver(){
         myBalanceViewModel.selectedPayments.observe(
             this,
             { selectedPayments ->
-                myBalanceViewModel.exportPayments = selectedPayments
+//                myBalanceViewModel.exportPayments = selectedPayments
                 adapter.setData(selectedPayments)
             }
         )

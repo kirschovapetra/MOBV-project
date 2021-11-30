@@ -83,15 +83,12 @@ class NewContactFragment : Fragment() {
     }
 
     private fun insertOrUpdateContact(contact: Contact){
-        lifecycleScope.launch{
+        newContactViewModel.saveContact(contact)
             if(newContactViewModel.isNew.value!!){
-                newContactViewModel.insertContact(contact)
                 navigateToContactsAndMakeToast("Contact added!")
             } else {
-                newContactViewModel.contactRepo.updateContact(contact)
                 navigateToContactsAndMakeToast("Contact updated!")
             }
-        }
     }
 
     private fun navigateToContactsAndMakeToast(message: String){

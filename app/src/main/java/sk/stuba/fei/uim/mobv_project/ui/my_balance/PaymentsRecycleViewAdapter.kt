@@ -10,7 +10,7 @@ import sk.stuba.fei.uim.mobv_project.R
 import sk.stuba.fei.uim.mobv_project.data.entities.Payment
 
 class PaymentsRecycleViewAdapter(
-    private var payments: List<Payment>
+    var payments: List<Payment>
 ) :
     RecyclerView.Adapter<PaymentsRecycleViewAdapter.ViewHolder>() {
 

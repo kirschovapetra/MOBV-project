@@ -2,9 +2,11 @@ package sk.stuba.fei.uim.mobv_project.data.view_models.contacts
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import sk.stuba.fei.uim.mobv_project.data.entities.Contact
 import sk.stuba.fei.uim.mobv_project.data.repositories.AccountRepository
 import sk.stuba.fei.uim.mobv_project.data.repositories.ContactRepository
@@ -58,9 +60,17 @@ class NewContactViewModel(
         )
     }
 
-    suspend fun insertContact(contact: Contact){
-        contact.sourceAccount = MainAccountID // todo LocalUser
-        contactRepo.insertContact(contact)
+    fun saveContact(contact: Contact) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                if (isNew.value!!) {
+                    contact.sourceAccount = MainAccountID
+                    contactRepo.insertContact(contact)// insertContact(contact)
+                } else {
+                    contactRepo.updateContact(contact)
+                }
+            }
+        }
     }
 
      fun returnStatusOfTheForm() : FormStatus {
