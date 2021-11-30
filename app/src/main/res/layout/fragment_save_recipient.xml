@@ -7,7 +7,7 @@
     <data>
         <variable
             name="viewModel"
-            type="sk.stuba.fei.uim.mobv_project.data.view_models.transaction.SaveRecipientViewModel" />
+            type="sk.stuba.fei.uim.mobv_project.data.view_models.contacts.NewContactViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -67,7 +67,7 @@
             android:hint="@string/contactAccountIdHint"
             android:inputType="number"
             android:minHeight="48dp"
-            android:text="@={viewModel.accountId}"
+            android:text="@={viewModel.contactAccountId}"
             app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -109,6 +109,7 @@
                 android:layout_marginEnd="8dp"
                 android:gravity="center_horizontal"
                 android:text="@string/addNewContactButton"
+                android:onClick="@{() -> viewModel.saveContact()}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
