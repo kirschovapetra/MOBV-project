@@ -25,9 +25,25 @@ object CipherUtils {
      * @param password String to be used for key derivation
      * @param salt get by calling [getSalt]
      * @param iv get by calling [getIv]
+     * @return encrypted content encoded in Base64 format
      */
     fun encrypt(content: String, password: String, salt: String, iv: String): String {
         return encodeToString(cipher(ENCRYPT_MODE, content.toByteArray(), password, salt, iv))
+    }
+
+    /**
+     * Shortcut for [encrypt] which does not require user to generate salt and iv before calling.
+     *
+     * @param content String to be encrypted
+     * @param password String to be used for key derivation
+     * @return [EncryptResult] containing encrypted content encoded in Base64 format, salt and iv
+     */
+    fun encrypt(content: String, password: String): EncryptResult {
+        val salt = getSalt()
+        val iv = getIv()
+        val encryptedContent = encrypt(content, password, salt, iv)
+
+        return EncryptResult(encryptedContent, salt, iv)
     }
 
     /**
@@ -35,6 +51,7 @@ object CipherUtils {
      * @param password String to be used for key derivation
      * @param salt reuse salt from encrypt process
      * @param iv reuse iv from encrypt process
+     * @return decrypted content
      */
     fun decrypt(content: String, password: String, salt: String, iv: String): String {
         return String(cipher(DECRYPT_MODE, decodeToByteArray(content), password, salt, iv))
@@ -91,4 +108,9 @@ object CipherUtils {
         return SecureRandom.getInstance(secureRandomAlgorithm)
     }
 
+    data class EncryptResult(
+        val encryptedContent: String,
+        val salt: String,
+        val iv: String
+    )
 }

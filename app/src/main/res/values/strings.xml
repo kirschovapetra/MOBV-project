@@ -4,15 +4,15 @@
     <!-- Fragment label -->
     <string name="fragment_login_label">Login</string>
     <string name="fragment_intro_label">Intro</string>
-    <string name="fragment_create_wallet_label">Create a new wallet</string>
-    <string name="fragment_import_wallet_label">Import an existing wallet</string>
+    <string name="fragment_create_wallet_label">Create wallet</string>
+    <string name="fragment_import_wallet_label">Import wallet</string>
     <string name="fragment_contacts_label">Contacts</string>
     <string name="fragment_my_balance_label">My Balance</string>
     <string name="fragment_settings_label">Settings</string>
     <string name="fragment_create_pin_label">Create pin</string>
     <string name="fragment_create_new_transaction_label">New Transaction</string>
     <string name="fragment_new_contact_label">Contact</string>
-    <string name="fragment_save_recipient_label">Create contact from transaction</string>
+    <string name="fragment_save_recipient_label">Save recipient</string>
 
     <!-- Navigation bar -->
     <string name="bottom_nav_settings">Settings</string>
@@ -43,6 +43,8 @@
     <!-- Import -->
     <string name="import_private_key_hint">Enter you private key</string>
     <string name="import_submit_import">Import</string>
+    <string name="import_form_error_empty_key">You have to provide a key</string>
+    <string name="import_form_error_invalid_key_length">Your key does not match the required length of 56</string>
 
     <!-- New contact -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

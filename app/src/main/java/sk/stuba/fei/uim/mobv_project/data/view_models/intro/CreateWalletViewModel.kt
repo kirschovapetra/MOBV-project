@@ -14,7 +14,7 @@ import sk.stuba.fei.uim.mobv_project.utils.SecurityContext
 class CreateWalletViewModel(
     private val accountRepository: AccountRepository,
     private val args: CreateWalletFragmentArgs
-    ): ViewModel() {
+) : ViewModel() {
 
     private val keyPair = MutableLiveData<KeyPair>()
     val privateKey: LiveData<String> = Transformations.map(keyPair) {

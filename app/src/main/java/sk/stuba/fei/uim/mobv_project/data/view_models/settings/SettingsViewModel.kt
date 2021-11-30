@@ -42,7 +42,7 @@ class SettingsViewModel(
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 try {
-                    accountRepo.syncAccount(senderPublic, senderSecret, "Jozko", "Mrkvicka")
+                    accountRepo.syncAccount("Jozko", "Mrkvicka", "1234", senderSecret)
 
                     // treba syncnut api s db pre kazdu tabulku zvlast
                     balanceRepo.syncBalances(senderPublic)

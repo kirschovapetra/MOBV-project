@@ -11,8 +11,7 @@ import sk.stuba.fei.uim.mobv_project.data.entities.Account
 import sk.stuba.fei.uim.mobv_project.data.exceptions.TransactionFailedException
 import sk.stuba.fei.uim.mobv_project.data.exceptions.ValidationException
 import sk.stuba.fei.uim.mobv_project.data.utils.Validation
-import kotlin.jvm.Throws
-import sk.stuba.fei.uim.mobv_project.utils.CipherUtils
+import sk.stuba.fei.uim.mobv_project.utils.CipherUtils.encrypt
 
 class AccountRepository(
     private val api: StellarApi,
@@ -67,46 +66,66 @@ class AccountRepository(
     /********************* API *********************/
 
     @Throws(TransactionFailedException::class)
-    suspend fun createAndSyncAccount(firstName: String, lastName: String, pin: String, pair: KeyPair): Account {
-
-        // 1. od friendbota si vypytam 10000 peniazkov
+    suspend fun createAndSyncAccount(
+        firstName: String,
+        lastName: String,
+        pin: String,
+        pair: KeyPair
+    ): Account {
+        // od friendbota si vypytam 10000 peniazkov
         val resp = api.createStellarAccount(pair.accountId)
 
-        // 2. syncnem account
-        val salt = CipherUtils.getSalt()
-        val iv = CipherUtils.getIv()
-        val encryptedSecretSeed = CipherUtils.encrypt(String(pair.secretSeed), pin, salt, iv)
+        val encryptResult = encrypt(String(pair.secretSeed), pin)
 
-        val account = Account(pair.accountId, firstName, lastName, encryptedSecretSeed, salt, iv)
+        val account = Account(
+            pair.accountId,
+            firstName,
+            lastName,
+            encryptResult.encryptedContent,
+            encryptResult.salt,
+            encryptResult.iv
+        )
         dao.insertOrUpdate(
             account
         )
 
-        Log.i(TAG, "createNewAccount: " +
-                "Success Private key: ${String(pair.secretSeed)}, " +
-                "Public Key: ${pair.accountId}")
+        Log.d(
+            TAG, "createNewAccount: " +
+                    "Success Private key: ${String(pair.secretSeed)}, " +
+                    "Public Key: ${pair.accountId}"
+        )
 
         return account
     }
 
     @Throws(ValidationException::class)
     suspend fun syncAccount(
-        accountId: String, privateKey: String,
-        firstName: String, lastName: String,
-    ) {
-
-        // check ci kluce matchuju k rovnakemu accountu
-        val kp = Validation.doKeysMatch(accountId, privateKey)
+        firstName: String,
+        lastName: String,
+        pin: String,
+        privateKey: String
+    ): Account {
+        val kp = Validation.validatePrivateKey(privateKey)
 
         // check ci existuje account
         val acc = api.getStellarAccount(kp.accountId)
 
-        dao.insertOrUpdate(
-            Account(acc.accountId, firstName, lastName, String(kp.secretSeed))
+        val encryptResult = encrypt(privateKey, pin)
+        val account = Account(
+            acc.accountId,
+            firstName,
+            lastName,
+            encryptResult.encryptedContent,
+            encryptResult.salt,
+            encryptResult.iv
         )
-        Log.i(TAG, "syncAccount: Success ${acc.accountId}")
 
+        dao.insertOrUpdate(
+            account
+        )
+        Log.d(TAG, "syncAccount: Success ${acc.accountId}")
 
+        return account
     }
 
 }
