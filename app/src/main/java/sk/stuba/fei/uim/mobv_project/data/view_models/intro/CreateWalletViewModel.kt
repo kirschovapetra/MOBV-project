@@ -48,8 +48,8 @@ class CreateWalletViewModel(
                     keyPair.value!!
                 )
                 SecurityContext.account = account
+                _eventLocalAccountCreated.postValue(Event(true))
             }
-            _eventLocalAccountCreated.value = Event(true)
         }
     }
 

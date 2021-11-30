@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
         // run once and comment it out to start at My Balance
         // reason: it runs truncate and inserts in a coroutine, so I guess its not
         //          really in sync with query run in main thread
-//        createDummyDbData()
+        //createDummyDbData()
 
         val accountRepository = AccountRepository.getInstance(this)
         val account = accountRepository.getFirstAccount()
@@ -64,7 +64,6 @@ class MainActivity : AppCompatActivity() {
         setupBottomNav()
 
 //        apiWithDbTest()
-        createDummyDbData()
         trackDbChanges()
 
     }

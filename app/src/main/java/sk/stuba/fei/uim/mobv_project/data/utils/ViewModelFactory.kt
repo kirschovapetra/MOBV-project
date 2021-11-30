@@ -47,7 +47,10 @@ class ViewModelFactory(private vararg val repository: AppDbRepository) : ViewMod
 
         if (modelClass.isAssignableFrom(CreateNewTransactionViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return CreateNewTransactionViewModel(repository[0] as ContactRepository) as T
+            return CreateNewTransactionViewModel(
+                repository[0] as ContactRepository,
+                repository[1] as PaymentRepository
+            ) as T
         }
 
         if (modelClass.isAssignableFrom(SaveRecipientViewModel::class.java)) {

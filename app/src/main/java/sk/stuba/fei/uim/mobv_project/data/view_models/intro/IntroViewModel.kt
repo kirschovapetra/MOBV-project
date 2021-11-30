@@ -7,6 +7,7 @@ import androidx.navigation.NavDirections
 import sk.stuba.fei.uim.mobv_project.data.view_models.event.Event
 import sk.stuba.fei.uim.mobv_project.ui.intro.IntroFragmentDirections.actionIntroFragmentToCreateWalletFragment
 import sk.stuba.fei.uim.mobv_project.ui.intro.IntroFragmentDirections.actionIntroFragmentToImportWalletFragment
+import sk.stuba.fei.uim.mobv_project.ui.utils.Validation
 
 class IntroViewModel : ViewModel() {
 
@@ -29,15 +30,21 @@ class IntroViewModel : ViewModel() {
 
     fun createNewWallet() {
         if (validateInput()) {
-            _eventLocalAccountCreated.value = Event(actionIntroFragmentToCreateWalletFragment(
-                firstName.value, lastName.value, pin.value!!))
+            _eventLocalAccountCreated.value = Event(
+                actionIntroFragmentToCreateWalletFragment(
+                    firstName.value, lastName.value, pin.value!!
+                )
+            )
         }
     }
 
     fun importWallet() {
         if (validateInput()) {
-            _eventLocalAccountCreated.value = Event(actionIntroFragmentToImportWalletFragment(
-                firstName.value, lastName.value, pin.value!!))
+            _eventLocalAccountCreated.value = Event(
+                actionIntroFragmentToImportWalletFragment(
+                    firstName.value, lastName.value, pin.value!!
+                )
+            )
         }
     }
 
@@ -51,7 +58,7 @@ class IntroViewModel : ViewModel() {
     }
 
     private fun validatePin(): Boolean {
-        val pinValid = pin.value != null && 8 <= pin.value!!.length
+        val pinValid = Validation.validatePin(pin.value)
         _eventInvalidPin.value = Event(!pinValid)
 
         return pinValid
