@@ -62,8 +62,6 @@ class CreateWalletViewModel(
                         args.pin,
                         keyPair.value!!
                     )
-                    //TODO: payments sync is probably unnecessary
-                    paymentRepository.syncPayments(account.accountId)
                     balanceRepository.syncBalances(account.accountId)
 
                     SecurityContext.account = account
