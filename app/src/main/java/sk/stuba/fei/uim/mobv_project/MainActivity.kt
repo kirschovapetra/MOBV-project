@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
         }
         else {
             SecurityContext.account = account
-            graph.startDestination = R.id.myBalanceFragment
+            graph.startDestination = R.id.createNewTransactionFragment
         }
         navHostFragment.navController.graph = graph
 

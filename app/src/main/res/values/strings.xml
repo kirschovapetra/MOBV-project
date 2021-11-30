@@ -48,18 +48,18 @@
 
     <!-- New contact -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="contactNameHint">John Smith</string>
-    <string name="contactAccountIdHint">10</string>
+    <string name="contactNameHint">Contact name</string>
+    <string name="contactAccountIdHint">Account Id</string>
     <string name="addNewContactButton">Save</string>
 
-    <string name="new_contact_created">Contact saved!</string>
-    <string name="new_contact_updated">Contact updated!</string>
+    <string name="new_contact_created">Contact saved</string>
+    <string name="new_contact_updated">Contact updated</string>
 
-    <string name="new_contact_invalid_contact_name">Invalid name!</string>
-    <string name="new_contact_invalid_contact_account_id">You have to set contact id</string>
+    <string name="new_contact_invalid_contact_name">Invalid name</string>
+    <string name="new_contact_invalid_contact_account_id">You have to set the contact id</string>
     <string name="new_contact_non_existing_account_id">Account with this id is not registered</string>
-    <string name="new_contact_duplicate_contact">You already have contact with this id!</string>
-    <string name="new_contact_you_like_yourself">You can not add yourself!</string>
+    <string name="new_contact_duplicate_contact">You already have a contact with this id</string>
+    <string name="new_contact_you_like_yourself">You can not add yourself</string>
 
     <!-- Create new transaction -->
     <string name="accountId_hint">Account ID</string>

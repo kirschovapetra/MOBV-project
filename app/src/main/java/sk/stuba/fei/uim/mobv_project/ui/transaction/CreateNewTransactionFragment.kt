@@ -18,6 +18,9 @@ import sk.stuba.fei.uim.mobv_project.data.repositories.PaymentRepository
 import sk.stuba.fei.uim.mobv_project.data.utils.ViewModelFactory
 import sk.stuba.fei.uim.mobv_project.data.view_models.transaction.CreateNewTransactionViewModel
 import sk.stuba.fei.uim.mobv_project.databinding.FragmentCreateNewTransactionBinding
+import sk.stuba.fei.uim.mobv_project.ui.utils.LoadingLayoutUtils
+import sk.stuba.fei.uim.mobv_project.ui.utils.LoadingLayoutUtils.setLoadingLayoutVisibility
+import sk.stuba.fei.uim.mobv_project.ui.utils.NotificationUtils
 
 class CreateNewTransactionFragment : Fragment(), AdapterView.OnItemSelectedListener {
     private val viewModel: CreateNewTransactionViewModel by viewModels() {
@@ -43,19 +46,33 @@ class CreateNewTransactionFragment : Fragment(), AdapterView.OnItemSelectedListe
         binding.lifecycleOwner = viewLifecycleOwner
         binding.spinner.onItemSelectedListener = this
         viewModel.allContacts.observe(viewLifecycleOwner, {
+            // TODO replace ArrayAdapter
             val spinnerAdapter = ArrayAdapter(context!!, android.R.layout.simple_spinner_item, it)
             binding.spinner.adapter = spinnerAdapter
         })
         viewModel.eventPaymentSuccessful.observe(viewLifecycleOwner, { event ->
             event.getContentIfNotHandled()?.let {
                 findNavController().navigate(it)
+                setLoadingLayoutVisibility(activity, false)
             }
         })
         viewModel.eventInvalidPin.observe(viewLifecycleOwner, {
             it.getContentIfNotHandled()?.let { pinInvalid ->
                 if (pinInvalid) {
                     onInvalidPin()
+                    setLoadingLayoutVisibility(activity, false)
                 }
+            }
+        })
+        viewModel.eventApiValidationFailed.observe(viewLifecycleOwner, {
+            it.getContentIfNotHandled()?.let { errorMessage ->
+                NotificationUtils.showSnackbar(view, errorMessage, Snackbar.LENGTH_LONG)
+                setLoadingLayoutVisibility(activity, false)
+            }
+        })
+        viewModel.eventLoadingStarted.observe(viewLifecycleOwner, {
+            it.getContentIfNotHandled()?.let {
+                setLoadingLayoutVisibility(activity, true)
             }
         })
         return binding.root
@@ -69,6 +86,7 @@ class CreateNewTransactionFragment : Fragment(), AdapterView.OnItemSelectedListe
     override fun onNothingSelected(parent: AdapterView<*>?) {
         // TODO("Not yet implemented")
     }
+
     private fun onInvalidPin() {
         view?.let {
             Snackbar.make(

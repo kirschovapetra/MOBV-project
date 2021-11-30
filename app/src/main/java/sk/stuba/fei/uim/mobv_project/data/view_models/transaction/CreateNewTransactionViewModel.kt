@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import sk.stuba.fei.uim.mobv_project.api.StellarApi
 import sk.stuba.fei.uim.mobv_project.data.entities.Contact
+import sk.stuba.fei.uim.mobv_project.data.exceptions.ValidationException
 import sk.stuba.fei.uim.mobv_project.data.repositories.ContactRepository
 import sk.stuba.fei.uim.mobv_project.data.repositories.PaymentRepository
 import sk.stuba.fei.uim.mobv_project.data.view_models.event.Event
@@ -20,6 +21,7 @@ import sk.stuba.fei.uim.mobv_project.ui.transaction.CreateNewTransactionFragment
 import sk.stuba.fei.uim.mobv_project.ui.utils.Validation
 import sk.stuba.fei.uim.mobv_project.utils.CipherUtils
 import sk.stuba.fei.uim.mobv_project.utils.SecurityContext
+import javax.crypto.BadPaddingException
 import kotlin.coroutines.coroutineContext
 
 class CreateNewTransactionViewModel(
@@ -47,14 +49,22 @@ class CreateNewTransactionViewModel(
         get() = contactRepository.getAllContacts()
     private var selectedContact: Contact? = null
 
-    fun setSelectedContact(contact: Contact) {
-        selectedContact = contact
-        accountId.value = contact.contactId
-    }
+    private val _eventLoadingStarted = MutableLiveData<Event<Boolean>>()
+    val eventLoadingStarted: LiveData<Event<Boolean>>
+        get() = _eventLoadingStarted
+
+    private val _eventApiValidationFailed = MutableLiveData<Event<String>>()
+    val eventApiValidationFailed: LiveData<Event<String>>
+        get() = _eventApiValidationFailed
 
     private val _eventInvalidPin = MutableLiveData<Event<Boolean>>()
     val eventInvalidPin: LiveData<Event<Boolean>>
         get() = _eventInvalidPin
+
+    fun setSelectedContact(contact: Contact) {
+        selectedContact = contact
+        accountId.value = contact.contactId
+    }
 
     private fun validatePin(): Boolean {
         val pinValid = Validation.validatePin(pin.value)
@@ -64,30 +74,38 @@ class CreateNewTransactionViewModel(
     }
 
     fun sendPayment() {
+        _eventLoadingStarted.value = Event(true)
         var validationResult = true
 
-        // validationResult = validationResult && validateAmount()
+
         validationResult = validationResult && validatePin()
         if (validationResult) {
             viewModelScope.launch {
                 withContext(Dispatchers.Default) {
-                    if (SecurityContext.account == null) {
-                        Log.e("account", "SecurityContext.account is null")
-                    } else {
-                        val account = SecurityContext.account!!
-                        val privateKey = account.privateKey!!
-                        val decryptedPrivateKey = CipherUtils.decrypt(
-                            privateKey,
-                            pin.value!!,
-                            account.salt!!,
-                            account.iv!!
-                        )
-                        paymentRepository.sendAndSyncPayment(
-                            account.accountId,
-                            decryptedPrivateKey,
-                            accountId.value!!,
-                            amount = amount.value.toString()
-                        )
+                    try {
+                        if (SecurityContext.account == null) {
+                            Log.e("account", "SecurityContext.account is null")
+                        } else {
+                            val account = SecurityContext.account!!
+                            val privateKey = account.privateKey!!
+                            val decryptedPrivateKey = CipherUtils.decrypt(
+                                privateKey,
+                                pin.value!!,
+                                account.salt!!,
+                                account.iv!!
+                            )
+                            paymentRepository.sendAndSyncPayment(
+                                account.accountId,
+                                decryptedPrivateKey,
+                                accountId.value!!,
+                                amount = amount.value.toString()
+                            )
+                        }
+                    } catch (exeption: ValidationException) {
+                        _eventApiValidationFailed.postValue(Event(exeption.message.toString()))
+                    } catch (exeption: BadPaddingException) {
+                        Log.e("BadPadding exception", exeption.toString())
+                        _eventInvalidPin.postValue(Event(true))
                     }
                 }
             }
@@ -109,7 +127,6 @@ class CreateNewTransactionViewModel(
             _eventPaymentSuccessful.value = Event(null)
         }
     }
-
     private fun validateAmount(): Boolean {
         // TODO validate or remove
         val result = true

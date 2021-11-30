@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.snackbar.Snackbar
 import sk.stuba.fei.uim.mobv_project.R
 import sk.stuba.fei.uim.mobv_project.data.repositories.AccountRepository
 import sk.stuba.fei.uim.mobv_project.data.repositories.ContactRepository
@@ -19,12 +20,18 @@ import sk.stuba.fei.uim.mobv_project.data.view_models.transaction.SaveRecipientV
 import sk.stuba.fei.uim.mobv_project.databinding.FragmentCreateNewTransactionBinding
 import sk.stuba.fei.uim.mobv_project.databinding.FragmentSaveRecipientBinding
 import sk.stuba.fei.uim.mobv_project.ui.transaction.SaveRecipientFragmentDirections.actionSaveRecipientFragmentToMyBalanceFragment
+import sk.stuba.fei.uim.mobv_project.ui.utils.NotificationUtils
+import sk.stuba.fei.uim.mobv_project.ui.utils.NotificationUtils.showSnackbar
+import sk.stuba.fei.uim.mobv_project.ui.utils.NotificationUtils.showSnackbarFromResourceEvent
 
 class SaveRecipientFragment : Fragment() {
-    // TODO replace with NewContactViewModel
     private val args: SaveRecipientFragmentArgs by navArgs()
-    private val viewModel: SaveRecipientViewModel by viewModels()
-
+    private val viewModel: NewContactViewModel by viewModels {
+        ViewModelFactory(
+            ContactRepository.getInstance(context!!),
+            AccountRepository.getInstance(context!!)
+        )
+    }
     private lateinit var binding: FragmentSaveRecipientBinding
 
 
@@ -43,7 +50,16 @@ class SaveRecipientFragment : Fragment() {
         binding.addSkipButton.setOnClickListener {
             findNavController().navigate(actionSaveRecipientFragmentToMyBalanceFragment())
         }
-        viewModel.accountId.value = args.accountId
+        viewModel.contactAccountId.value = args.accountId
+        viewModel.eventInvalidForm.observe(this, { event ->
+            showSnackbarFromResourceEvent(view, event, Snackbar.LENGTH_LONG)
+        })
+        viewModel.eventContactSave.observe(this, { event ->
+            event.getContentIfNotHandled()?.let { messageResourceId ->
+                showSnackbar(view, messageResourceId, Snackbar.LENGTH_LONG)
+                findNavController().navigate(actionSaveRecipientFragmentToMyBalanceFragment())
+            }
+        })
         return binding.root
     }
 }
