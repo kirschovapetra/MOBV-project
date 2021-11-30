@@ -8,12 +8,16 @@ import kotlinx.coroutines.withContext
 import org.stellar.sdk.KeyPair
 import sk.stuba.fei.uim.mobv_project.data.exceptions.ValidationException
 import sk.stuba.fei.uim.mobv_project.data.repositories.AccountRepository
+import sk.stuba.fei.uim.mobv_project.data.repositories.BalanceRepository
+import sk.stuba.fei.uim.mobv_project.data.repositories.PaymentRepository
 import sk.stuba.fei.uim.mobv_project.data.view_models.event.Event
 import sk.stuba.fei.uim.mobv_project.ui.intro.CreateWalletFragmentArgs
 import sk.stuba.fei.uim.mobv_project.utils.SecurityContext
 
 class CreateWalletViewModel(
     private val accountRepository: AccountRepository,
+    private val balanceRepository: BalanceRepository,
+    private val paymentRepository: PaymentRepository,
     private val args: CreateWalletFragmentArgs
 ) : ViewModel() {
 
@@ -21,6 +25,10 @@ class CreateWalletViewModel(
     val privateKey: LiveData<String> = Transformations.map(keyPair) {
         String(it.secretSeed)
     }
+
+    private val _eventLoadingStart = MutableLiveData<Event<Boolean>>()
+    val eventLoadingStart: LiveData<Event<Boolean>>
+        get() = _eventLoadingStart
 
     private val _eventRepositoryValidationError = MutableLiveData<Event<String>>()
     val eventRepositoryValidationError: LiveData<Event<String>>
@@ -44,6 +52,7 @@ class CreateWalletViewModel(
     }
 
     fun createLocalAccount() {
+        _eventLoadingStart.value = Event(true)
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 try {
@@ -53,6 +62,9 @@ class CreateWalletViewModel(
                         args.pin,
                         keyPair.value!!
                     )
+                    //TODO: payments sync is probably unnecessary
+                    paymentRepository.syncPayments(account.accountId)
+                    balanceRepository.syncBalances(account.accountId)
 
                     SecurityContext.account = account
                     _eventLocalAccountCreated.postValue(Event(true))

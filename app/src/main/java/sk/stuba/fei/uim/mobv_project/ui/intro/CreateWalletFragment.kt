@@ -16,10 +16,13 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import sk.stuba.fei.uim.mobv_project.R
 import sk.stuba.fei.uim.mobv_project.data.repositories.AccountRepository
+import sk.stuba.fei.uim.mobv_project.data.repositories.BalanceRepository
+import sk.stuba.fei.uim.mobv_project.data.repositories.PaymentRepository
 import sk.stuba.fei.uim.mobv_project.data.utils.CreateWalletViewModelFactory
 import sk.stuba.fei.uim.mobv_project.data.view_models.intro.CreateWalletViewModel
 import sk.stuba.fei.uim.mobv_project.databinding.FragmentCreateWalletBinding
 import sk.stuba.fei.uim.mobv_project.ui.intro.CreateWalletFragmentDirections.actionCreateWalletFragmentToMyBalanceFragment
+import sk.stuba.fei.uim.mobv_project.ui.utils.LoadingLayoutUtils.setLoadingLayoutVisibility
 import sk.stuba.fei.uim.mobv_project.ui.utils.NotificationUtils
 import sk.stuba.fei.uim.mobv_project.ui.utils.NotificationUtils.showSnackbarFromMessageEvent
 
@@ -29,6 +32,8 @@ class CreateWalletFragment : Fragment(R.layout.fragment_create_wallet) {
     private val viewModel: CreateWalletViewModel by viewModels {
         CreateWalletViewModelFactory(
             AccountRepository.getInstance(context!!),
+            BalanceRepository.getInstance(context!!),
+            PaymentRepository.getInstance(context!!),
             args
         )
     }
@@ -48,9 +53,6 @@ class CreateWalletFragment : Fragment(R.layout.fragment_create_wallet) {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
-        viewModel.eventRepositoryValidationError.observe(this, {
-            showSnackbarFromMessageEvent(view, it, Snackbar.LENGTH_LONG)
-        })
         viewModel.eventCopyToClipboard.observe(this, {
             it.getContentIfNotHandled()?.let { text ->
                 copyToClipboard(text)
@@ -63,9 +65,17 @@ class CreateWalletFragment : Fragment(R.layout.fragment_create_wallet) {
                 }
             }
         })
+        viewModel.eventLoadingStart.observe(this, {
+            setLoadingLayoutVisibility(activity, true)
+        })
+        viewModel.eventRepositoryValidationError.observe(this, {
+            showSnackbarFromMessageEvent(view, it, Snackbar.LENGTH_LONG)
+            setLoadingLayoutVisibility(activity, false)
+        })
         viewModel.eventLocalAccountCreated.observe(this, { event ->
             event.getContentIfNotHandled()?.let {
                 if (it) {
+                    setLoadingLayoutVisibility(activity, false)
                     findNavController().navigate(
                         actionCreateWalletFragmentToMyBalanceFragment()
                     )

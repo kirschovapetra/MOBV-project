@@ -41,7 +41,7 @@
     <string name="registered_continue_button_text">Continue</string>
 
     <!-- Import -->
-    <string name="import_private_key_hint">Enter you private key</string>
+    <string name="import_private_key_hint">Enter your private key</string>
     <string name="import_submit_import">Import</string>
     <string name="import_form_error_empty_key">You have to provide a key</string>
     <string name="import_form_error_invalid_key_length">Your key does not match the required length of 56</string>

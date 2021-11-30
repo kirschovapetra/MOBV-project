@@ -29,6 +29,10 @@ class ImportWalletViewModel(
 
     val privateKey = MutableLiveData<String>()
 
+    private val _eventLoadingStart = MutableLiveData<Event<Boolean>>()
+    val eventLoadingStart: LiveData<Event<Boolean>>
+        get() = _eventLoadingStart
+
     private val _eventFormError = MutableLiveData<Event<Int>>()
     val eventFormError: LiveData<Event<Int>>
         get() = _eventFormError
@@ -42,6 +46,7 @@ class ImportWalletViewModel(
         get() = _eventLocalAccountCreated
 
     fun createLocalAccount() {
+        _eventLoadingStart.value = Event(true)
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 val formError = validateForm()

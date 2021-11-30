@@ -18,6 +18,7 @@ import sk.stuba.fei.uim.mobv_project.data.utils.ImportWalletViewModelFactory
 import sk.stuba.fei.uim.mobv_project.data.view_models.intro.ImportWalletViewModel
 import sk.stuba.fei.uim.mobv_project.databinding.FragmentImportWalletBinding
 import sk.stuba.fei.uim.mobv_project.ui.intro.ImportWalletFragmentDirections.actionImportWalletFragmentToMyBalanceFragment
+import sk.stuba.fei.uim.mobv_project.ui.utils.LoadingLayoutUtils.setLoadingLayoutVisibility
 import sk.stuba.fei.uim.mobv_project.ui.utils.NotificationUtils.showSnackbarFromMessageEvent
 import sk.stuba.fei.uim.mobv_project.ui.utils.NotificationUtils.showSnackbarFromResourceEvent
 
@@ -48,15 +49,23 @@ class ImportWalletFragment : Fragment(R.layout.fragment_import_wallet) {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
+        viewModel.eventLoadingStart.observe(this, {
+            it.getContentIfNotHandled()?.let {
+                setLoadingLayoutVisibility(activity, true)
+            }
+        })
         viewModel.eventFormError.observe(this, { event ->
+            setLoadingLayoutVisibility(activity, false)
             showSnackbarFromResourceEvent(view, event, Snackbar.LENGTH_LONG)
         })
         viewModel.eventRepositoryValidationError.observe(this, { event ->
+            setLoadingLayoutVisibility(activity, false)
             showSnackbarFromMessageEvent(view, event, Snackbar.LENGTH_LONG)
         })
         viewModel.eventLocalAccountCreated.observe(this, { event ->
             event.getContentIfNotHandled()?.let {
                 if (it) {
+                    setLoadingLayoutVisibility(activity, false)
                     findNavController().navigate(actionImportWalletFragmentToMyBalanceFragment())
                 }
             }
