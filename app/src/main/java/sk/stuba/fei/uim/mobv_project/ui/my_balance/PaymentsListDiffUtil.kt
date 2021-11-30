@@ -25,12 +25,6 @@ class PaymentsListDiffUtil(
             oldPayments[oldItemPosition].paymentId != newPayments[newItemPosition].paymentId -> {
                 false
             }
-            oldPayments[oldItemPosition].transactionHash != newPayments[newItemPosition].transactionHash -> {
-                false
-            }
-            oldPayments[oldItemPosition].transactionSuccessful != newPayments[newItemPosition].transactionSuccessful -> {
-                false
-            }
             oldPayments[oldItemPosition].createdAt != newPayments[newItemPosition].createdAt -> {
                 false
             }

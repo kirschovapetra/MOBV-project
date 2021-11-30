@@ -26,5 +26,4 @@ data class Balances(
     @NonNull @ColumnInfo(name = "asset_code") var assetCode: String = "Lumens",
     @NonNull @ColumnInfo(name = "source_account") var sourceAccount: String = "", // FK: ref na account
     @ColumnInfo(name = "balance") var balance: String? = "",
-    @ColumnInfo(name = "limit") var limit: String? = "",
 ) : AppDbEntity()

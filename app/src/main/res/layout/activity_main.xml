@@ -28,6 +28,7 @@
         app:layout_constraintTop_toBottomOf="@+id/action_bar">
 
         <ScrollView
+            android:id="@+id/scroll_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"

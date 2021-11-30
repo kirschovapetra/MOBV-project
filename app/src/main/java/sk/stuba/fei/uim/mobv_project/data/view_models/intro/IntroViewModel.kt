@@ -7,7 +7,7 @@ import androidx.navigation.NavDirections
 import sk.stuba.fei.uim.mobv_project.data.view_models.event.Event
 import sk.stuba.fei.uim.mobv_project.ui.intro.IntroFragmentDirections.actionIntroFragmentToCreateWalletFragment
 import sk.stuba.fei.uim.mobv_project.ui.intro.IntroFragmentDirections.actionIntroFragmentToImportWalletFragment
-import sk.stuba.fei.uim.mobv_project.ui.utils.Validation
+import sk.stuba.fei.uim.mobv_project.data.utils.Validation
 
 class IntroViewModel : ViewModel() {
 

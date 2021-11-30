@@ -19,8 +19,6 @@ import androidx.room.*
 )
 data class Payment(
     @PrimaryKey @ColumnInfo(name = "payment_id") var paymentId: Long = -1L,
-    @ColumnInfo(name = "transaction_hash") var transactionHash: String? = "",
-    @ColumnInfo(name = "transaction_successful") var transactionSuccessful: Boolean?,
     @ColumnInfo(name = "created_at") var createdAt: String? = "",
     @ColumnInfo(name = "asset_code") var assetCode: String? = "Lumens",
     @ColumnInfo(name = "from") var from: String? = "",
@@ -29,6 +27,4 @@ data class Payment(
     @ColumnInfo(name = "paymentType") var paymentType: String? = "",
     // FK: ref na account
     @ColumnInfo(name = "source_account") var sourceAccount: String? = ""
-) : AppDbEntity() {
-    constructor() : this(transactionSuccessful = null)
-}
+) : AppDbEntity()

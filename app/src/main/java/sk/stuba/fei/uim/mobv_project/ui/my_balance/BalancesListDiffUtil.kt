@@ -25,16 +25,7 @@ class BalancesListDiffUtil(
             oldBalances[oldItemPosition].assetCode != newBalances[newItemPosition].assetCode -> {
                 false
             }
-//            oldBalances[oldItemPosition].assetIssuer != newBalances[newItemPosition].assetIssuer -> {
-//                false
-//            }
-//            oldBalances[oldItemPosition].assetType != newBalances[newItemPosition].assetType -> {
-//                false
-//            }
             oldBalances[oldItemPosition].balance != newBalances[newItemPosition].balance -> {
-                false
-            }
-            oldBalances[oldItemPosition].limit != newBalances[newItemPosition].limit -> {
                 false
             }
             oldBalances[oldItemPosition].sourceAccount != newBalances[newItemPosition].sourceAccount -> {

@@ -81,7 +81,6 @@ class BalanceRepository(
                 Balances(
                     assetCode = Converters.assetToAssetCode(balance.asset.orNull()),
                     balance = balance.balance,
-                    limit = balance.limit,
                     sourceAccount = accountResp.accountId
                 ))
         }

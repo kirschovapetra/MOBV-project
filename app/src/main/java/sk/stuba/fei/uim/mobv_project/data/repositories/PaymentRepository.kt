@@ -85,8 +85,6 @@ class PaymentRepository(
             dao.insertOrUpdate(
                 Payment(
                     paymentId = payment.id,
-                    transactionHash = payment.transactionHash,
-                    transactionSuccessful = payment.isTransactionSuccessful,
                     createdAt = payment.createdAt,
                     assetCode = Converters.assetToAssetCode(payment.asset),
                     from = payment.from,

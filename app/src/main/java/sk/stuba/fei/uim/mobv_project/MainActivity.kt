@@ -193,20 +193,16 @@ class MainActivity : AppCompatActivity() {
             Contact(contactId = einstein.accountId, name = "Einstein", sourceAccount = bill.accountId),
         )
         val balances = listOf(
-            Balances(balance = "10000.0", limit = "100.0", sourceAccount = bill.accountId),
+            Balances(balance = "10000.0", sourceAccount = bill.accountId),
             Balances(
-                assetCode = "DOGECOIN:aabbcc", balance = "20000.0", limit = "200.0",
-                sourceAccount = jeff.accountId),
+                assetCode = "DOGECOIN:aabbcc", balance = "20000.0", sourceAccount = jeff.accountId),
             Balances(
-                assetCode = "nejakyAssetCode:Issuer", balance = "10000.0", limit = "100.0",
-                sourceAccount = jeff.accountId),
+                assetCode = "nejakyAssetCode:Issuer", balance = "10000.0", sourceAccount = jeff.accountId),
         )
         val payments = listOf(
-            Payment(paymentId = 123, transactionHash = "QWERTYUIOP", transactionSuccessful = true,
-                createdAt = "2021-11-18", assetCode = "DOGECOIN:aabbcc", from = bill.accountId,
+            Payment(paymentId = 123, createdAt = "2021-11-18", assetCode = "DOGECOIN:aabbcc", from = bill.accountId,
                 to = jeff.accountId, amount = "50.0", sourceAccount = bill.accountId, paymentType = "credit"),
-            Payment(paymentId = 456, transactionHash = "POIUYTREWQ", transactionSuccessful = true,
-                createdAt = "2021-11-18", assetCode = "nejakyAssetCode:Issuer", from = jeff.accountId,
+            Payment(paymentId = 456, createdAt = "2021-11-18", assetCode = "nejakyAssetCode:Issuer", from = jeff.accountId,
                 to = elon.accountId, amount = "50.0", sourceAccount = jeff.accountId, paymentType = "credit")
         )
 

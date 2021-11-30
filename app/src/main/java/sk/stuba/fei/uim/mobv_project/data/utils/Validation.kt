@@ -9,7 +9,11 @@ import kotlin.jvm.Throws
 
 
 object Validation {
-    @JvmStatic
+
+    fun validatePin(pin: String?): Boolean {
+        return pin != null && 8 <= pin.length
+    }
+
     @Throws(ValidationException::class)
     fun validateAccountId(accountId: String): KeyPair {
         try {
@@ -19,7 +23,6 @@ object Validation {
         }
     }
 
-    @JvmStatic
     @Throws(ValidationException::class)
     fun validatePrivateKey(privateKey: String): KeyPair {
         try {
@@ -29,7 +32,6 @@ object Validation {
         }
     }
 
-    @JvmStatic
     @Throws(ValidationException::class)
     fun doKeysMatch(accountId: String, privateKey: String): KeyPair {
 
@@ -43,7 +45,6 @@ object Validation {
 
     }
 
-    @JvmStatic
     @Throws(ValidationException::class)
     fun doesAccountExist(server: Server, accountId: String): AccountResponse {
         try {

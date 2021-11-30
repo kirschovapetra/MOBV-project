@@ -17,7 +17,7 @@ import sk.stuba.fei.uim.mobv_project.data.view_models.event.Event
 import sk.stuba.fei.uim.mobv_project.ui.transaction.CreateNewTransactionFragmentDirections
 import sk.stuba.fei.uim.mobv_project.ui.transaction.CreateNewTransactionFragmentDirections.actionCreateNewTransactionFragmentToMyBalanceFragment
 import sk.stuba.fei.uim.mobv_project.ui.transaction.CreateNewTransactionFragmentDirections.actionCreateNewTransactionFragmentToSaveRecipientFragment
-import sk.stuba.fei.uim.mobv_project.ui.utils.Validation
+import sk.stuba.fei.uim.mobv_project.data.utils.Validation
 import sk.stuba.fei.uim.mobv_project.utils.CipherUtils
 import sk.stuba.fei.uim.mobv_project.utils.SecurityContext
 import kotlin.coroutines.coroutineContext
