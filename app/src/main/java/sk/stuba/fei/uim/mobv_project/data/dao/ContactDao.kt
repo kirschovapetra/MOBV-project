@@ -13,6 +13,9 @@ abstract class  ContactDao: EntityDao<Contact>()  {
     @Query("SELECT * FROM contact WHERE contact_id = :id")
     abstract fun getById(id: String): LiveData<Contact>
 
+    @Query("SELECT * FROM contact WHERE contact_id = :id")
+    abstract fun getDeadById(id: String): Contact?
+
     @Query("SELECT * FROM contact WHERE source_account = :accountId")
     abstract fun getBySourceAccount(accountId: String): LiveData<List<Contact>>
 
