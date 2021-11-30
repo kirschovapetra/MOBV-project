@@ -16,10 +16,10 @@ import sk.stuba.fei.uim.mobv_project.data.view_models.contacts.NewContactViewMod
 import sk.stuba.fei.uim.mobv_project.data.view_models.contacts.NewContactViewModel.FormStatus
 import sk.stuba.fei.uim.mobv_project.databinding.FragmentNewContactBinding
 import android.view.Gravity
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import kotlinx.coroutines.launch
 import sk.stuba.fei.uim.mobv_project.data.repositories.AccountRepository
+import sk.stuba.fei.uim.mobv_project.data.view_models.contacts.NewContactViewModel.SaveResult
+import sk.stuba.fei.uim.mobv_project.ui.contacts.NewContactFragmentDirections.actionNewContactFragmentToContactsFragment
 
 class NewContactFragment : Fragment() {
 
@@ -36,9 +36,9 @@ class NewContactFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            val serializedContact  = it.getSerializable(CONTACT_PARAM_KEY) //as Contact
+            val serializedContact = it.getSerializable(CONTACT_PARAM_KEY)
 
-            if(serializedContact != null){
+            if (serializedContact != null) {
                 newContactViewModel.setContact(serializedContact as Contact)
             }
         }
@@ -55,52 +55,51 @@ class NewContactFragment : Fragment() {
             container,
             false
         )
-        attachClickListenerToAddButton(binding)
-        View.VISIBLE
         binding.newContactViewModel = newContactViewModel
         binding.lifecycleOwner = viewLifecycleOwner
+
+        newContactViewModel.eventInvalidForm.observe(this, { event ->
+            event.getContentIfNotHandled()?.let { formStatus ->
+                showToast(getToasterMessage(formStatus))
+            }
+        })
+        newContactViewModel.eventContactSave.observe(this, { event ->
+            event.getContentIfNotHandled()?.let { saveResult ->
+                navigateToContactsAndMakeToast(saveResult)
+            }
+        })
 
         return binding.root
     }
 
-    private fun attachClickListenerToAddButton(binding: FragmentNewContactBinding){
-        val clickButtonListener: View.OnClickListener = View.OnClickListener {Unit
-            updateContacts()
-        }
-
-        binding.addNewContactButtonTitle.setOnClickListener(clickButtonListener)
-    }
-
-    private fun updateContacts() {
-        val formStatus = newContactViewModel.returnStatusOfTheForm()
-
-        if (formStatus != FormStatus.OK) {
-            showToast(newContactViewModel.getToasterMessage(formStatus))
-            return
-        }
-
-        insertOrUpdateContact(newContactViewModel.getContact())
-    }
-
-    private fun insertOrUpdateContact(contact: Contact){
-        newContactViewModel.saveContact(contact)
-            if(newContactViewModel.isNew.value!!){
-                navigateToContactsAndMakeToast("Contact added!")
-            } else {
-                navigateToContactsAndMakeToast("Contact updated!")
-            }
-    }
-
-    private fun navigateToContactsAndMakeToast(message: String){
+    private fun navigateToContactsAndMakeToast(saveResult: SaveResult) {
         findNavController().navigate(
-            NewContactFragmentDirections.actionNewContactFragmentToContactsFragment()
+            actionNewContactFragmentToContactsFragment()
         )
-        showToast(message)
+        showToast(getToasterMessage(saveResult))
     }
 
-    private fun showToast(message: String){
-        var toast = Toast.makeText(context, message, Toast.LENGTH_LONG)
+    private fun showToast(message: String) {
+        val toast = Toast.makeText(context, message, Toast.LENGTH_LONG)
         toast.setGravity(Gravity.TOP, 0, 150)
         toast.show()
+    }
+
+    private fun getToasterMessage(saveResult: SaveResult): String {
+        return when (saveResult) {
+            SaveResult.CREATED -> resources.getString(R.string.new_contact_created)
+            SaveResult.UPDATED -> resources.getString(R.string.new_contact_updated)
+        }
+    }
+
+    private fun getToasterMessage(formStatus: FormStatus): String {
+        return when (formStatus) {
+            FormStatus.INVALID_NAME -> resources.getString(R.string.new_contact_invalid_contact_name)
+            FormStatus.INVALID_CONTACT_ID -> resources.getString(R.string.new_contact_invalid_contact_account_id)
+            FormStatus.NON_EXISTING_ACCOUNT -> resources.getString(R.string.new_contact_non_existing_account_id)
+            FormStatus.DUPLICATED_ACCOUNT -> resources.getString(R.string.new_contact_duplicate_contact)
+            FormStatus.ADDING_YOURSELF -> resources.getString(R.string.new_contact_you_like_yourself)
+            else -> ""
+        }
     }
 }
