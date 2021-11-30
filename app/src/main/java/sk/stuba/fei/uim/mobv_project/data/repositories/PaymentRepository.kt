@@ -44,7 +44,10 @@ class PaymentRepository(
     fun getAllPayments(): LiveData<List<Payment>> = dao.getAll()
     fun getPaymentById(id: String): LiveData<Payment> = dao.getById(id)
     fun getAccountPayments(id: String?): LiveData<List<Payment>> = dao.getBySourceAccount(id)
+
     fun getAccountPaymentsByAssetCode(id: String?, assetCode:String?): LiveData<List<Payment>> = dao.getBySourceAccountAssetCode(id, assetCode)
+    fun getDeadAccountPaymentsByAssetCodeAndSourceAccount(assetCode:String, accountId: String): List<Payment> =
+        dao.getDeadByAssetCodeAndSourceAccount(assetCode, accountId)
 
     suspend fun insertPayment(payment: Payment) {
         dao.insert(payment)

@@ -43,6 +43,9 @@ class BalanceRepository(
 
     fun getAllBalances(): LiveData<List<Balances>> = dao.getAll()
     fun getBalancesByAssetCode(code: String): LiveData<Balances> = dao.getByAssetCode(code)
+    fun getDeadBalancesByAssetCodeAndSourceAccount(assetCode: String, sourceAccount: String): List<Balances> =
+        dao.getDeadByAssetCodeAndSourceAccount(assetCode, sourceAccount)
+
     fun getAccountBalances(id: String): LiveData<List<Balances>> = dao.getBySourceAccount(id)
 
     fun getAccountAssetCodes(id: String?): LiveData<List<String>> = dao.getAccountAssetCodes(id)

@@ -1,6 +1,7 @@
 package sk.stuba.fei.uim.mobv_project.ui.contacts
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ import sk.stuba.fei.uim.mobv_project.data.repositories.ContactRepository
 import sk.stuba.fei.uim.mobv_project.data.utils.ViewModelFactory
 import sk.stuba.fei.uim.mobv_project.data.view_models.contacts.ContactsViewModel
 import sk.stuba.fei.uim.mobv_project.databinding.FragmentContactsBinding
+import sk.stuba.fei.uim.mobv_project.utils.SecurityContext
 
 class ContactsFragment : Fragment(), ContactsRecycleViewAdapter.OnContactClickListener {
 
@@ -24,6 +26,7 @@ class ContactsFragment : Fragment(), ContactsRecycleViewAdapter.OnContactClickLi
     }
     private lateinit var binding: FragmentContactsBinding
     private lateinit var adapter: ContactsRecycleViewAdapter
+    private val account = SecurityContext.account!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,11 +80,9 @@ class ContactsFragment : Fragment(), ContactsRecycleViewAdapter.OnContactClickLi
     }
 
     private fun setContactObserver(){
-        contactsViewModel.contactRepo.getAccountContacts("1").observe(
+        contactsViewModel.contactRepo.getAccountContacts(account.accountId).observe(
             this,
-            { contacts ->
-                adapter.setData(contacts)
-            }
+            { contacts -> adapter.setData(contacts) }
         )
     }
 

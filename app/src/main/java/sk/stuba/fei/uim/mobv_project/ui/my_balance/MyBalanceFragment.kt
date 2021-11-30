@@ -52,6 +52,7 @@ class MyBalanceFragment : NoNavigationUpFragment(), AdapterView.OnItemSelectedLi
         )
 
         attachObserverToSpinner()
+        binding.assetOptionsSpinner.onItemSelectedListener = this
 
 //        attachListerToNewTransactionButton(binding)
         attachViewModelToBinding(binding)
@@ -97,8 +98,6 @@ class MyBalanceFragment : NoNavigationUpFragment(), AdapterView.OnItemSelectedLi
         binding.lifecycleOwner = viewLifecycleOwner
     }
 
-
-
     private fun attachListerToNewTransactionButton(binding: FragmentMyBalanceBinding) {
         val clickButtonListener: View.OnClickListener = View.OnClickListener {
 //            findNavController().navigate(
@@ -115,16 +114,14 @@ class MyBalanceFragment : NoNavigationUpFragment(), AdapterView.OnItemSelectedLi
         myBalanceViewModel.selectedPayments.observe(
             this,
             { selectedPayments ->
-//                myBalanceViewModel.exportPayments = selectedPayments
                 adapter.setData(selectedPayments)
             }
         )
     }
 
-
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-        Log.e("SPINNER", "position" + p2.toString() + " Id " + p3.toString())
-//        myBalanceViewModel.selectedToken.postValue()
+        val selectedAssetOption = myBalanceViewModel.assetOptions.value!![p2]
+        myBalanceViewModel.updatePaymentsAndBalance(selectedAssetOption)
     }
 
     override fun onNothingSelected(p0: AdapterView<*>?) {

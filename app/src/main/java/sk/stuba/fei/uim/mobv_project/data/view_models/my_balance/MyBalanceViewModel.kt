@@ -4,13 +4,20 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import sk.stuba.fei.uim.mobv_project.data.entities.Account
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import sk.stuba.fei.uim.mobv_project.data.entities.Balances
 import sk.stuba.fei.uim.mobv_project.data.entities.Payment
 import sk.stuba.fei.uim.mobv_project.data.repositories.BalanceRepository
 import sk.stuba.fei.uim.mobv_project.data.repositories.PaymentRepository
+import sk.stuba.fei.uim.mobv_project.utils.SecurityContext
 
 
-class MyBalanceViewModel(balanceRepo: BalanceRepository, paymentRepo: PaymentRepository) : ViewModel() {
+class MyBalanceViewModel(
+    private val balanceRepo: BalanceRepository,
+    private val  paymentRepo: PaymentRepository) : ViewModel() {
 
     /*
     z Balances - k menu
@@ -21,45 +28,40 @@ class MyBalanceViewModel(balanceRepo: BalanceRepository, paymentRepo: PaymentRep
      - pretty much asi vsetko :D
     */
 
-    // neskor cez SecurityContext
-    var MAIN_ACCOUNT = Account("2", "Jeff", "Bezos", "123456")
+    var mainAccount = SecurityContext.account!!// Account("2", "Jeff", "Bezos", "123456")
 
-    var walletOwner = MAIN_ACCOUNT?.firstName + " " + MAIN_ACCOUNT?.lastName
+    val walletOwner =  MutableLiveData<String>()//mainAccount.firstName + " " + mainAccount.lastName
 
-    // TODO z tychto dvoch asi spravit mapu cez transformers.map ale neviem ako sa to robi :(
-    // ale asi ked mapu tak by som getla cele balance, nie iba assetCodes + amount
-    var assetOptions = balanceRepo.getAccountAssetCodes(MAIN_ACCOUNT?.accountId) // list assetov - do spinneru
-    var balances = balanceRepo.getAccountBalanceAmounts(MAIN_ACCOUNT?.accountId) // list balancov (iba sumy)
-
-    // mutable
-    var selectedAsset = MutableLiveData<String>()
-    var selectedBalance = MutableLiveData<String>()
-    var selectedPayments: LiveData<List<Payment>>
-
-    // export budu asi tie platby ktore patria sourceAccountu a maju assetCode taky aky bol selectnuty
-//    var exportPayments: List<Payment> = ArrayList()
+    var assetOptions = balanceRepo.getAccountAssetCodes(mainAccount?.accountId) // list assetov - do spinneru
+    var balanceToShow = MutableLiveData<String?>()
+    var selectedPayments = MutableLiveData<List<Payment>>()
 
     init {
+        walletOwner.value = mainAccount.firstName + " " + mainAccount.lastName
+//        paymentRepo.getAllPayments().observeForever { payments ->
+//            Log.e("ALLPAYMENTS", payments.toString())
+//        }
+    }
 
-        // toto funguje len in theory, lebo
-        // jednak neviem ci sedia indexy balancov s asset kodmi ked sa getnu zvlast
-        // a jednak vracia mi to null zase
-        // zatial som svacla do accountBalance cely balance list nech to aspon nieco vypisuje
-        selectedBalance.value = balances.value?.get(0)
-        selectedAsset.value = assetOptions.value?.get(0)
-        selectedPayments = paymentRepo.getAccountPaymentsByAssetCode(MAIN_ACCOUNT.accountId, selectedAsset.value)
+    fun updatePaymentsAndBalance(selectedAsset: String) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val balance =
+                    balanceRepo.getDeadBalancesByAssetCodeAndSourceAccount(selectedAsset, mainAccount.accountId) // getDeadBalance
+                val payments =
+                    paymentRepo.getDeadAccountPaymentsByAssetCodeAndSourceAccount(selectedAsset, mainAccount.accountId)
 
-//        exportPayments =
-//            if (selectedPayments.value != null) selectedPayments.value!!
-//            else ArrayList()
+                selectedPayments.postValue(payments)
+                balanceToShow.postValue(parseBalance(balance))
+            }
+        }
+    }
 
-        Log.i("MyBalanceViewModel", "selectedAsset: ${selectedAsset.value}")
-        Log.i("MyBalanceViewModel", "MAIN_ACCOUNT: $MAIN_ACCOUNT")
-        Log.i("MyBalanceViewModel", "balances: ${balances.value}")
-        Log.i("MyBalanceViewModel", "assetOptions: ${assetOptions.value}")
-        Log.i("MyBalanceViewModel", "walletOwner: $walletOwner")
-        Log.i("MyBalanceViewModel", "selectedAsset: ${selectedAsset.value}")
-        Log.i("MyBalanceViewModel", "selectedPayments: ${selectedPayments.value}")
+    private fun parseBalance(dbBalance: List<Balances>): String {
+        return if(dbBalance.isNotEmpty()) {
+            return dbBalance[0].balance!!
+        }
+        else {"NO BALANCE"}
     }
 
 }
