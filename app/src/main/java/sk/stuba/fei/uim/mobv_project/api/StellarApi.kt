@@ -13,8 +13,6 @@ import sk.stuba.fei.uim.mobv_project.data.exceptions.*
 import sk.stuba.fei.uim.mobv_project.data.utils.Validation
 import kotlin.jvm.Throws
 
-// TODO krajsejsie logy a error handling
-
 
 class StellarApi(private val context: Context) {
 
@@ -162,8 +160,6 @@ class StellarApi(private val context: Context) {
             .setBaseFee(Transaction.MIN_BASE_FEE)
             .addMemo(Memo.text(memo))
             .build()
-
-        // TODO este niekde medzi tym check aj s pinom
 
         // podpis
         transaction.sign(srcKeyPair)

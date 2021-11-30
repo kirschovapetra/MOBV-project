@@ -9,8 +9,9 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.stellar.sdk.KeyPair
 import sk.stuba.fei.uim.mobv_project.data.entities.*
 import sk.stuba.fei.uim.mobv_project.data.repositories.*
@@ -95,22 +96,32 @@ class MainActivity : AppCompatActivity() {
         val balanceRepo = BalanceRepository.getInstance(this)
         val paymentRepo = PaymentRepository.getInstance(this)
 
-        GlobalScope.launch {
-            val ss = accountRepo.createAndSyncAccount("Severus", "Snape", "1234", KeyPair.random())
-            val hp = accountRepo.createAndSyncAccount( "Harry", "Potter", "5678", KeyPair.random())
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                val ss =
+                    accountRepo.createAndSyncAccount("Severus", "Snape", "1234", KeyPair.random())
+                val hp =
+                    accountRepo.createAndSyncAccount("Harry", "Potter", "5678", KeyPair.random())
 
-            balanceRepo.syncBalances(ss.accountId)
-            balanceRepo.syncBalances(hp.accountId)
+                balanceRepo.syncBalances(ss.accountId)
+                balanceRepo.syncBalances(hp.accountId)
 
-            paymentRepo.sendAndSyncPayment(
-                sourcePublicKey = ss.accountId, sourcePrivateKey = CipherUtils.decrypt(ss.privateKey!!, "1234", ss.salt!!, ss.iv!!),
-                destinationPublicKey = hp.accountId, amount = "20", memo = "Mistah Pottah")
+                paymentRepo.sendAndSyncPayment(
+                    sourcePublicKey = ss.accountId,
+                    sourcePrivateKey = CipherUtils.decrypt(ss.privateKey!!,
+                        "1234",
+                        ss.salt!!,
+                        ss.iv!!),
+                    destinationPublicKey = hp.accountId,
+                    amount = "20",
+                    memo = "Mistah Pottah")
 
-            balanceRepo.syncBalances(ss.accountId)
-            balanceRepo.syncBalances(hp.accountId)
+                balanceRepo.syncBalances(ss.accountId)
+                balanceRepo.syncBalances(hp.accountId)
 
-            paymentRepo.syncPayments(ss.accountId)
-            paymentRepo.syncPayments(hp.accountId)
+                paymentRepo.syncPayments(ss.accountId)
+                paymentRepo.syncPayments(hp.accountId)
+            }
         }
     }
 

@@ -3,8 +3,9 @@ package sk.stuba.fei.uim.mobv_project.data.view_models.settings
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import sk.stuba.fei.uim.mobv_project.data.entities.Contact
 import sk.stuba.fei.uim.mobv_project.data.exceptions.ApiException
 import sk.stuba.fei.uim.mobv_project.data.exceptions.TransactionFailedException
@@ -38,49 +39,42 @@ class SettingsViewModel(
     // "asset_code": "USD", "asset_issuer": "GA234B7P5ME6FTFLZ77PBYMRUJ3L33I6UPNYZ3XAUY4NNT7QWIAV7GL5"
 
     fun insertAccountToDb() {
-        GlobalScope.launch {
-//            val ss = accountRepo.createAndSyncAccount("Ahoj", "Nazdar")
-            try {
-                accountRepo.syncAccount(senderPublic, senderSecret, "Jozko", "Mrkvicka")
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                try {
+                    accountRepo.syncAccount(senderPublic, senderSecret, "Jozko", "Mrkvicka")
 
-                // pridam sourcu dogecoin
-//             balanceRepo.addAndSyncTrustedAsset(
-//                 senderPublic, senderSecret, dogecoinAssetCode, dogecoinAssetIssuer,"200000")
+                    // treba syncnut api s db pre kazdu tabulku zvlast
+                    balanceRepo.syncBalances(senderPublic)
+                    paymentRepo.syncPayments(senderPublic)
 
-                // treba syncnut api s db pre kazdu tabulku zvlast
-                balanceRepo.syncBalances(senderPublic)
-                paymentRepo.syncPayments(senderPublic)
+                    contactRepo.insertContact(
+                        Contact(contactPublic, "Moj najlepsi kamko", senderPublic)
+                    )
 
-                contactRepo.insertContact(
-                    Contact(contactPublic, "Moj najlepsi kamko", senderPublic)
-                )
-
-                // native platba - v Lumenoch
+                    // native platba - v Lumenoch
 //                paymentRepo.sendAndSyncPayment(
 //                    sourcePublicKey = senderPublic, sourcePrivateKey = senderSecret,
 //                    destinationPublicKey = contactPublic, amount = "50", memo = "Serus bruh")
 
-                // custom platba - v dogecoinoch (jediny rozdiel ze sa zada assetCode a issuer)
-                // failne lebo nemame ziadne dogecoiny :(
-                paymentRepo.sendAndSyncPayment(
-                    sourcePublicKey = senderPublic, sourcePrivateKey = senderSecret,
-                    destinationPublicKey = contactPublic, assetCode = dogecoinAssetCode,
-                    assetIssuer = dogecoinAssetIssuer, amount = "100", memo = "tak nic")
+                    // custom platba - v dogecoinoch (jediny rozdiel ze sa zada assetCode a issuer)
+                    // failne lebo nemame ziadne dogecoiny :(
+                    paymentRepo.sendAndSyncPayment(
+                        sourcePublicKey = senderPublic, sourcePrivateKey = senderSecret,
+                        destinationPublicKey = contactPublic, assetCode = dogecoinAssetCode,
+                        assetIssuer = dogecoinAssetIssuer, amount = "100", memo = "tak nic")
 
-                balanceRepo.syncBalances(senderPublic)
-                paymentRepo.syncPayments(senderPublic)
-            }
-            catch (e: ValidationException) {
-                Log.e("SettingsViewModel", "ValidationException: ${e.message}")
-            }
-            catch (e: TransactionFailedException) {
-                Log.e("SettingsViewModel", "TransactionFailedException: ${e.message}")
-            }
-            catch (e: ApiException) {
-                Log.e("SettingsViewModel", "ApiException: ${e.message}")
-            }
-            catch (e: Exception) {
-                Log.e("SettingsViewModel", "Nieco sa ale ze brutalne posralo ${e.message}")
+                    balanceRepo.syncBalances(senderPublic)
+                    paymentRepo.syncPayments(senderPublic)
+                } catch (e: ValidationException) {
+                    Log.e("SettingsViewModel", "ValidationException: ${e.message}")
+                } catch (e: TransactionFailedException) {
+                    Log.e("SettingsViewModel", "TransactionFailedException: ${e.message}")
+                } catch (e: ApiException) {
+                    Log.e("SettingsViewModel", "ApiException: ${e.message}")
+                } catch (e: Exception) {
+                    Log.e("SettingsViewModel", "Nieco sa ale ze brutalne posralo ${e.message}")
+                }
             }
         }
     }
