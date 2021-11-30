@@ -21,6 +21,7 @@ import sk.stuba.fei.uim.mobv_project.data.view_models.intro.CreateWalletViewMode
 import sk.stuba.fei.uim.mobv_project.databinding.FragmentCreateWalletBinding
 import sk.stuba.fei.uim.mobv_project.ui.intro.CreateWalletFragmentDirections.actionCreateWalletFragmentToMyBalanceFragment
 import sk.stuba.fei.uim.mobv_project.ui.utils.NotificationUtils
+import sk.stuba.fei.uim.mobv_project.ui.utils.NotificationUtils.showSnackbarFromMessageEvent
 
 class CreateWalletFragment : Fragment(R.layout.fragment_create_wallet) {
 
@@ -47,19 +48,22 @@ class CreateWalletFragment : Fragment(R.layout.fragment_create_wallet) {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
-        viewModel.eventCopyToClipboard.observe(viewLifecycleOwner, {
+        viewModel.eventRepositoryValidationError.observe(this, {
+            showSnackbarFromMessageEvent(view, it, Snackbar.LENGTH_LONG)
+        })
+        viewModel.eventCopyToClipboard.observe(this, {
             it.getContentIfNotHandled()?.let { text ->
                 copyToClipboard(text)
             }
         })
-        viewModel.eventContinue.observe(viewLifecycleOwner, { event ->
+        viewModel.eventContinue.observe(this, { event ->
             event.getContentIfNotHandled()?.let {
                 if (it) {
                     showContinueDialog()
                 }
             }
         })
-        viewModel.eventLocalAccountCreated.observe(viewLifecycleOwner, { event ->
+        viewModel.eventLocalAccountCreated.observe(this, { event ->
             event.getContentIfNotHandled()?.let {
                 if (it) {
                     findNavController().navigate(

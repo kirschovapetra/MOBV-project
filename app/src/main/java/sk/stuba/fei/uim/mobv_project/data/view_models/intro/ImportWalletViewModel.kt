@@ -72,7 +72,7 @@ class ImportWalletViewModel(
 
     private fun validateForm(): FormError? {
         return when {
-            privateKey.value.isNullOrBlank() -> FormError.KEY_EMPTY
+            privateKey.value.isNullOrEmpty() -> FormError.KEY_EMPTY
             privateKey.value!!.length != 56 -> FormError.KEY_INVALID_LENGTH
             else -> null
         }
