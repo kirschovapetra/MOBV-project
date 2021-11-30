@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import sk.stuba.fei.uim.mobv_project.R
 import sk.stuba.fei.uim.mobv_project.data.entities.Account
 import sk.stuba.fei.uim.mobv_project.data.entities.Contact
 import sk.stuba.fei.uim.mobv_project.data.repositories.AccountRepository
@@ -19,8 +20,7 @@ class NewContactViewModel(
     private val accountRepo: AccountRepository
 ) : ViewModel() {
 
-    enum class FormStatus {
-        OK,
+    enum class FormError {
         INVALID_NAME,
         INVALID_CONTACT_ID,
         NON_EXISTING_ACCOUNT,
@@ -44,12 +44,12 @@ class NewContactViewModel(
     private val account: Account = SecurityContext.account!!
 
     // EVENTS
-    private val _eventInvalidForm = MutableLiveData<Event<FormStatus>>()
-    val eventInvalidForm: LiveData<Event<FormStatus>>
+    private val _eventInvalidForm = MutableLiveData<Event<Int>>()
+    val eventInvalidForm: LiveData<Event<Int>>
         get() = _eventInvalidForm
 
-    private val _eventContactSaved = MutableLiveData<Event<SaveResult>>()
-    val eventContactSave: LiveData<Event<SaveResult>>
+    private val _eventContactSaved = MutableLiveData<Event<Int>>()
+    val eventContactSave: LiveData<Event<Int>>
         get() = _eventContactSaved
 
 
@@ -62,19 +62,27 @@ class NewContactViewModel(
     fun saveContact() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val formStatus = validateFields()
-                if (formStatus != FormStatus.OK) {
-                    _eventInvalidForm.postValue(Event(formStatus))
+                val formError = validateFields()
+                formError?.let {
+                    _eventInvalidForm.postValue(Event(getMessageResourceId(it)))
                     return@withContext
                 }
 
                 val contact = getContact()
                 if (isNew.value!!) {
                     contactRepo.insertContact(contact)
-                    _eventContactSaved.postValue(Event(SaveResult.CREATED))
+                    _eventContactSaved.postValue(
+                        Event(
+                            getMessageResourceId(SaveResult.CREATED)
+                        )
+                    )
                 } else {
                     contactRepo.updateContact(contact)
-                    _eventContactSaved.postValue(Event(SaveResult.UPDATED))
+                    _eventContactSaved.postValue(
+                        Event(
+                            getMessageResourceId(SaveResult.UPDATED)
+                        )
+                    )
                 }
             }
         }
@@ -94,24 +102,41 @@ class NewContactViewModel(
 
     private fun isContactDuplicate(contactId: String): Boolean {
         return contactRepo.getDeadContactByIdAndSourceAccount(contactId, account.accountId)
-                   .isNotEmpty()
+            .isNotEmpty()
     }
 
-    private fun validateFields(): FormStatus {
+    private fun validateFields(): FormError? {
         return when {
-            contactName.value == "" -> FormStatus.INVALID_NAME
+            contactName.value == "" -> FormError.INVALID_NAME
 
-            contactAccountId.value == "" -> FormStatus.INVALID_CONTACT_ID
+            contactAccountId.value == "" -> FormError.INVALID_CONTACT_ID
 
             isNew.value!! && accountDoesNotExist(account.accountId)
-            -> FormStatus.NON_EXISTING_ACCOUNT
+            -> FormError.NON_EXISTING_ACCOUNT
 
             isNew.value!! && isContactDuplicate(contactAccountId.value!!)
-            -> FormStatus.DUPLICATED_ACCOUNT
+            -> FormError.DUPLICATED_ACCOUNT
 
-            contactAccountId.value == account.accountId -> FormStatus.ADDING_YOURSELF
+            contactAccountId.value == account.accountId -> FormError.ADDING_YOURSELF
 
-            else -> FormStatus.OK
+            else -> null
+        }
+    }
+
+    private fun getMessageResourceId(saveResult: SaveResult): Int {
+        return when (saveResult) {
+            SaveResult.CREATED -> R.string.new_contact_created
+            SaveResult.UPDATED -> R.string.new_contact_updated
+        }
+    }
+
+    private fun getMessageResourceId(formError: FormError): Int {
+        return when (formError) {
+            FormError.INVALID_NAME -> R.string.new_contact_invalid_contact_name
+            FormError.INVALID_CONTACT_ID -> R.string.new_contact_invalid_contact_account_id
+            FormError.NON_EXISTING_ACCOUNT -> R.string.new_contact_non_existing_account_id
+            FormError.DUPLICATED_ACCOUNT -> R.string.new_contact_duplicate_contact
+            FormError.ADDING_YOURSELF -> R.string.new_contact_you_like_yourself
         }
     }
 }
