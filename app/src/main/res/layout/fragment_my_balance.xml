@@ -20,11 +20,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="300dp"
-            android:weightSum="100"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="5dp"
+            android:layout_marginBottom="16dp"
             android:orientation="vertical"
+            android:weightSum="100"
             app:layout_constraintBottom_toTopOf="@+id/paymentsRecyclerView"
             app:layout_constraintStart_toStartOf="parent">
 
@@ -32,21 +31,21 @@
                 android:id="@+id/walletOwner"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                app:layout_constraintBottom_toTopOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="80dp"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="80dp"
                 android:layout_marginEnd="16dp"
-                android:text="@={myBalanceViewModel.walletOwner}" />
+                android:text="@={myBalanceViewModel.walletOwner}"
+                app:layout_constraintBottom_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent" />
 
             <Spinner
                 android:id="@+id/assetOptionsSpinner"
                 android:layout_width="match_parent"
-                app:layout_constraintBottom_toTopOf="@+id/walletOwner"
-                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_height="50dp"
                 android:layout_marginTop="20dp"
                 android:contentDescription="@string/asset_options_description"
-                android:layout_height="50dp" />
+                app:layout_constraintBottom_toTopOf="@+id/walletOwner"
+                app:layout_constraintLeft_toLeftOf="parent" />
 
             <TextView
                 android:id="@+id/accountBalance"
@@ -65,8 +64,7 @@
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="-10dp"
+            android:layout_marginBottom="96dp"
             android:background="@drawable/custom_black_border"
             android:padding="5dp"
             app:layout_constraintBottom_toBottomOf="parent"

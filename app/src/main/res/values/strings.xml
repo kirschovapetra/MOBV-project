@@ -91,4 +91,8 @@
     <string name="settings_asset_issuer_hint">Asset Issuer</string>
     <string name="settings_asset_code_hint">Asset code</string>
     <string name="currency_text">Lumens</string>
+    <string name="contactCardName">ContactCardName</string>
+    <string name="contactId">845646</string>
+    <string name="contacticon">contactIcon</string>
+    <string name="CardcontactId">4564894654</string>
 </resources>
