@@ -86,4 +86,5 @@
     <string name="settings_add_asset_button">Add to trusted</string>
     <string name="settings_asset_issuer_hint">Asset Issuer</string>
     <string name="settings_asset_code_hint">Asset code</string>
+    <string name="currency_text">Lumens</string>
 </resources>

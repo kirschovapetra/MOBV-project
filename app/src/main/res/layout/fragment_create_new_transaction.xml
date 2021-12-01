@@ -19,29 +19,22 @@
             android:id="@+id/spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginEnd="32dp"
+            android:layout_marginTop="50dp"
             android:minHeight="48dp"
-            app:layout_constraintBottom_toTopOf="@+id/accountIdEditText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="packed" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/accountIdEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginEnd="32dp"
             android:ems="10"
             android:hint="@string/accountId_hint"
             android:inputType="text"
             android:minHeight="48dp"
             android:text="@={viewModel.accountId}"
-            app:layout_constraintBottom_toTopOf="@+id/pinEditText"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/spinner" />
 
@@ -49,16 +42,25 @@
             android:id="@+id/amountEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginEnd="32dp"
             android:ems="10"
             android:hint="@string/amount_hint"
             android:inputType="number"
             android:minHeight="48dp"
             android:text="@={Converters.floatToString(viewModel.amount)}"
-            app:layout_constraintBottom_toTopOf="@+id/sendPaymentButton"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/currencyEditText" />
+
+        <EditText
+            android:id="@+id/currencyEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/currency_text"
+            android:text="@string/currency_text"
+            android:enabled="false"
+            android:minHeight="48dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/pinEditText" />
 
@@ -66,16 +68,12 @@
             android:id="@+id/pinEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginEnd="32dp"
             android:ems="10"
             android:hint="@string/pin_hint"
             android:inputType="numberPassword"
             android:minHeight="48dp"
             android:text="@={viewModel.pin}"
-            app:layout_constraintBottom_toTopOf="@+id/amountEditText"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/accountIdEditText" />
 
@@ -83,13 +81,10 @@
             android:id="@+id/sendPaymentButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginEnd="32dp"
             android:onClick="@{() -> viewModel.sendPayment()}"
             android:text="@string/sendTransactionButton"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/amountEditText" />
 
