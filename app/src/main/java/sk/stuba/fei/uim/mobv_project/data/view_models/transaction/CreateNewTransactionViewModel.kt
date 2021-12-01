@@ -47,9 +47,9 @@ class CreateNewTransactionViewModel(
     val eventInvalidPin: LiveData<Event<Boolean>>
         get() = _eventInvalidPin
 
-    fun setSelectedContact(contact: Contact) {
+    fun setSelectedContact(contact: Contact?) {
         selectedContact = contact
-        accountId.value = contact.contactId
+        accountId.value = contact?.contactId.orEmpty()
     }
 
     private fun validatePin(): Boolean {

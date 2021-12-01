@@ -45,10 +45,11 @@ class CreateNewTransactionFragment : Fragment(), AdapterView.OnItemSelectedListe
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
         binding.spinner.onItemSelectedListener = this
-        viewModel.allContacts.observe(viewLifecycleOwner, {
-            // TODO replace ArrayAdapter
-            val spinnerAdapter = ArrayAdapter(context!!, android.R.layout.simple_spinner_item, it)
-            binding.spinner.adapter = spinnerAdapter
+        viewModel.allContacts.observe(viewLifecycleOwner, { contactList ->
+            context?.let { context ->
+                val spinnerAdapter = ContactArrayAdapter(context, contactList)
+                binding.spinner.adapter = spinnerAdapter
+            }
         })
         viewModel.eventPaymentSuccessful.observe(viewLifecycleOwner, { event ->
             event.getContentIfNotHandled()?.let {
@@ -84,7 +85,7 @@ class CreateNewTransactionFragment : Fragment(), AdapterView.OnItemSelectedListe
     }
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
-        // TODO("Not yet implemented")
+        viewModel.setSelectedContact(null)
     }
 
     private fun onInvalidPin() {
