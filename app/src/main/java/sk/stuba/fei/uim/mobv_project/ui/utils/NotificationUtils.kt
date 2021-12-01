@@ -20,25 +20,41 @@ object NotificationUtils {
 
     fun showSnackbar(view: View?, resourceId: Int, duration: Int) {
         view?.let {
-            Snackbar.make(it, resourceId, duration).show()
+            Snackbar.make(it, resourceId, duration)
+                .setAction("X") {
+                    it.visibility = View.GONE
+                }
+                .show()
         }
     }
 
     fun showSnackbar(view: View?, message: String, duration: Int) {
         view?.let {
-            Snackbar.make(it, message, duration).show()
+            Snackbar.make(it, message, duration)
+                .setAction("X") {
+                    it.visibility = View.GONE
+                }
+                .show()
         }
     }
 
     fun showAnchorSnackbar(view: View?, message: String, duration: Int, anchorId: Int) {
         view?.let {
-            Snackbar.make(it, message, duration).setAnchorView(anchorId).show()
+            Snackbar.make(it, message, duration).setAnchorView(anchorId)
+                .setAction("X") {
+                    it.visibility = View.GONE
+                }
+                .show()
         }
     }
 
     fun showAnchorSnackbar(view: View?, resourceId: Int, duration: Int, anchorId: Int) {
         view?.let {
-            Snackbar.make(it, resourceId, duration).setAnchorView(anchorId).show()
+            Snackbar.make(it, resourceId, duration).setAnchorView(anchorId)
+                .setAction("X") {
+                    it.visibility = View.GONE
+                }
+                .show()
         }
     }
 }

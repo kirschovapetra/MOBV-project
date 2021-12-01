@@ -1,15 +1,14 @@
 package sk.stuba.fei.uim.mobv_project.ui.contacts
 
 import android.os.Bundle
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import sk.stuba.fei.uim.mobv_project.R
 import sk.stuba.fei.uim.mobv_project.data.entities.Contact
 import sk.stuba.fei.uim.mobv_project.data.repositories.AccountRepository
@@ -18,6 +17,8 @@ import sk.stuba.fei.uim.mobv_project.data.utils.ViewModelFactory
 import sk.stuba.fei.uim.mobv_project.data.view_models.contacts.NewContactViewModel
 import sk.stuba.fei.uim.mobv_project.databinding.FragmentNewContactBinding
 import sk.stuba.fei.uim.mobv_project.ui.contacts.NewContactFragmentDirections.actionNewContactFragmentToContactsFragment
+import sk.stuba.fei.uim.mobv_project.ui.utils.NotificationUtils
+import sk.stuba.fei.uim.mobv_project.ui.utils.NotificationUtils.showSnackbar
 
 class NewContactFragment : Fragment() {
 
@@ -58,32 +59,22 @@ class NewContactFragment : Fragment() {
 
         newContactViewModel.eventInvalidForm.observe(this, { event ->
             event.getContentIfNotHandled()?.let { messageResourceId ->
-                showToast(messageResourceId)
+                showSnackbar(view, messageResourceId, Snackbar.LENGTH_LONG)
             }
         })
         newContactViewModel.eventContactSave.observe(this, { event ->
             event.getContentIfNotHandled()?.let { messageResourceId ->
-                navigateToContactsAndMakeToast(messageResourceId)
+                navigateToContactsAndShowSnackbar(messageResourceId)
             }
         })
 
         return binding.root
     }
 
-    private fun navigateToContactsAndMakeToast(messageResourceId: Int) {
+    private fun navigateToContactsAndShowSnackbar(messageResourceId: Int) {
         findNavController().navigate(
             actionNewContactFragmentToContactsFragment()
         )
-        showToast(messageResourceId)
-    }
-
-    private fun showToast(messageResourceId: Int) {
-        val toast = Toast.makeText(
-            context,
-            resources.getString(messageResourceId),
-            Toast.LENGTH_LONG
-        )
-        toast.setGravity(Gravity.TOP, 0, 150)
-        toast.show()
+        NotificationUtils.showAnchorSnackbar(view, messageResourceId, Snackbar.LENGTH_LONG, R.id.bottom_nav_view)
     }
 }
