@@ -5,24 +5,28 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/custom_black_border"
-    app:cardBackgroundColor="@color/md_theme_light_background">
+    app:cardBackgroundColor="@color/md_theme_light_background"
+    android:layout_marginBottom="10dp"
+    >
 
     <LinearLayout
         android:id="@+id/paymentCardWrapper"
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:layout_margin="0dp"
+        android:layout_marginBottom="5dp"
         android:background="@drawable/custom_black_border"
         android:orientation="horizontal"
-        android:padding="1dp">
+        android:padding="1dp"
+        >
 
         <LinearLayout
             android:id="@+id/paymentTypeIconWrapper"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_margin="5dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginRight="10dp"
             android:orientation="horizontal"
-            android:padding="5dp">
+            >
 
             <ImageView
                 android:id="@+id/paymentCardTypeIcon"
@@ -54,7 +58,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginStart="0dp"
                     android:text="Jozko"
-                    android:textSize="20sp"
+                    android:textSize="17sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -63,7 +67,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:text="50"
-                    android:textSize="20sp"
+                    android:textSize="17sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -72,7 +76,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:text="20.10.2015"
-                    android:textSize="20sp"
+                    android:textSize="17sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -87,7 +91,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="46546496846fdsfdas4f6das4f6sf4sa65f4sda6f479as8f463sad1f"
-                    android:textSize="15sp"
+                    android:textSize="13sp"
                     android:textStyle="normal" />
             </LinearLayout>
 
