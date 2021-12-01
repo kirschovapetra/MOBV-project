@@ -20,31 +20,17 @@ class MyBalanceViewModel(
     private val  paymentRepo: PaymentRepository,
     private val contactRepo: ContactRepository) : ViewModel() {
 
-    /*
-    z Balances - k menu
-     - assetCode
-     - balance
+    var account = SecurityContext.account!!
 
-    Payments - do recycler view
-     - pretty much asi vsetko :D
-    */
-
-    var account = SecurityContext.account!!// Account("2", "Jeff", "Bezos", "123456")
-
-    val walletOwner =  MutableLiveData<String>()//mainAccount.firstName + " " + mainAccount.lastName
+    val walletOwner =  MutableLiveData<String>()
 
     var assetOptions = balanceRepo.getAccountAssetCodes(account.accountId)
-//    var selectedAssetOption = MutableLiveData<Int>()
 
     var balanceToShow = MutableLiveData<String?>()
     var selectedPayments = MutableLiveData<List<Payment>>()
 
     init {
         walletOwner.value = account.firstName + " " + account.lastName
-//        Log.e("SELECTED ST", selectedAssetOption.value.toString())
-//        paymentRepo.getAllPayments().observeForever { payments ->
-//            Log.e("ALLPAYMENTS", payments.toString())
-//        }
     }
 
     private fun fetchContactNameForPayment(payment: Payment): String {
@@ -76,11 +62,12 @@ class MyBalanceViewModel(
 
                 payments.forEach {
                     val attachedContactName = fetchContactNameForPayment(it)
-                    it.sourceAccount = attachedContactName
 
                     if(isNumeric(attachedContactName)) {
+                        it.sourceAccount = "Unknown"
                         it.from = ""
                     } else {
+                        it.sourceAccount = attachedContactName
                         it.from = setPaymentSender(it)
                     }
                 }

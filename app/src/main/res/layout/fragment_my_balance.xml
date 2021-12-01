@@ -17,35 +17,36 @@
         android:layout_height="match_parent"
         tools:context=".ui.my_balance.MyBalanceFragment">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="300dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginBottom="16dp"
             android:orientation="vertical"
-            android:weightSum="100"
-            app:layout_constraintBottom_toTopOf="@+id/paymentsRecyclerView"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:id="@+id/walletOwner"
+                style="@style/TextAppearance.Material3.HeadlineMedium"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="80dp"
                 android:layout_marginEnd="16dp"
                 android:text="@={myBalanceViewModel.walletOwner}"
-                app:layout_constraintBottom_toTopOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent" />
-
+                android:textColor="@color/md_theme_light_primary"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_editor_absoluteX="16dp" />
+<!--            android:text="@={myBalanceViewModel.walletOwner}"-->
             <Spinner
                 android:id="@+id/assetOptionsSpinner"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="20dp"
+                android:layout_marginEnd="16dp"
                 android:contentDescription="@string/asset_options_description"
-                app:layout_constraintBottom_toTopOf="@+id/walletOwner"
-                app:layout_constraintLeft_toLeftOf="parent" />
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/walletOwner" />
 
             <TextView
                 android:id="@+id/accountBalance"
@@ -55,23 +56,18 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="16dp"
                 android:text="@{myBalanceViewModel.balanceToShow}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent" />
-        </LinearLayout>
+                app:layout_constraintTop_toBottomOf="@+id/assetOptionsSpinner" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/paymentsRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="300dp"
-            android:layout_marginStart="16dp"
             android:layout_marginBottom="96dp"
             android:background="@drawable/custom_black_border"
-            android:padding="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+            tools:layout_editor_absoluteX="16dp" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/newTransactionButton"
