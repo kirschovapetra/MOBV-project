@@ -36,7 +36,7 @@ class ContactArrayAdapter(
 
     private fun createView(contact: Contact?, parent: ViewGroup): View {
         val view: TextView = LayoutInflater.from(context)
-                                 .inflate(android.R.layout.simple_spinner_item, parent, false)
+                                 .inflate(R.layout.contact_spinner_item, parent, false)
                                  as TextView
         return bindView(contact, view)
     }
