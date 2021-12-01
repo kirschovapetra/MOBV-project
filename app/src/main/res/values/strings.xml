@@ -75,5 +75,15 @@
     <string name="sentTransactionSaveContact">Transaction has been successfully sent. Would you like to save the recipient as a new contact?</string>
 
     <!-- Settings -->
-
+    <string name="settings_unlink_button">Unlink account</string>
+    <string name="settings_dialog_title">Are you sure?</string>
+    <string name="settings_dialog_message">If you lose your Private Key you won\'t be able to recover your wallet if you change your device or forget your pin code.</string>
+    <string name="settings_dialog_positive">Yes, unlink account</string>
+    <string name="settings_dialog_negative">No, go back</string>
+    <string name="settings_snackbar_message">You have been successfully logged out.</string>
+    <string name="settings_danger_zone_text">Danger zone !</string>
+    <string name="settings_add_asset_text">Add new trusted asset</string>
+    <string name="settings_add_asset_button">Add to trusted</string>
+    <string name="settings_asset_issuer_hint">Asset Issuer</string>
+    <string name="settings_asset_code_hint">Asset code</string>
 </resources>

@@ -1,5 +1,6 @@
 package sk.stuba.fei.uim.mobv_project.ui.utils
 
+import android.annotation.SuppressLint
 import android.view.View
 import com.google.android.material.snackbar.Snackbar
 import sk.stuba.fei.uim.mobv_project.data.view_models.event.Event
@@ -26,6 +27,12 @@ object NotificationUtils {
     fun showSnackbar(view: View?, message: String, duration: Int) {
         view?.let {
             Snackbar.make(it, message, duration).show()
+        }
+    }
+
+    fun showAnchorSnackbar(view: View?, message: String, duration: Int, anchorId: Int) {
+        view?.let {
+            Snackbar.make(it, message, duration).setAnchorView(anchorId).show()
         }
     }
 }

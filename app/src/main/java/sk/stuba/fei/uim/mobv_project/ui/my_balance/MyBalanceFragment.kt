@@ -9,6 +9,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import sk.stuba.fei.uim.mobv_project.R
@@ -17,11 +18,10 @@ import sk.stuba.fei.uim.mobv_project.data.repositories.PaymentRepository
 import sk.stuba.fei.uim.mobv_project.data.utils.ViewModelFactory
 import sk.stuba.fei.uim.mobv_project.data.view_models.my_balance.MyBalanceViewModel
 import sk.stuba.fei.uim.mobv_project.databinding.FragmentMyBalanceBinding
-import sk.stuba.fei.uim.mobv_project.ui.abstracts.NoNavigationUpFragment
 
 
 //todo ked chalan otoci telefon, tak by sa mohla zachovat value selectnuta v spinneri
-class MyBalanceFragment : NoNavigationUpFragment(), AdapterView.OnItemSelectedListener {
+class MyBalanceFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     private val myBalanceViewModel: MyBalanceViewModel by viewModels {
         ViewModelFactory(

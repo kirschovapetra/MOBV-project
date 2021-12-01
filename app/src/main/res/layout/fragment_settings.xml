@@ -15,37 +15,94 @@
         android:layout_height="match_parent"
         tools:context=".ui.settings.SettingsFragment">
 
+        <TextView
+            android:id="@+id/textView"
+            style="@style/NegativeButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+            android:text="@string/settings_add_asset_text"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/assetCodeEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/settings_asset_code_hint"
+            android:inputType="text"
+            android:minHeight="48dp"
+            android:text="@={settingsViewModel.assetCode}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView"
+            android:importantForAutofill="no" />
+
+        <EditText
+            android:id="@+id/assetIssuerEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/settings_asset_issuer_hint"
+            android:inputType="text"
+            android:minHeight="48dp"
+            android:text="@={settingsViewModel.assetIssuer}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/assetCodeEditText"
+            android:importantForAutofill="no" />
+
+        <EditText
+            android:id="@+id/pinEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/pin_hint"
+            android:inputType="numberPassword"
+            android:minHeight="48dp"
+            android:text="@={settingsViewModel.pin}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/assetIssuerEditText"
+            android:importantForAutofill="no" />
+
+        <Button
+            android:id="@+id/changeTrustButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:onClick="@{() -> settingsViewModel.changeTrust()}"
+            android:text="@string/settings_add_asset_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pinEditText" />
+
+        <TextView
+            android:id="@+id/dangerZoneLabel"
+            style="@style/PositiveButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:text="@string/settings_danger_zone_text"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/changeTrustButton" />
+
         <Button
             android:id="@+id/unlink_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/md_theme_light_error"
-            android:text="Unlink account"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="@string/settings_unlink_button"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.494"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/dangerZoneLabel" />
 
-        <Button
-            android:id="@+id/testButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="@{() -> settingsViewModel.insertAccountToDb()}"
-            android:text="Test: insertAccountToDb()"
-            app:layout_constraintBottom_toTopOf="@+id/unlink_button"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-<!--        <TextView-->
-<!--            android:id="@+id/liveDataTest"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="@{settingsViewModel.contacts2.toString()}"-->
-<!--            app:layout_constraintBottom_toTopOf="@+id/unlink_button"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toBottomOf="@+id/testButton" />-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

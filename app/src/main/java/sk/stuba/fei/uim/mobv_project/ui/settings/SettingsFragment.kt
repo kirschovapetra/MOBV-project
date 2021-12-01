@@ -13,6 +13,8 @@ import sk.stuba.fei.uim.mobv_project.data.repositories.*
 import sk.stuba.fei.uim.mobv_project.data.utils.ViewModelFactory
 import sk.stuba.fei.uim.mobv_project.data.view_models.settings.SettingsViewModel
 import sk.stuba.fei.uim.mobv_project.databinding.FragmentSettingsBinding
+import sk.stuba.fei.uim.mobv_project.ui.utils.LoadingLayoutUtils
+import sk.stuba.fei.uim.mobv_project.ui.utils.NotificationUtils
 
 
 class SettingsFragment : Fragment() {
@@ -47,27 +49,48 @@ class SettingsFragment : Fragment() {
             showDialog(requireContext())
         }
 
+        settingsViewModel.eventTransactionSuccessful.observe(viewLifecycleOwner, {
+            it.getContentIfNotHandled()?.let { message ->
+                NotificationUtils.showAnchorSnackbar(view, message, Snackbar.LENGTH_LONG, R.id.bottom_nav_view)
+                LoadingLayoutUtils.setLoadingLayoutVisibility(activity, false)
+            }
+        })
+        settingsViewModel.eventInvalidPin.observe(viewLifecycleOwner, {
+            it.getContentIfNotHandled()?.let { pinInvalid ->
+                if (pinInvalid) {
+                    NotificationUtils.showAnchorSnackbar(view,  resources.getString(R.string.intro_pin_invalid_text), Snackbar.LENGTH_SHORT, R.id.bottom_nav_view)
+                    LoadingLayoutUtils.setLoadingLayoutVisibility(activity, false)
+                }
+            }
+        })
+        settingsViewModel.eventApiValidationFailed.observe(viewLifecycleOwner, {
+            it.getContentIfNotHandled()?.let { errorMessage ->
+                NotificationUtils.showAnchorSnackbar(view, errorMessage, Snackbar.LENGTH_LONG, R.id.bottom_nav_view)
+                LoadingLayoutUtils.setLoadingLayoutVisibility(activity, false)
+            }
+        })
+        settingsViewModel.eventLoadingStarted.observe(viewLifecycleOwner, {
+            it.getContentIfNotHandled()?.let {
+                LoadingLayoutUtils.setLoadingLayoutVisibility(activity, true)
+            }
+        })
+
         return binding.root
     }
 
     private fun showDialog(context: Context) {
         MaterialAlertDialogBuilder(context, R.style.CustomMaterialAlertDialog)
-            .setTitle("Are you sure?")
-            .setMessage("If you lose your Private Key you won't be able to recover your wallet if you change your device or forget your pin code.")
+            .setTitle(R.string.settings_dialog_title)
+            .setMessage(R.string.settings_dialog_message)
             .setIcon(R.drawable.ic_baseline_warning_24)
-            .setPositiveButton("Yes, unlink account") { _, _ ->
+            .setPositiveButton(R.string.settings_dialog_positive) { _, _ ->
                 findNavController().navigate(
                     SettingsFragmentDirections.actionAboutFragmentToIntroFragment()
                 )
                 settingsViewModel.clearDatabase()
-                view?.let {
-                    Snackbar.make(it,
-                        "You have been successfully logged out",
-                        Snackbar.LENGTH_SHORT)
-                        .show()
-                }
+                NotificationUtils.showSnackbar(view, R.string.settings_snackbar_message, Snackbar.LENGTH_SHORT)
             }
-            .setNegativeButton("No, go back") { _, _ -> }
+            .setNegativeButton(R.string.settings_dialog_negative) { _, _ -> }
             .show()
     }
 }

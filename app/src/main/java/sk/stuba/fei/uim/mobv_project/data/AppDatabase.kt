@@ -10,8 +10,8 @@ import androidx.room.RoomDatabase
 
 @Database(
     entities = [Account::class, Balances::class, Contact::class, Payment::class],
-    version = 4,
-    exportSchema = false // true
+    version = 1,
+    exportSchema = false
 )
 //@TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {

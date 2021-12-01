@@ -103,14 +103,11 @@ class PaymentRepository(
         sourcePublicKey: String,
         sourcePrivateKey: String,
         destinationPublicKey: String,
-        assetCode: String = "Lumens",
-        assetIssuer: String = "",
         amount: String,
         memo: String = "",
     ) {
 
-        val transactionResponse = api.sendStellarTransaction(
-            sourcePrivateKey, destinationPublicKey, assetCode, assetIssuer, amount, memo)
+        api.sendStellarPayment(sourcePrivateKey, destinationPublicKey, amount, memo)
         syncPayments(sourcePublicKey)
         Log.i(TAG, "sendPayment: Success SRC=$sourcePublicKey DST=$destinationPublicKey")
 

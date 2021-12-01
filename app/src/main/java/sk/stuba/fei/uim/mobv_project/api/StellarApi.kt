@@ -85,26 +85,7 @@ class StellarApi(private val context: Context) {
     }
 
     @Throws(ValidationException::class, TransactionFailedException::class, ApiException::class)
-    suspend fun sendStellarTransaction(
-        sourcePrivateKey: String,
-        destinationPublicKey: String,
-        assetCode: String = "Lumens",
-        assetIssuer: String = "",
-        amount: String,
-        memo: String = "",
-    ): SubmitTransactionResponse {
-
-        return if (assetCode == "Lumens") {
-            sendNativeTransaction(
-                sourcePrivateKey, destinationPublicKey, amount, memo)
-        } else {
-            sendCustomAssetTransaction(
-                sourcePrivateKey, destinationPublicKey, assetCode, assetIssuer, amount, memo)
-        }
-    }
-
-    @Throws(ValidationException::class, TransactionFailedException::class, ApiException::class)
-    private suspend fun sendNativeTransaction(
+    suspend fun sendStellarPayment(
         sourcePrivateKey: String,
         destinationPublicKey: String,
         amount: String,
@@ -206,43 +187,6 @@ class StellarApi(private val context: Context) {
         }
 
     }
-
-    @Throws(ValidationException::class, TransactionFailedException::class, ApiException::class)
-    private suspend fun sendCustomAssetTransaction(
-        sourcePrivateKey: String,
-        destinationPublicKey: String,
-        assetCode: String,
-        assetIssuer: String,
-        amount: String,
-        memo: String = "",
-    ): SubmitTransactionResponse {
-
-        // check ci kluce davaju zmysel
-        val srcKeyPair = Validation.validatePrivateKey(sourcePrivateKey)
-        val dstKeyPair = Validation.validateAccountId(destinationPublicKey)
-
-        // check ci existuju accounty
-        val sourceAccount = getStellarAccount(srcKeyPair.accountId)
-        val destAccount = getStellarAccount(dstKeyPair.accountId)
-
-        val response: SubmitTransactionResponse
-        try {
-            // posleme peniaze v assetovej mene
-            val asset = Asset.createNonNativeAsset(assetCode, assetIssuer) as AssetTypeCreditAlphaNum
-            response = payment(srcKeyPair, sourceAccount, destAccount, asset, amount, memo)
-
-        } catch (e: Exception) {
-            throw ApiException("Error while creating Payment transaction")
-        }
-
-        if (response.isSuccess) {
-            return response
-        } else {
-            val reason = Converters.resultCodesToReason(response.extras.resultCodes)
-            throw TransactionFailedException("Payment failed: $reason")
-        }
-    }
-
 
 }
 

@@ -1,12 +1,13 @@
 package sk.stuba.fei.uim.mobv_project.data.view_models.settings
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import sk.stuba.fei.uim.mobv_project.data.entities.Contact
 import sk.stuba.fei.uim.mobv_project.data.exceptions.ApiException
 import sk.stuba.fei.uim.mobv_project.data.exceptions.TransactionFailedException
 import sk.stuba.fei.uim.mobv_project.data.exceptions.ValidationException
@@ -14,7 +15,12 @@ import sk.stuba.fei.uim.mobv_project.data.repositories.AccountRepository
 import sk.stuba.fei.uim.mobv_project.data.repositories.BalanceRepository
 import sk.stuba.fei.uim.mobv_project.data.repositories.ContactRepository
 import sk.stuba.fei.uim.mobv_project.data.repositories.PaymentRepository
+import sk.stuba.fei.uim.mobv_project.data.utils.Validation
+import sk.stuba.fei.uim.mobv_project.data.view_models.event.Event
+import sk.stuba.fei.uim.mobv_project.utils.CipherUtils
+import sk.stuba.fei.uim.mobv_project.utils.SecurityContext
 import java.lang.Exception
+import javax.crypto.BadPaddingException
 
 
 class SettingsViewModel(
@@ -23,61 +29,28 @@ class SettingsViewModel(
     private val contactRepo: ContactRepository,
     private val paymentRepo: PaymentRepository,
 ) : ViewModel() {
-
-    // tento ma trusted native a dogecoin
-    val senderPublic = "GAL7TYW3AMA5PNK37FBA4BRN44OJDLEW42G5EZZ4TIHT5HX5SIQZD33J"
-    val senderSecret = "SC35HCUFX5NF3TEDP2P5D4PVCUT4MHK5KMMGSDHQYQHRABEYMOEOX3ZI"
-
-    // tento ma trusted native, dogecoin, usd
-    // ale neviem jeho privateKey takze ten je iba kontakt
-    val contactPublic = "GAVDLPPKCQLKPDP5N3LZXJVJGMJ7VRX2LLTKZO6R62EG53A3EZP3GH53"
-
-    val dogecoinAssetCode = "DOGECOIN"
-    val dogecoinAssetIssuer = "GB46LWKQW65CZ7AMEY7JD4Z4ADX2CA4XYQBAJK6VTIUP6MWQUKCRQDJF"
-
     // "asset_code": "DOGECOIN", "asset_issuer": "GB46LWKQW65CZ7AMEY7JD4Z4ADX2CA4XYQBAJK6VTIUP6MWQUKCRQDJF"
     // "asset_code": "USD", "asset_issuer": "GA234B7P5ME6FTFLZ77PBYMRUJ3L33I6UPNYZ3XAUY4NNT7QWIAV7GL5"
 
-    fun insertAccountToDb() {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                try {
-                    accountRepo.syncAccount("Jozko", "Mrkvicka", "1234", senderSecret)
+    val assetCode = MutableLiveData<String>()
+    val assetIssuer = MutableLiveData<String>()
+    val pin = MutableLiveData<String>()
 
-                    // treba syncnut api s db pre kazdu tabulku zvlast
-                    balanceRepo.syncBalances(senderPublic)
-                    paymentRepo.syncPayments(senderPublic)
+    private val _eventTransactionSuccessful = MutableLiveData<Event<String>>()
+    val eventTransactionSuccessful: LiveData<Event<String>>
+        get() = _eventTransactionSuccessful
 
-                    contactRepo.insertContact(
-                        Contact(contactPublic, "Moj najlepsi kamko", senderPublic)
-                    )
+    private val _eventLoadingStarted = MutableLiveData<Event<Boolean>>()
+    val eventLoadingStarted: LiveData<Event<Boolean>>
+        get() = _eventLoadingStarted
 
-                    // native platba - v Lumenoch
-//                paymentRepo.sendAndSyncPayment(
-//                    sourcePublicKey = senderPublic, sourcePrivateKey = senderSecret,
-//                    destinationPublicKey = contactPublic, amount = "50", memo = "Serus bruh")
+    private val _eventApiValidationFailed = MutableLiveData<Event<String>>()
+    val eventApiValidationFailed: LiveData<Event<String>>
+        get() = _eventApiValidationFailed
 
-                    // custom platba - v dogecoinoch (jediny rozdiel ze sa zada assetCode a issuer)
-                    // failne lebo nemame ziadne dogecoiny :(
-                    paymentRepo.sendAndSyncPayment(
-                        sourcePublicKey = senderPublic, sourcePrivateKey = senderSecret,
-                        destinationPublicKey = contactPublic, assetCode = dogecoinAssetCode,
-                        assetIssuer = dogecoinAssetIssuer, amount = "100", memo = "tak nic")
-
-                    balanceRepo.syncBalances(senderPublic)
-                    paymentRepo.syncPayments(senderPublic)
-                } catch (e: ValidationException) {
-                    Log.e("SettingsViewModel", "ValidationException: ${e.message}")
-                } catch (e: TransactionFailedException) {
-                    Log.e("SettingsViewModel", "TransactionFailedException: ${e.message}")
-                } catch (e: ApiException) {
-                    Log.e("SettingsViewModel", "ApiException: ${e.message}")
-                } catch (e: Exception) {
-                    Log.e("SettingsViewModel", "Nieco sa ale ze brutalne posralo ${e.message}")
-                }
-            }
-        }
-    }
+    private val _eventInvalidPin = MutableLiveData<Event<Boolean>>()
+    val eventInvalidPin: LiveData<Event<Boolean>>
+        get() = _eventInvalidPin
 
     fun clearDatabase() {
         viewModelScope.launch {
@@ -85,8 +58,75 @@ class SettingsViewModel(
             balanceRepo.clearBalances()
             contactRepo.clearContacts()
             paymentRepo.clearPayments()
-
-            Log.i("SettingsViewModel", "Databaza je vymazana")
         }
     }
+
+    fun changeTrust() {
+        _eventLoadingStarted.value = Event(true)
+
+        viewModelScope.launch {
+            withContext(Dispatchers.Default) {
+                if (isFormValid()) {
+                    try {
+                        if (SecurityContext.account == null) {
+                            Log.e("account", "SecurityContext.account is null")
+                        } else {
+                            val account = SecurityContext.account!!
+                            val privateKey = account.privateKey!!
+                            val decryptedPrivateKey = CipherUtils.decrypt(
+                                privateKey,
+                                pin.value!!,
+                                account.salt!!,
+                                account.iv!!
+                            )
+                            balanceRepo.addAndSyncTrustedAsset(
+                                account.accountId,
+                                decryptedPrivateKey,
+                                assetCode.value!!,
+                                assetIssuer.value!!)
+
+                            _eventTransactionSuccessful.postValue(
+                                Event("Asset has been successfully added to your balances.")
+                            )
+
+                        }
+                    } catch (e: ValidationException) {
+                        _eventApiValidationFailed.postValue(Event(e.message.toString()))
+                    }
+                    catch (e: TransactionFailedException) {
+                        _eventApiValidationFailed.postValue(Event(e.message.toString()))
+                    }
+                    catch (e: ApiException) {
+                        _eventApiValidationFailed.postValue(Event(e.message.toString()))
+                    }
+                    catch (e: BadPaddingException) {
+                        Log.e("BadPadding exception", e.toString())
+                        _eventInvalidPin.postValue(Event(true))
+                    }
+                } else {
+                    _eventApiValidationFailed.postValue(Event("Invalid input data."))
+                }
+            }
+        }
+    }
+
+    private fun validatePin(): Boolean {
+        val pinValid = Validation.validatePin(pin.value)
+        _eventInvalidPin.postValue(Event(!pinValid))
+
+        return pinValid
+    }
+
+
+    private fun isFormValid(): Boolean {
+        var isFormValid = true
+        isFormValid = isFormValid
+                && !assetCode.value.isNullOrEmpty()
+                && !assetIssuer.value.isNullOrEmpty()
+                && validatePin()
+
+        return isFormValid
+    }
+
+
 }
