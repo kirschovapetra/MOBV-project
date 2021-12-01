@@ -36,26 +36,23 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment = supportFragmentManager.findFragmentById(
             R.id.nav_host_fragment
         ) as NavHostFragment
-        val navInflater = navHostFragment.navController.navInflater
-        val graph = navInflater.inflate(R.navigation.nav_graph)
 
-        // run once and comment it out to start at My Balance
-        // reason: it runs truncate and inserts in a coroutine, so I guess its not
-        //          really in sync with query run in main thread
-        //createDummyDbData()
+        navController = navHostFragment.navController
+        val navInflater = navController.navInflater
+        val graph = navInflater.inflate(R.navigation.nav_graph)
+        // use intro fragment as default nav graph start
+        graph.startDestination = R.id.introFragment
 
         val accountRepository = AccountRepository.getInstance(this)
         val account = accountRepository.getFirstAccount()
 
-        if (account == null) {
-            graph.startDestination = R.id.introFragment
-        } else {
-            SecurityContext.account = account
+        account?.let {
+            // replace with MyBalance if account already exists
+            SecurityContext.account = it
             graph.startDestination = R.id.myBalanceFragment
         }
-        navHostFragment.navController.graph = graph
+        navController.graph = graph
 
-        navController = navHostFragment.navController
         val topNavItems = setOf(
             R.id.introFragment, R.id.settingsFragment, R.id.contactsFragment, R.id.myBalanceFragment
         )

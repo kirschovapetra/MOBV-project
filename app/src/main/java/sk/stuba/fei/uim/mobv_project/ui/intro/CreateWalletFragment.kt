@@ -22,6 +22,7 @@ import sk.stuba.fei.uim.mobv_project.data.view_models.intro.CreateWalletViewMode
 import sk.stuba.fei.uim.mobv_project.databinding.FragmentCreateWalletBinding
 import sk.stuba.fei.uim.mobv_project.ui.intro.CreateWalletFragmentDirections.actionCreateWalletFragmentToMyBalanceFragment
 import sk.stuba.fei.uim.mobv_project.ui.utils.LoadingLayoutUtils.setLoadingLayoutVisibility
+import sk.stuba.fei.uim.mobv_project.ui.utils.NavigationGraphUtils.changeNavGraphStartDestination
 import sk.stuba.fei.uim.mobv_project.ui.utils.NotificationUtils
 import sk.stuba.fei.uim.mobv_project.ui.utils.NotificationUtils.showSnackbarFromMessageEvent
 
@@ -74,9 +75,9 @@ class CreateWalletFragment : Fragment(R.layout.fragment_create_wallet) {
             event.getContentIfNotHandled()?.let {
                 if (it) {
                     setLoadingLayoutVisibility(activity, false)
-                    findNavController().navigate(
-                        actionCreateWalletFragmentToMyBalanceFragment()
-                    )
+                    val navController = findNavController()
+                    navController.navigate(actionCreateWalletFragmentToMyBalanceFragment())
+                    changeNavGraphStartDestination(this, R.id.myBalanceFragment)
                 }
             }
         })

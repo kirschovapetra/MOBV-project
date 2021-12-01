@@ -2,18 +2,25 @@ package sk.stuba.fei.uim.mobv_project.ui.settings
 
 import android.content.Context
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.*
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import sk.stuba.fei.uim.mobv_project.R
-import sk.stuba.fei.uim.mobv_project.data.repositories.*
+import sk.stuba.fei.uim.mobv_project.data.repositories.AccountRepository
+import sk.stuba.fei.uim.mobv_project.data.repositories.BalanceRepository
+import sk.stuba.fei.uim.mobv_project.data.repositories.ContactRepository
+import sk.stuba.fei.uim.mobv_project.data.repositories.PaymentRepository
 import sk.stuba.fei.uim.mobv_project.data.utils.ViewModelFactory
 import sk.stuba.fei.uim.mobv_project.data.view_models.settings.SettingsViewModel
 import sk.stuba.fei.uim.mobv_project.databinding.FragmentSettingsBinding
 import sk.stuba.fei.uim.mobv_project.ui.utils.LoadingLayoutUtils
+import sk.stuba.fei.uim.mobv_project.ui.utils.NavigationGraphUtils.changeNavGraphStartDestination
 import sk.stuba.fei.uim.mobv_project.ui.utils.NotificationUtils
 
 
@@ -86,9 +93,11 @@ class SettingsFragment : Fragment() {
             .setMessage(R.string.settings_dialog_message)
             .setIcon(R.drawable.ic_baseline_warning_24)
             .setPositiveButton(R.string.settings_dialog_positive) { _, _ ->
-                findNavController().navigate(
+                val navController = findNavController()
+                navController.navigate(
                     SettingsFragmentDirections.actionAboutFragmentToIntroFragment()
                 )
+                changeNavGraphStartDestination(this, R.id.introFragment)
                 settingsViewModel.clearDatabase()
                 NotificationUtils.showSnackbar(view, R.string.settings_snackbar_message, Snackbar.LENGTH_SHORT)
             }
