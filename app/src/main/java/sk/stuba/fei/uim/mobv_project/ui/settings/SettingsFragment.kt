@@ -34,7 +34,7 @@ class SettingsFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
 
         binding = DataBindingUtil.inflate(
             inflater,
@@ -90,7 +90,7 @@ class SettingsFragment : Fragment() {
                     SettingsFragmentDirections.actionAboutFragmentToIntroFragment()
                 )
                 settingsViewModel.clearDatabase()
-                NotificationUtils.showAnchorSnackbar(view, R.string.settings_snackbar_message, Snackbar.LENGTH_SHORT, R.id.bottom_nav_view)
+                NotificationUtils.showSnackbar(view, R.string.settings_snackbar_message, Snackbar.LENGTH_SHORT)
             }
             .setNegativeButton(R.string.settings_dialog_negative) { _, _ -> }
             .show()

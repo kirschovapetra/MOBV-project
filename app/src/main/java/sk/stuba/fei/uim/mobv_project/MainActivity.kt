@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
     private lateinit var binding: ActivityMainBinding
     private lateinit var bottomNavView: BottomNavigationView
-    private lateinit var onGlobalResizeListener: ViewTreeObserver.OnGlobalLayoutListener
+    private var onGlobalLayoutListenerEnabled = false
 
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() || super.onSupportNavigateUp()
@@ -63,8 +63,7 @@ class MainActivity : AppCompatActivity() {
 
         if (account == null) {
             graph.startDestination = R.id.introFragment
-        }
-        else {
+        } else {
             SecurityContext.account = account
             graph.startDestination = R.id.myBalanceFragment
         }
@@ -84,7 +83,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupBottomNav() {
         bottomNavView = binding.bottomNavView
-        onGlobalResizeListener = createOnGlobalLayoutListener()
+        addOnGlobalLayoutListener()
 
         bottomNavView.setupWithNavController(navController)
 
@@ -95,16 +94,20 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (bottomNavItems.contains(destination.id)) {
                 bottomNavView.visibility = View.VISIBLE
-                addOnGlobalLayoutListener()
+                onGlobalLayoutListenerEnabled = true
             } else {
+                onGlobalLayoutListenerEnabled = false
                 bottomNavView.visibility = View.GONE
-                removeOnGlobalLayoutListener()
             }
         }
     }
 
-    private fun createOnGlobalLayoutListener() =
-         ViewTreeObserver.OnGlobalLayoutListener{
+    private fun addOnGlobalLayoutListener() {
+        binding.root.viewTreeObserver.addOnGlobalLayoutListener {
+            if (!onGlobalLayoutListenerEnabled) {
+                return@addOnGlobalLayoutListener
+            }
+
             val view = binding.root
             val r = Rect()
 
@@ -114,7 +117,7 @@ class MainActivity : AppCompatActivity() {
             if (heightDiff > 400) {
                 Log.d("hide", heightDiff.toString())
                 bottomNavView.visibility = View.GONE
-            }else{
+            } else {
                 Log.d("show", heightDiff.toString())
                 val transition = Fade()
                 transition.duration = 100
@@ -123,16 +126,8 @@ class MainActivity : AppCompatActivity() {
                 TransitionManager.beginDelayedTransition(bottomNavView, transition)
                 bottomNavView.visibility = View.VISIBLE
             }
+        }
     }
-
-    private fun addOnGlobalLayoutListener() {
-        binding.root.viewTreeObserver.addOnGlobalLayoutListener(onGlobalResizeListener)
-    }
-
-    private fun removeOnGlobalLayoutListener() {
-        binding.root.viewTreeObserver.removeOnGlobalLayoutListener(onGlobalResizeListener)
-    }
-
 
     /*********************** testiky *********************/
 
