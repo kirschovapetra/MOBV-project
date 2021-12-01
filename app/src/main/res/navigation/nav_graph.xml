@@ -98,7 +98,9 @@
             app:destination="@id/contactsFragment"
             app:enterAnim="@anim/slide_in_left"
             app:exitAnim="@anim/slide_out_right"
-            app:popEnterAnim="@anim/slide_in_left" />
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popUpTo="@id/contactsFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/myBalanceFragment"
@@ -133,14 +135,17 @@
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/myBalanceFragment" />
         <action
             android:id="@+id/action_createNewTransactionFragment_to_myBalanceFragment"
             app:destination="@id/myBalanceFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/myBalanceFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/saveRecipientFragment"
@@ -153,7 +158,9 @@
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/saveRecipientFragment"
+            app:popUpToInclusive="true" />
         <argument
             android:name="accountId"
             app:argType="string" />
