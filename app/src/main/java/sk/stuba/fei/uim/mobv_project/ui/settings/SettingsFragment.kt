@@ -51,21 +51,21 @@ class SettingsFragment : Fragment() {
 
         settingsViewModel.eventTransactionSuccessful.observe(viewLifecycleOwner, {
             it.getContentIfNotHandled()?.let { message ->
-                NotificationUtils.showSnackbar(view, message, Snackbar.LENGTH_LONG)
+                NotificationUtils.showAnchorSnackbar(view, message, Snackbar.LENGTH_LONG, R.id.bottom_nav_view)
                 LoadingLayoutUtils.setLoadingLayoutVisibility(activity, false)
             }
         })
         settingsViewModel.eventInvalidPin.observe(viewLifecycleOwner, {
             it.getContentIfNotHandled()?.let { pinInvalid ->
                 if (pinInvalid) {
-                    NotificationUtils.showSnackbar(view,  resources.getString(R.string.intro_pin_invalid_text), Snackbar.LENGTH_SHORT)
+                    NotificationUtils.showAnchorSnackbar(view,  resources.getString(R.string.intro_pin_invalid_text), Snackbar.LENGTH_SHORT, R.id.bottom_nav_view)
                     LoadingLayoutUtils.setLoadingLayoutVisibility(activity, false)
                 }
             }
         })
         settingsViewModel.eventApiValidationFailed.observe(viewLifecycleOwner, {
             it.getContentIfNotHandled()?.let { errorMessage ->
-                NotificationUtils.showSnackbar(view, errorMessage, Snackbar.LENGTH_LONG)
+                NotificationUtils.showAnchorSnackbar(view, errorMessage, Snackbar.LENGTH_LONG, R.id.bottom_nav_view)
                 LoadingLayoutUtils.setLoadingLayoutVisibility(activity, false)
             }
         })
@@ -88,7 +88,7 @@ class SettingsFragment : Fragment() {
                     SettingsFragmentDirections.actionAboutFragmentToIntroFragment()
                 )
                 settingsViewModel.clearDatabase()
-                NotificationUtils.showSnackbar(view, R.string.settings_snackbar_message, Snackbar.LENGTH_SHORT)
+                NotificationUtils.showAnchorSnackbar(view, R.string.settings_snackbar_message, Snackbar.LENGTH_SHORT, R.id.bottom_nav_view)
             }
             .setNegativeButton(R.string.settings_dialog_negative) { _, _ -> }
             .show()
