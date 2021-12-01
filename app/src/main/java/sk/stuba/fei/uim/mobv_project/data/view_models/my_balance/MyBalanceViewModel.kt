@@ -17,12 +17,13 @@ import sk.stuba.fei.uim.mobv_project.utils.SecurityContext
 
 class MyBalanceViewModel(
     private val balanceRepo: BalanceRepository,
-    private val  paymentRepo: PaymentRepository,
-    private val contactRepo: ContactRepository) : ViewModel() {
+    private val paymentRepo: PaymentRepository,
+    private val contactRepo: ContactRepository,
+) : ViewModel() {
 
     var account = SecurityContext.account!!
 
-    val walletOwner =  MutableLiveData<String>()
+    val walletOwner = MutableLiveData<String>()
 
     var assetOptions = balanceRepo.getAccountAssetCodes(account.accountId)
 
@@ -34,18 +35,20 @@ class MyBalanceViewModel(
     }
 
     private fun fetchContactNameForPayment(payment: Payment): String {
-        val associatedContactId = if(payment.paymentType.equals("debit")) payment.from else payment.to
+        val associatedContactId =
+            if (payment.paymentType.equals("debit")) payment.from else payment.to
 
-        val attachedContact = contactRepo.getDeadContactByIdAndSourceAccount(associatedContactId!!, account.accountId)
+        val attachedContact =
+            contactRepo.getDeadContactByIdAndSourceAccount(associatedContactId!!, account.accountId)
 
-        if(attachedContact.isNotEmpty()) {
+        if (attachedContact.isNotEmpty()) {
             return attachedContact[0].name!!
         }
-        return payment.sourceAccount!!
+        return "Unknown"
     }
 
     private fun setPaymentSender(payment: Payment): String {
-        return if(payment.paymentType.equals("debit")) payment.from!! else payment.to!!
+        return if (payment.paymentType.equals("debit")) payment.from!! else payment.to!!
     }
 
     private fun isNumeric(string: String): Boolean {
@@ -62,14 +65,8 @@ class MyBalanceViewModel(
 
                 payments.forEach {
                     val attachedContactName = fetchContactNameForPayment(it)
-
-                    if(isNumeric(attachedContactName)) {
-                        it.sourceAccount = "Unknown"
-                        it.from = ""
-                    } else {
-                        it.sourceAccount = attachedContactName
-                        it.from = setPaymentSender(it)
-                    }
+                    it.sourceAccount = attachedContactName
+                    it.from = setPaymentSender(it)
                 }
 
                 selectedPayments.postValue(payments)
@@ -79,10 +76,11 @@ class MyBalanceViewModel(
     }
 
     private fun parseBalance(dbBalance: List<Balances>): String {
-        return if(dbBalance.isNotEmpty()) {
+        return if (dbBalance.isNotEmpty()) {
             return dbBalance[0].balance!!
+        } else {
+            "NO BALANCE"
         }
-        else {"NO BALANCE"}
     }
 
 }
