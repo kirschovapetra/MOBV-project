@@ -29,13 +29,14 @@ class ContactsRecycleViewAdapter(
     // binds the list items to a view
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        val contactsViewModel = contacts[position]
+        val contact = contacts[position]
 
         // sets the image to the imageview from our itemHolder class
 //        holder.imageView.setImageResource(ItemsViewModel.image)
 
         // sets the text to the textview from our itemHolder class
-        holder.contactNameTextView.text = contactsViewModel.name
+        holder.contactNameTextView.text = contact.name
+        holder.contactIdTextView.text = contact.contactId
     }
 
     // return the number of the items in the list
@@ -54,6 +55,7 @@ class ContactsRecycleViewAdapter(
    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 //                val imageView: ImageView = itemView.findViewById(R.id.imageview)
         val contactNameTextView: TextView = itemView.findViewById(R.id.contactCardName)
+        val contactIdTextView: TextView = itemView.findViewById(R.id.contactCardAccountId)
 
         init {
             itemView.setOnClickListener(this)

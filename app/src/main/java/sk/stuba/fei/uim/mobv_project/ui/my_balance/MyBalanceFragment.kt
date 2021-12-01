@@ -14,6 +14,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import sk.stuba.fei.uim.mobv_project.R
 import sk.stuba.fei.uim.mobv_project.data.repositories.BalanceRepository
+import sk.stuba.fei.uim.mobv_project.data.repositories.ContactRepository
 import sk.stuba.fei.uim.mobv_project.data.repositories.PaymentRepository
 import sk.stuba.fei.uim.mobv_project.data.utils.ViewModelFactory
 import sk.stuba.fei.uim.mobv_project.data.view_models.my_balance.MyBalanceViewModel
@@ -27,6 +28,7 @@ class MyBalanceFragment : Fragment(), AdapterView.OnItemSelectedListener {
         ViewModelFactory(
             BalanceRepository.getInstance(requireContext()),
             PaymentRepository.getInstance(requireContext()),
+            ContactRepository.getInstance(requireContext())
         )
     }
     private lateinit var binding: FragmentMyBalanceBinding
@@ -119,8 +121,10 @@ class MyBalanceFragment : Fragment(), AdapterView.OnItemSelectedListener {
         )
     }
 
-    override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-        val selectedAssetOption = myBalanceViewModel.assetOptions.value!![p2]
+    override fun onItemSelected(p0: AdapterView<*>?, p1: View?, assetOptionIndex: Int, p3: Long) {
+        val selectedAssetOption = myBalanceViewModel.assetOptions.value!![assetOptionIndex]
+//        Log.e("SETUJEM", "assetOptionIndex")
+//        myBalanceViewModel.selectedAssetOption.value = assetOptionIndex
         myBalanceViewModel.updatePaymentsAndBalance(selectedAssetOption)
     }
 
