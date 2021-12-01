@@ -20,6 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="32dp"
             android:layout_marginBottom="8dp"
             android:paddingStart="8dp"
@@ -36,49 +37,37 @@
             app:layout_constraintVertical_chainStyle="packed" />
 
         <EditText
+            style="@style/edit_text_default"
             android:id="@+id/newContactName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginBottom="8dp"
-            android:ems="10"
             android:hint="@string/contactNameHint"
             android:inputType="textPersonName"
-            android:minHeight="48dp"
             android:text="@={viewModel.contactName}"
             app:layout_constraintBottom_toTopOf="@+id/newContactAccountId"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/warningTextView"
-            app:layout_constraintVertical_chainStyle="packed" />
+            app:layout_constraintVertical_chainStyle="packed"
+            android:importantForAutofill="no" />
 
         <EditText
+            style="@style/edit_text_default"
             android:id="@+id/newContactAccountId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginBottom="8dp"
-            android:ems="10"
             android:hint="@string/contactAccountIdHint"
             android:inputType="number"
-            android:minHeight="48dp"
             android:text="@={viewModel.contactAccountId}"
             app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/newContactName" />
+            app:layout_constraintTop_toBottomOf="@+id/newContactName"
+            android:importantForAutofill="no" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -86,30 +75,25 @@
             app:layout_constraintTop_toBottomOf="@+id/newContactAccountId">
 
             <Button
+                style="@style/button_text_submit"
                 android:id="@+id/addSkipButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:gravity="center_horizontal"
+                android:layout_marginTop="16dp"
+                android:gravity="center_horizontal|center_vertical"
                 android:text="@string/addSkipButton"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/addNewContactButtonTitle"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0"
                 tools:text="Skip" />
 
             <Button
+                style="@style/button_submit"
                 android:id="@+id/addNewContactButtonTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:gravity="center_horizontal"
-                android:text="@string/addNewContactButton"
+                android:gravity="center_horizontal|center_vertical"
                 android:onClick="@{() -> viewModel.saveContact()}"
+                android:text="@string/addNewContactButton"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"

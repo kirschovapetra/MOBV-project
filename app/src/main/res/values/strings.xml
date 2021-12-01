@@ -46,6 +46,10 @@
     <string name="import_form_error_empty_key">You have to provide a key</string>
     <string name="import_form_error_invalid_key_length">Your key does not match the required length of 56</string>
 
+    <!-- Contacts -->
+    <string name="contact_card_contact_icon_description">Contact icon</string>
+    <string name="contact_card_contact_name_description">Contact name</string>
+
     <!-- New contact -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="contactNameHint">Contact name</string>

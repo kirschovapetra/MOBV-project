@@ -15,14 +15,9 @@
         tools:context=".ui.intro.IntroFragment">
 
         <EditText
+            style="@style/edit_text_default"
             android:id="@+id/firstNameEditText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginBottom="8dp"
-            android:ems="10"
+            android:autofillHints="name"
             android:hint="@string/intro_first_name_hint"
             android:inputType="textPersonName"
             android:maxLength="255"
@@ -35,18 +30,13 @@
             app:layout_constraintVertical_chainStyle="packed" />
 
         <EditText
+            style="@style/edit_text_default"
             android:id="@+id/lastNameEditText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginBottom="8dp"
-            android:ems="10"
             android:hint="@string/intro_last_name_hint"
             android:inputType="textPersonName"
             android:maxLength="255"
             android:text="@={viewModel.lastName}"
+            android:autofillHints="lastName"
             app:layout_constraintBottom_toTopOf="@+id/registerPinEditText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -54,18 +44,12 @@
             app:layout_constraintTop_toBottomOf="@+id/firstNameEditText" />
 
         <EditText
+            style="@style/edit_text_default"
             android:id="@+id/registerPinEditText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginBottom="8dp"
-            android:ems="10"
             android:hint="@string/intro_pin_pin_hint"
             android:inputType="numberPassword"
-            android:minHeight="48dp"
             android:text="@={viewModel.pin}"
+            android:autofillHints="password"
             app:layout_constraintBottom_toTopOf="@+id/registerPinConfirmationEditText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -73,18 +57,12 @@
             app:layout_constraintTop_toBottomOf="@+id/lastNameEditText" />
 
         <EditText
+            style="@style/edit_text_default"
             android:id="@+id/registerPinConfirmationEditText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginBottom="8dp"
-            android:ems="10"
             android:hint="@string/intro_pin_confirmation_hint"
             android:inputType="numberPassword"
-            android:minHeight="48dp"
             android:text="@={viewModel.confirmationPin}"
+            android:autofillHints="password"
             app:layout_constraintBottom_toTopOf="@+id/createNewWalletButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -92,17 +70,11 @@
             app:layout_constraintTop_toBottomOf="@+id/registerPinEditText" />
 
         <Button
+            style="@style/button_submit"
             android:id="@+id/createNewWalletButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginBottom="8dp"
-            android:text="@string/intro_create_new_wallet_button_text"
-            android:textAlignment="center"
-            android:textSize="24sp"
             android:onClick="@{() -> viewModel.createNewWallet()}"
+            android:text="@string/intro_create_new_wallet_button_text"
+            android:textSize="24sp"
             app:layout_constraintBottom_toTopOf="@+id/importWalletButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -110,16 +82,10 @@
             app:layout_constraintTop_toBottomOf="@+id/registerPinConfirmationEditText" />
 
         <Button
+            style="@style/button_text_submit"
             android:id="@+id/importWalletButton"
-            style="@style/Widget.Material3.Button.TextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginBottom="32dp"
-            android:text="@string/intro_import_wallet_button_text"
             android:onClick="@{() -> viewModel.importWallet()}"
+            android:text="@string/intro_import_wallet_button_text"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"

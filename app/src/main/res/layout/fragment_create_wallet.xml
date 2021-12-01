@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="viewModel"
             type="sk.stuba.fei.uim.mobv_project.data.view_models.intro.CreateWalletViewModel" />
@@ -51,10 +50,8 @@
             app:layout_constraintTop_toBottomOf="@+id/warningTextView">
 
             <TextView
+                style="@style/textView_label"
                 android:id="@+id/privateKeyLabelTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="32dp"
                 android:text="@string/intro_private_key_label_text"
                 app:layout_constraintBottom_toTopOf="@+id/privateKeyTextView"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -63,45 +60,29 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
+                style="@style/textView_private_key"
                 android:id="@+id/privateKeyTextView"
-                android:layout_width="0dp"
-                android:layout_height="96dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/custom_black_border"
-                android:inputType="textLongMessage|textMultiLine"
-                android:singleLine="false"
                 android:text="@{viewModel.privateKey}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/privateKeyLabelTextView"
-                tools:text="Private key" />
+                tools:text="Private keyPrivate keyPrivate keyPrivate keyPrivate keyPrivate keyPrivate keyPrivate keyPrivate keyPrivate keyPrivate keyPrivate keyPrivate keyPrivate keyPrivate keyPrivate key" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <Button
+            style="@style/button_text_submit"
             android:id="@+id/copyPrivateKeyButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginBottom="8dp"
             android:onClick="@{() -> viewModel.copyPrivateKeyToClipboard()}"
             android:text="@string/registered_copy_private_key_button_text"
-            style="@style/Widget.Material3.Button.TextButton"
             app:layout_constraintBottom_toTopOf="@+id/continueButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
 
         <Button
+            style="@style/button_submit"
             android:id="@+id/continueButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginBottom="16dp"
             android:onClick="@{() -> viewModel.continueToMyBalance()}"
             android:text="@string/registered_continue_button_text"
             app:layout_constraintBottom_toBottomOf="parent"

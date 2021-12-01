@@ -28,13 +28,10 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
+            style="@style/edit_text_default"
             android:id="@+id/assetCodeEditText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="10"
             android:hint="@string/settings_asset_code_hint"
             android:inputType="text"
-            android:minHeight="48dp"
             android:text="@={settingsViewModel.assetCode}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -42,13 +39,10 @@
             android:importantForAutofill="no" />
 
         <EditText
+            style="@style/edit_text_default"
             android:id="@+id/assetIssuerEditText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="10"
             android:hint="@string/settings_asset_issuer_hint"
             android:inputType="text"
-            android:minHeight="48dp"
             android:text="@={settingsViewModel.assetIssuer}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -56,13 +50,10 @@
             android:importantForAutofill="no" />
 
         <EditText
+            style="@style/edit_text_default"
             android:id="@+id/pinEditText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="10"
             android:hint="@string/pin_hint"
             android:inputType="numberPassword"
-            android:minHeight="48dp"
             android:text="@={settingsViewModel.pin}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -70,10 +61,8 @@
             android:importantForAutofill="no" />
 
         <Button
+            style="@style/button_submit"
             android:id="@+id/changeTrustButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:onClick="@{() -> settingsViewModel.changeTrust()}"
             android:text="@string/settings_add_asset_button"
             app:layout_constraintEnd_toEndOf="parent"
