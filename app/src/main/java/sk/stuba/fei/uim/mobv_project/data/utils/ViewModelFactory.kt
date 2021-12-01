@@ -54,11 +54,6 @@ class ViewModelFactory(private vararg val repository: AppDbRepository) : ViewMod
             ) as T
         }
 
-        if (modelClass.isAssignableFrom(SaveRecipientViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return SaveRecipientViewModel(/*repository[0] as ContactRepository*/) as T
-        }
-
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

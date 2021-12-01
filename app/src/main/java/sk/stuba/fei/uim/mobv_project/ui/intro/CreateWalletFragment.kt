@@ -17,7 +17,6 @@ import com.google.android.material.snackbar.Snackbar
 import sk.stuba.fei.uim.mobv_project.R
 import sk.stuba.fei.uim.mobv_project.data.repositories.AccountRepository
 import sk.stuba.fei.uim.mobv_project.data.repositories.BalanceRepository
-import sk.stuba.fei.uim.mobv_project.data.repositories.PaymentRepository
 import sk.stuba.fei.uim.mobv_project.data.utils.CreateWalletViewModelFactory
 import sk.stuba.fei.uim.mobv_project.data.view_models.intro.CreateWalletViewModel
 import sk.stuba.fei.uim.mobv_project.databinding.FragmentCreateWalletBinding
@@ -33,7 +32,6 @@ class CreateWalletFragment : Fragment(R.layout.fragment_create_wallet) {
         CreateWalletViewModelFactory(
             AccountRepository.getInstance(context!!),
             BalanceRepository.getInstance(context!!),
-            PaymentRepository.getInstance(context!!),
             args
         )
     }
