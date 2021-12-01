@@ -1,20 +1,31 @@
 package sk.stuba.fei.uim.mobv_project
 
+import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.ViewTreeObserver
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
+import androidx.transition.Fade
+import androidx.transition.TransitionManager
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.stellar.sdk.KeyPair
-import sk.stuba.fei.uim.mobv_project.data.entities.*
-import sk.stuba.fei.uim.mobv_project.data.repositories.*
+import sk.stuba.fei.uim.mobv_project.data.entities.Account
+import sk.stuba.fei.uim.mobv_project.data.entities.Balances
+import sk.stuba.fei.uim.mobv_project.data.entities.Contact
+import sk.stuba.fei.uim.mobv_project.data.entities.Payment
+import sk.stuba.fei.uim.mobv_project.data.repositories.AccountRepository
+import sk.stuba.fei.uim.mobv_project.data.repositories.BalanceRepository
+import sk.stuba.fei.uim.mobv_project.data.repositories.ContactRepository
+import sk.stuba.fei.uim.mobv_project.data.repositories.PaymentRepository
 import sk.stuba.fei.uim.mobv_project.databinding.ActivityMainBinding
 import sk.stuba.fei.uim.mobv_project.utils.CipherUtils
 import sk.stuba.fei.uim.mobv_project.utils.SecurityContext
@@ -24,6 +35,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
     private lateinit var binding: ActivityMainBinding
+    private lateinit var bottomNavView: BottomNavigationView
+    private lateinit var onGlobalResizeListener: ViewTreeObserver.OnGlobalLayoutListener
 
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() || super.onSupportNavigateUp()
@@ -70,7 +83,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupBottomNav() {
-        val bottomNavView = binding.bottomNavView
+        bottomNavView = binding.bottomNavView
+        onGlobalResizeListener = createOnGlobalLayoutListener()
+
         bottomNavView.setupWithNavController(navController)
 
         val bottomNavItems = setOf(
@@ -80,10 +95,42 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (bottomNavItems.contains(destination.id)) {
                 bottomNavView.visibility = View.VISIBLE
+                addOnGlobalLayoutListener()
             } else {
                 bottomNavView.visibility = View.GONE
+                removeOnGlobalLayoutListener()
             }
         }
+    }
+
+    private fun createOnGlobalLayoutListener() =
+         ViewTreeObserver.OnGlobalLayoutListener{
+            val view = binding.root
+            val r = Rect()
+
+            view.getWindowVisibleDisplayFrame(r);
+
+            val heightDiff = view.rootView.height - (r.bottom - r.top);
+            if (heightDiff > 400) {
+                Log.d("hide", heightDiff.toString())
+                bottomNavView.visibility = View.GONE
+            }else{
+                Log.d("show", heightDiff.toString())
+                val transition = Fade()
+                transition.duration = 100
+                transition.addTarget(bottomNavView)
+
+                TransitionManager.beginDelayedTransition(bottomNavView, transition)
+                bottomNavView.visibility = View.VISIBLE
+            }
+    }
+
+    private fun addOnGlobalLayoutListener() {
+        binding.root.viewTreeObserver.addOnGlobalLayoutListener(onGlobalResizeListener)
+    }
+
+    private fun removeOnGlobalLayoutListener() {
+        binding.root.viewTreeObserver.removeOnGlobalLayoutListener(onGlobalResizeListener)
     }
 
 

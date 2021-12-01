@@ -51,21 +51,21 @@ class SettingsFragment : Fragment() {
 
         settingsViewModel.eventTransactionSuccessful.observe(viewLifecycleOwner, {
             it.getContentIfNotHandled()?.let { message ->
-                NotificationUtils.showAnchorSnackbar(view, message, Snackbar.LENGTH_LONG, R.id.bottom_nav_view)
+                NotificationUtils.showSnackbar(view, message, Snackbar.LENGTH_LONG)
                 LoadingLayoutUtils.setLoadingLayoutVisibility(activity, false)
             }
         })
         settingsViewModel.eventInvalidPin.observe(viewLifecycleOwner, {
             it.getContentIfNotHandled()?.let { pinInvalid ->
                 if (pinInvalid) {
-                    NotificationUtils.showAnchorSnackbar(view,  resources.getString(R.string.intro_pin_invalid_text), Snackbar.LENGTH_SHORT, R.id.bottom_nav_view)
+                    NotificationUtils.showSnackbar(view,  resources.getString(R.string.intro_pin_invalid_text), Snackbar.LENGTH_SHORT)
                     LoadingLayoutUtils.setLoadingLayoutVisibility(activity, false)
                 }
             }
         })
         settingsViewModel.eventApiValidationFailed.observe(viewLifecycleOwner, {
             it.getContentIfNotHandled()?.let { errorMessage ->
-                NotificationUtils.showAnchorSnackbar(view, errorMessage, Snackbar.LENGTH_LONG, R.id.bottom_nav_view)
+                NotificationUtils.showSnackbar(view, errorMessage, Snackbar.LENGTH_LONG)
                 LoadingLayoutUtils.setLoadingLayoutVisibility(activity, false)
             }
         })
