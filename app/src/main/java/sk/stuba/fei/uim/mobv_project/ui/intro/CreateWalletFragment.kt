@@ -17,12 +17,12 @@ import com.google.android.material.snackbar.Snackbar
 import sk.stuba.fei.uim.mobv_project.R
 import sk.stuba.fei.uim.mobv_project.data.repositories.AccountRepository
 import sk.stuba.fei.uim.mobv_project.data.repositories.BalanceRepository
-import sk.stuba.fei.uim.mobv_project.data.repositories.PaymentRepository
 import sk.stuba.fei.uim.mobv_project.data.utils.CreateWalletViewModelFactory
 import sk.stuba.fei.uim.mobv_project.data.view_models.intro.CreateWalletViewModel
 import sk.stuba.fei.uim.mobv_project.databinding.FragmentCreateWalletBinding
 import sk.stuba.fei.uim.mobv_project.ui.intro.CreateWalletFragmentDirections.actionCreateWalletFragmentToMyBalanceFragment
 import sk.stuba.fei.uim.mobv_project.ui.utils.LoadingLayoutUtils.setLoadingLayoutVisibility
+import sk.stuba.fei.uim.mobv_project.ui.utils.NavigationGraphUtils.changeNavGraphStartDestination
 import sk.stuba.fei.uim.mobv_project.ui.utils.NotificationUtils
 import sk.stuba.fei.uim.mobv_project.ui.utils.NotificationUtils.showSnackbarFromMessageEvent
 
@@ -33,7 +33,6 @@ class CreateWalletFragment : Fragment(R.layout.fragment_create_wallet) {
         CreateWalletViewModelFactory(
             AccountRepository.getInstance(context!!),
             BalanceRepository.getInstance(context!!),
-            PaymentRepository.getInstance(context!!),
             args
         )
     }
@@ -76,9 +75,9 @@ class CreateWalletFragment : Fragment(R.layout.fragment_create_wallet) {
             event.getContentIfNotHandled()?.let {
                 if (it) {
                     setLoadingLayoutVisibility(activity, false)
-                    findNavController().navigate(
-                        actionCreateWalletFragmentToMyBalanceFragment()
-                    )
+                    val navController = findNavController()
+                    navController.navigate(actionCreateWalletFragmentToMyBalanceFragment())
+                    changeNavGraphStartDestination(this, R.id.myBalanceFragment)
                 }
             }
         })

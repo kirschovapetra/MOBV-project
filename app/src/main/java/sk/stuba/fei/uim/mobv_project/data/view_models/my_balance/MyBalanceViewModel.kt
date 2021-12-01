@@ -17,49 +17,38 @@ import sk.stuba.fei.uim.mobv_project.utils.SecurityContext
 
 class MyBalanceViewModel(
     private val balanceRepo: BalanceRepository,
-    private val  paymentRepo: PaymentRepository,
-    private val contactRepo: ContactRepository) : ViewModel() {
+    private val paymentRepo: PaymentRepository,
+    private val contactRepo: ContactRepository,
+) : ViewModel() {
 
-    /*
-    z Balances - k menu
-     - assetCode
-     - balance
+    var account = SecurityContext.account!!
 
-    Payments - do recycler view
-     - pretty much asi vsetko :D
-    */
-
-    var account = SecurityContext.account!!// Account("2", "Jeff", "Bezos", "123456")
-
-    val walletOwner =  MutableLiveData<String>()//mainAccount.firstName + " " + mainAccount.lastName
+    val walletOwner = MutableLiveData<String>()
 
     var assetOptions = balanceRepo.getAccountAssetCodes(account.accountId)
-//    var selectedAssetOption = MutableLiveData<Int>()
 
     var balanceToShow = MutableLiveData<String?>()
     var selectedPayments = MutableLiveData<List<Payment>>()
 
     init {
         walletOwner.value = account.firstName + " " + account.lastName
-//        Log.e("SELECTED ST", selectedAssetOption.value.toString())
-//        paymentRepo.getAllPayments().observeForever { payments ->
-//            Log.e("ALLPAYMENTS", payments.toString())
-//        }
     }
 
     private fun fetchContactNameForPayment(payment: Payment): String {
-        val associatedContactId = if(payment.paymentType.equals("debit")) payment.from else payment.to
+        val associatedContactId =
+            if (payment.paymentType.equals("debit")) payment.from else payment.to
 
-        val attachedContact = contactRepo.getDeadContactByIdAndSourceAccount(associatedContactId!!, account.accountId)
+        val attachedContact =
+            contactRepo.getDeadContactByIdAndSourceAccount(associatedContactId!!, account.accountId)
 
-        if(attachedContact.isNotEmpty()) {
+        if (attachedContact.isNotEmpty()) {
             return attachedContact[0].name!!
         }
-        return payment.sourceAccount!!
+        return "Unknown"
     }
 
     private fun setPaymentSender(payment: Payment): String {
-        return if(payment.paymentType.equals("debit")) payment.from!! else payment.to!!
+        return if (payment.paymentType.equals("debit")) payment.from!! else payment.to!!
     }
 
     private fun isNumeric(string: String): Boolean {
@@ -77,12 +66,7 @@ class MyBalanceViewModel(
                 payments.forEach {
                     val attachedContactName = fetchContactNameForPayment(it)
                     it.sourceAccount = attachedContactName
-
-                    if(isNumeric(attachedContactName)) {
-                        it.from = ""
-                    } else {
-                        it.from = setPaymentSender(it)
-                    }
+                    it.from = setPaymentSender(it)
                 }
 
                 selectedPayments.postValue(payments)
@@ -92,10 +76,11 @@ class MyBalanceViewModel(
     }
 
     private fun parseBalance(dbBalance: List<Balances>): String {
-        return if(dbBalance.isNotEmpty()) {
+        return if (dbBalance.isNotEmpty()) {
             return dbBalance[0].balance!!
+        } else {
+            "NO BALANCE"
         }
-        else {"NO BALANCE"}
     }
 
 }

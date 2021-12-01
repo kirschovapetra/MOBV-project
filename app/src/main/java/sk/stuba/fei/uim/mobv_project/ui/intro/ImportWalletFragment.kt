@@ -19,6 +19,7 @@ import sk.stuba.fei.uim.mobv_project.data.view_models.intro.ImportWalletViewMode
 import sk.stuba.fei.uim.mobv_project.databinding.FragmentImportWalletBinding
 import sk.stuba.fei.uim.mobv_project.ui.intro.ImportWalletFragmentDirections.actionImportWalletFragmentToMyBalanceFragment
 import sk.stuba.fei.uim.mobv_project.ui.utils.LoadingLayoutUtils.setLoadingLayoutVisibility
+import sk.stuba.fei.uim.mobv_project.ui.utils.NavigationGraphUtils.changeNavGraphStartDestination
 import sk.stuba.fei.uim.mobv_project.ui.utils.NotificationUtils.showSnackbarFromMessageEvent
 import sk.stuba.fei.uim.mobv_project.ui.utils.NotificationUtils.showSnackbarFromResourceEvent
 
@@ -66,7 +67,10 @@ class ImportWalletFragment : Fragment(R.layout.fragment_import_wallet) {
             event.getContentIfNotHandled()?.let {
                 if (it) {
                     setLoadingLayoutVisibility(activity, false)
-                    findNavController().navigate(actionImportWalletFragmentToMyBalanceFragment())
+
+                    val navController = findNavController()
+                    navController.navigate(actionImportWalletFragmentToMyBalanceFragment())
+                    changeNavGraphStartDestination(this, R.id.myBalanceFragment)
                 }
             }
         })

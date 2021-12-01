@@ -35,4 +35,10 @@ object NotificationUtils {
             Snackbar.make(it, message, duration).setAnchorView(anchorId).show()
         }
     }
+
+    fun showAnchorSnackbar(view: View?, resourceId: Int, duration: Int, anchorId: Int) {
+        view?.let {
+            Snackbar.make(it, resourceId, duration).setAnchorView(anchorId).show()
+        }
+    }
 }

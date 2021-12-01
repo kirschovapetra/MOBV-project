@@ -11,6 +11,7 @@ import android.widget.Spinner
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import sk.stuba.fei.uim.mobv_project.R
 import sk.stuba.fei.uim.mobv_project.data.repositories.BalanceRepository
@@ -20,8 +21,6 @@ import sk.stuba.fei.uim.mobv_project.data.utils.ViewModelFactory
 import sk.stuba.fei.uim.mobv_project.data.view_models.my_balance.MyBalanceViewModel
 import sk.stuba.fei.uim.mobv_project.databinding.FragmentMyBalanceBinding
 
-
-//todo ked chalan otoci telefon, tak by sa mohla zachovat value selectnuta v spinneri
 class MyBalanceFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     private val myBalanceViewModel: MyBalanceViewModel by viewModels {
@@ -56,7 +55,7 @@ class MyBalanceFragment : Fragment(), AdapterView.OnItemSelectedListener {
         attachObserverToSpinner()
         binding.assetOptionsSpinner.onItemSelectedListener = this
 
-//        attachListerToNewTransactionButton(binding)
+        attachListenerToNewTransactionButton(binding)
         attachViewModelToBinding(binding)
         funInitializeRecycleAdapter(binding)
 
@@ -84,10 +83,6 @@ class MyBalanceFragment : Fragment(), AdapterView.OnItemSelectedListener {
         spinner.adapter = adapter
     }
 
-    private fun getDummyTokens(): MutableList<String> {
-        return mutableListOf("86223","86823","90223","90223")// ArrayList()
-    }
-
     private fun funInitializeRecycleAdapter(binding: FragmentMyBalanceBinding) {
         val paymentsRecycleView = binding.paymentsRecyclerView
 
@@ -100,11 +95,11 @@ class MyBalanceFragment : Fragment(), AdapterView.OnItemSelectedListener {
         binding.lifecycleOwner = viewLifecycleOwner
     }
 
-    private fun attachListerToNewTransactionButton(binding: FragmentMyBalanceBinding) {
+    private fun attachListenerToNewTransactionButton(binding: FragmentMyBalanceBinding) {
         val clickButtonListener: View.OnClickListener = View.OnClickListener {
-//            findNavController().navigate(
-//                ContactsFragmentDirections.actionContactsFragmentToNewContactFragment()
-//            )
+            findNavController().navigate(
+                MyBalanceFragmentDirections.actionMyBalanceFragmentToCreateNewTransactionFragment()
+            )
         }
 
         binding.newTransactionButton.setOnClickListener(
@@ -123,8 +118,6 @@ class MyBalanceFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, assetOptionIndex: Int, p3: Long) {
         val selectedAssetOption = myBalanceViewModel.assetOptions.value!![assetOptionIndex]
-//        Log.e("SETUJEM", "assetOptionIndex")
-//        myBalanceViewModel.selectedAssetOption.value = assetOptionIndex
         myBalanceViewModel.updatePaymentsAndBalance(selectedAssetOption)
     }
 

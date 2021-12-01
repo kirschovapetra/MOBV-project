@@ -1,11 +1,11 @@
 package sk.stuba.fei.uim.mobv_project.ui.transaction
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -15,12 +15,8 @@ import sk.stuba.fei.uim.mobv_project.data.repositories.AccountRepository
 import sk.stuba.fei.uim.mobv_project.data.repositories.ContactRepository
 import sk.stuba.fei.uim.mobv_project.data.utils.ViewModelFactory
 import sk.stuba.fei.uim.mobv_project.data.view_models.contacts.NewContactViewModel
-import sk.stuba.fei.uim.mobv_project.data.view_models.transaction.CreateNewTransactionViewModel
-import sk.stuba.fei.uim.mobv_project.data.view_models.transaction.SaveRecipientViewModel
-import sk.stuba.fei.uim.mobv_project.databinding.FragmentCreateNewTransactionBinding
 import sk.stuba.fei.uim.mobv_project.databinding.FragmentSaveRecipientBinding
 import sk.stuba.fei.uim.mobv_project.ui.transaction.SaveRecipientFragmentDirections.actionSaveRecipientFragmentToMyBalanceFragment
-import sk.stuba.fei.uim.mobv_project.ui.utils.NotificationUtils
 import sk.stuba.fei.uim.mobv_project.ui.utils.NotificationUtils.showSnackbar
 import sk.stuba.fei.uim.mobv_project.ui.utils.NotificationUtils.showSnackbarFromResourceEvent
 
@@ -38,7 +34,7 @@ class SaveRecipientFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_save_recipient,

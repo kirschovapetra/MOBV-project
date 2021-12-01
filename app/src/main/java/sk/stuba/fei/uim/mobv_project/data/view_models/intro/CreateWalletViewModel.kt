@@ -9,7 +9,6 @@ import org.stellar.sdk.KeyPair
 import sk.stuba.fei.uim.mobv_project.data.exceptions.ValidationException
 import sk.stuba.fei.uim.mobv_project.data.repositories.AccountRepository
 import sk.stuba.fei.uim.mobv_project.data.repositories.BalanceRepository
-import sk.stuba.fei.uim.mobv_project.data.repositories.PaymentRepository
 import sk.stuba.fei.uim.mobv_project.data.view_models.event.Event
 import sk.stuba.fei.uim.mobv_project.ui.intro.CreateWalletFragmentArgs
 import sk.stuba.fei.uim.mobv_project.utils.SecurityContext
@@ -17,7 +16,6 @@ import sk.stuba.fei.uim.mobv_project.utils.SecurityContext
 class CreateWalletViewModel(
     private val accountRepository: AccountRepository,
     private val balanceRepository: BalanceRepository,
-    private val paymentRepository: PaymentRepository,
     private val args: CreateWalletFragmentArgs
 ) : ViewModel() {
 

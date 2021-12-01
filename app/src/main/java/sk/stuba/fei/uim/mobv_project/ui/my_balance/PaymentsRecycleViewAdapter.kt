@@ -1,9 +1,6 @@
 package sk.stuba.fei.uim.mobv_project.ui.my_balance
 
-import android.content.Context
-import android.icu.text.SimpleDateFormat
 import android.os.Build
-import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,8 +13,6 @@ import sk.stuba.fei.uim.mobv_project.R
 import sk.stuba.fei.uim.mobv_project.data.entities.Payment
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
-import sk.stuba.fei.uim.mobv_project.data.entities.Account
-import sk.stuba.fei.uim.mobv_project.utils.SecurityContext
 
 
 class PaymentsRecycleViewAdapter(
@@ -59,10 +54,13 @@ class PaymentsRecycleViewAdapter(
         } else {
             holder.paymentTypeIcon.setBackgroundResource(R.drawable.ic_baseline_arrow_back_24)
         }
+
+        val amountNum = payment.amount!!.toDouble()
+
         holder.paymentContactName.text = payment.sourceAccount
         holder.paymentContactId.text = payment.from
-        holder.paymentAmount.text = payment.amount
-        holder.paymentDate.text = payment.createdAt //formatDate(payment.createdAt!!).toString() + "dasdad"
+        holder.paymentAmount.text = amountNum.toString()
+        holder.paymentDate.text = payment.createdAt!!.split("T")[0]
     }
 
     override fun getItemCount(): Int {
