@@ -6,6 +6,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.stellar.sdk.KeyPair
+import sk.stuba.fei.uim.mobv_project.data.exceptions.TransactionFailedException
 import sk.stuba.fei.uim.mobv_project.data.exceptions.ValidationException
 import sk.stuba.fei.uim.mobv_project.data.repositories.AccountRepository
 import sk.stuba.fei.uim.mobv_project.data.repositories.BalanceRepository
@@ -64,6 +65,9 @@ class CreateWalletViewModel(
 
                     SecurityContext.account = account
                     _eventLocalAccountCreated.postValue(Event(true))
+                }
+                catch (ex: TransactionFailedException) {
+                    _eventRepositoryValidationError.postValue(Event(ex.message.toString()))
                 }
                 catch (ex: ValidationException) {
                     _eventRepositoryValidationError.postValue(Event(ex.message.toString()))

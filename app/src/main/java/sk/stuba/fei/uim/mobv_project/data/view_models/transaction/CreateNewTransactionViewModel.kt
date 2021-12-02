@@ -8,6 +8,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import sk.stuba.fei.uim.mobv_project.data.entities.Contact
 import sk.stuba.fei.uim.mobv_project.data.exceptions.ApiException
+import sk.stuba.fei.uim.mobv_project.data.exceptions.TransactionFailedException
 import sk.stuba.fei.uim.mobv_project.data.exceptions.ValidationException
 import sk.stuba.fei.uim.mobv_project.data.repositories.BalanceRepository
 import sk.stuba.fei.uim.mobv_project.data.repositories.ContactRepository
@@ -108,7 +109,11 @@ class CreateNewTransactionViewModel(
                         }
                     } catch (exeption: ValidationException) {
                         _eventApiValidationFailed.postValue(Event(exeption.message.toString()))
-                    } catch (exeption: BadPaddingException) {
+                    }
+                    catch (exeption: TransactionFailedException) {
+                        _eventApiValidationFailed.postValue(Event(exeption.message.toString()))
+                    }
+                    catch (exeption: BadPaddingException) {
                         Log.e("BadPadding exception", exeption.toString())
                         _eventInvalidPin.postValue(Event(true))
                     } catch (exeption: ApiException) {
