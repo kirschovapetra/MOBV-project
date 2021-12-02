@@ -27,10 +27,6 @@ class PaymentsRecycleViewAdapter(
         val itemview = LayoutInflater.from(parent.context)
             .inflate(R.layout.fragment_balance_card, parent, false)
 
-//        val height: Int = parent.measuredHeight / 3
-//        itemView. setMinimumHeight(height)
-
-//        itemview.minimumHeight = height
         return ViewHolder(itemview)
     }
 
@@ -40,9 +36,6 @@ class PaymentsRecycleViewAdapter(
         val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
         val text = date.format(formatter)
         return LocalDate.parse(text, formatter)
-
-//        val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
-//        return LocalDate.parse(dateString, formatter)
     }
 
     // binds the list items to a view

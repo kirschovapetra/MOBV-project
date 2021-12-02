@@ -4,73 +4,83 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/custom_black_border"
-    >
-
-<!--    app:cardBackgroundColor="@color/md_theme_light_background"-->
-
-    <LinearLayout
-        android:id="@+id/contactIconWrapper"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_margin="5dp"
-        android:orientation="horizontal"
-        android:padding="5dp">
-
-        <ImageView
-            android:id="@+id/contactCardIcon"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:contentDescription="@string/contact_card_contact_icon_description"
-            app:srcCompat="@drawable/ic_baseline_people_alt_24" />
-    </LinearLayout>
+    app:cardBackgroundColor="@color/md_theme_light_background"
+    android:layout_marginBottom="7dp">
 
     <LinearLayout
-        android:id="@+id/allmightyContactWrapper"
+        android:id="@+id/contactAllWrapper"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginStart="30dp"
-        android:orientation="vertical"
-        app:layout_constraintStart_toStartOf="@+id/contactIconWrapper">
+        android:layout_height="70dp"
+        android:layout_margin="0dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/custom_black_border"
+        android:orientation="horizontal"
+        android:padding="1dp">
 
         <LinearLayout
-            android:id="@+id/contactInfoWrapper"
+            android:id="@+id/contactIconWrapper"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="5dp"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <ImageView
+                android:id="@+id/contactCardIcon"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/contact_card_contact_icon_description"
+                app:srcCompat="@drawable/ic_baseline_people_alt_24" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/allmightyContactWrapper"
             android:layout_width="match_parent"
-            android:layout_height="25dp"
-            android:layout_marginStart="30dp"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             app:layout_constraintStart_toStartOf="@+id/contactIconWrapper">
 
-            <TextView
-                android:id="@+id/contactCardName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:text="@string/contactCardName"
-                android:textSize="15sp"
-                android:textStyle="bold" />
+            <LinearLayout
+                android:id="@+id/contactInfoWrapper"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:layout_marginStart="5dp"
+                android:orientation="vertical"
+                app:layout_constraintStart_toStartOf="@+id/contactIconWrapper">
+
+                <TextView
+                    android:id="@+id/contactCardName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="@string/contactCardName"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/contactIdWrapper"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:id="@+id/contactCardAccountId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="11dp"
+                    android:text="@string/CardContactId"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
 
         </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/contactIdWrapper"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginStart="25dp"
-            android:orientation="vertical">
-
-
-            <TextView
-                android:id="@+id/contactCardAccountId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="11dp"
-                android:text="@string/CardContactId"
-                android:textSize="11sp"
-                android:textStyle="bold" />
-
-        </LinearLayout>
-
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

@@ -31,6 +31,12 @@ class MyBalanceViewModel(
 
     init {
         walletOwner.value = account.firstName + " " + account.lastName
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                paymentRepo.syncPayments(account.accountId)
+                balanceRepo.syncBalances(account.accountId)
+            }
+        }
     }
 
     private fun fetchContactNameForPayment(payment: Payment): String {
@@ -48,10 +54,6 @@ class MyBalanceViewModel(
 
     private fun setPaymentSender(payment: Payment): String {
         return if (payment.paymentType.equals("debit")) payment.from!! else payment.to!!
-    }
-
-    private fun isNumeric(string: String): Boolean {
-        return string.toIntOrNull() != null
     }
 
     fun updatePaymentsAndBalance(selectedAsset: String) {

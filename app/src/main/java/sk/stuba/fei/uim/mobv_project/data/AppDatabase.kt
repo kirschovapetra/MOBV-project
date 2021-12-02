@@ -13,7 +13,6 @@ import androidx.room.RoomDatabase
     version = 1,
     exportSchema = false
 )
-//@TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract val accountDao: AccountDao
     abstract val balanceDao: BalanceDao

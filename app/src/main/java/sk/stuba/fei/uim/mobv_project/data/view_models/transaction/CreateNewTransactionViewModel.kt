@@ -9,6 +9,7 @@ import kotlinx.coroutines.withContext
 import sk.stuba.fei.uim.mobv_project.data.entities.Contact
 import sk.stuba.fei.uim.mobv_project.data.exceptions.ApiException
 import sk.stuba.fei.uim.mobv_project.data.exceptions.ValidationException
+import sk.stuba.fei.uim.mobv_project.data.repositories.BalanceRepository
 import sk.stuba.fei.uim.mobv_project.data.repositories.ContactRepository
 import sk.stuba.fei.uim.mobv_project.data.repositories.PaymentRepository
 import sk.stuba.fei.uim.mobv_project.data.view_models.event.Event
@@ -21,7 +22,8 @@ import javax.crypto.BadPaddingException
 
 class CreateNewTransactionViewModel(
     private val contactRepository: ContactRepository,
-    private val paymentRepository: PaymentRepository
+    private val paymentRepository: PaymentRepository,
+    private val balanceRepository: BalanceRepository
 ) :
     ViewModel() {
     val accountId = MutableLiveData<String>()
@@ -86,6 +88,7 @@ class CreateNewTransactionViewModel(
                                     amount = it
                                 )
                             }
+                            balanceRepository.syncBalances(account.accountId)
 
                             if (isNewRecipient()) {
                                 _eventPaymentSuccessful.postValue(

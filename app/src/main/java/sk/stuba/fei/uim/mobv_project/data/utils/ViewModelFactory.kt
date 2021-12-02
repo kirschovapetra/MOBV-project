@@ -7,8 +7,6 @@ import sk.stuba.fei.uim.mobv_project.data.view_models.my_balance.*
 import sk.stuba.fei.uim.mobv_project.data.view_models.settings.SettingsViewModel
 import sk.stuba.fei.uim.mobv_project.data.view_models.transaction.*
 
-// TODO odkomentovat /*repository*/ ked budeme mat take konstruktory
-
 class ViewModelFactory(private vararg val repository: AppDbRepository) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -50,7 +48,8 @@ class ViewModelFactory(private vararg val repository: AppDbRepository) : ViewMod
             @Suppress("UNCHECKED_CAST")
             return CreateNewTransactionViewModel(
                 repository[0] as ContactRepository,
-                repository[1] as PaymentRepository
+                repository[1] as PaymentRepository,
+                repository[2] as BalanceRepository
             ) as T
         }
 

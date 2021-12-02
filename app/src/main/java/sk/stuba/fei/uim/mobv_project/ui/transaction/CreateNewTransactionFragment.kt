@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -13,12 +12,12 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import sk.stuba.fei.uim.mobv_project.R
 import sk.stuba.fei.uim.mobv_project.data.entities.Contact
+import sk.stuba.fei.uim.mobv_project.data.repositories.BalanceRepository
 import sk.stuba.fei.uim.mobv_project.data.repositories.ContactRepository
 import sk.stuba.fei.uim.mobv_project.data.repositories.PaymentRepository
 import sk.stuba.fei.uim.mobv_project.data.utils.ViewModelFactory
 import sk.stuba.fei.uim.mobv_project.data.view_models.transaction.CreateNewTransactionViewModel
 import sk.stuba.fei.uim.mobv_project.databinding.FragmentCreateNewTransactionBinding
-import sk.stuba.fei.uim.mobv_project.ui.utils.LoadingLayoutUtils
 import sk.stuba.fei.uim.mobv_project.ui.utils.LoadingLayoutUtils.setLoadingLayoutVisibility
 import sk.stuba.fei.uim.mobv_project.ui.utils.NotificationUtils
 
@@ -26,7 +25,8 @@ class CreateNewTransactionFragment : Fragment(), AdapterView.OnItemSelectedListe
     private val viewModel: CreateNewTransactionViewModel by viewModels() {
         ViewModelFactory(
             ContactRepository.getInstance(context!!),
-            PaymentRepository.getInstance(context!!)
+            PaymentRepository.getInstance(context!!),
+            BalanceRepository.getInstance(context!!)
         )
     }
     private lateinit var binding: FragmentCreateNewTransactionBinding

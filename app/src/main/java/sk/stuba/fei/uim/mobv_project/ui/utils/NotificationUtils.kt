@@ -1,6 +1,5 @@
 package sk.stuba.fei.uim.mobv_project.ui.utils
 
-import android.annotation.SuppressLint
 import android.view.View
 import com.google.android.material.snackbar.Snackbar
 import sk.stuba.fei.uim.mobv_project.data.view_models.event.Event

@@ -53,7 +53,6 @@ class ContactsRecycleViewAdapter(
 
     // Holds the views for adding it to image and text
    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
-//                val imageView: ImageView = itemView.findViewById(R.id.imageview)
         val contactNameTextView: TextView = itemView.findViewById(R.id.contactCardName)
         val contactIdTextView: TextView = itemView.findViewById(R.id.contactCardAccountId)
 

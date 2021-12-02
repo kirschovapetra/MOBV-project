@@ -46,7 +46,6 @@ class ContactsFragment : Fragment(), ContactsRecycleViewAdapter.OnContactClickLi
             container,
             false
         )
-//        contactsViewModel.contacts.postValue(returnDummyData()) // dotiahnit data na zobrazenie
 
         attachListerToNewContactButton(binding)
         attachViewModelToBinding(binding)
@@ -97,33 +96,4 @@ class ContactsFragment : Fragment(), ContactsRecycleViewAdapter.OnContactClickLi
         adapter.notifyItemChanged(position)
 
     }
-
-//    fun returnDummyData(): ArrayList<Contact> {
-//        var arrayList = ArrayList<Contact>()
-//        arrayList.add(Contact("1", "Jozko", "1"))
-//        arrayList.add(Contact("2", "Betka", "2"))
-//        arrayList.add(Contact("3", "Dan", "3"))
-//        arrayList.add(Contact("4", "Johny", "4"))
-//        arrayList.add(Contact("1", "Soky", "1"))
-//        arrayList.add(Contact("2", "Martin", "2"))
-//        arrayList.add(Contact("3", "Marek", "3"))
-//        arrayList.add(Contact("4", "Zuzka", "4"))
-//        arrayList.add(Contact("1", "JAROOO", "1"))
-//        arrayList.add(Contact("2", "Matus", "2"))
-//        arrayList.add(Contact("3", "Ondo", "3"))
-//        arrayList.add(Contact("4", "Huto", "4"))
-//        arrayList.add(Contact("1", "Jozko", "1"))
-//        arrayList.add(Contact("2", "Betka", "2"))
-//        arrayList.add(Contact("3", "Dan", "3"))
-//        arrayList.add(Contact("4", "Johny", "4"))
-//        arrayList.add(Contact("1", "Soky", "1"))
-//        arrayList.add(Contact("2", "Martin", "2"))
-//        arrayList.add(Contact("3", "Marek", "3"))
-//        arrayList.add(Contact("4", "Zuzka", "4"))
-//        arrayList.add(Contact("1", "JAROOO", "1"))
-//        arrayList.add(Contact("2", "Matus", "2"))
-//        arrayList.add(Contact("3", "Ondo", "3"))
-//        arrayList.add(Contact("4", "Huto", "4"))
-//        return arrayList
-//    }
 }
