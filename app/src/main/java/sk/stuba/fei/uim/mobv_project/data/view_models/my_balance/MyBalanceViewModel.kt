@@ -1,8 +1,10 @@
 package sk.stuba.fei.uim.mobv_project.data.view_models.my_balance
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -11,6 +13,7 @@ import sk.stuba.fei.uim.mobv_project.data.entities.Payment
 import sk.stuba.fei.uim.mobv_project.data.repositories.BalanceRepository
 import sk.stuba.fei.uim.mobv_project.data.repositories.ContactRepository
 import sk.stuba.fei.uim.mobv_project.data.repositories.PaymentRepository
+import sk.stuba.fei.uim.mobv_project.ui.utils.NotificationUtils
 import sk.stuba.fei.uim.mobv_project.utils.SecurityContext
 
 
@@ -31,12 +34,18 @@ class MyBalanceViewModel(
 
     init {
         walletOwner.value = account.firstName + " " + account.lastName
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                paymentRepo.syncPayments(account.accountId)
-                balanceRepo.syncBalances(account.accountId)
+
+            viewModelScope.launch {
+                withContext(Dispatchers.IO) {
+                    try {
+                        paymentRepo.syncPayments(account.accountId)
+                        balanceRepo.syncBalances(account.accountId)
+                    } catch (e: Exception) {
+                        Log.e("MyBalanceViewModel", "${e.message}")
+                    }
+                }
             }
-        }
+
     }
 
     private fun fetchContactNameForPayment(payment: Payment): String {

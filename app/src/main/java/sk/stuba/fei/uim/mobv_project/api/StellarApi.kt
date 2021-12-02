@@ -70,7 +70,7 @@ class StellarApi(private val context: Context) {
 
         try {
             // get payments
-            val paymentsRequest = server.payments().forAccount(pair.accountId)
+            val paymentsRequest = server.payments().forAccount(pair.accountId).limit(100)
             val operations = paymentsRequest.execute().records
 
             val payments = ArrayList<PaymentOperationResponse>()

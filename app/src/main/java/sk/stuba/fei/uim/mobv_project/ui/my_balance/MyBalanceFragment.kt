@@ -146,7 +146,7 @@ class MyBalanceFragment : Fragment(), AdapterView.OnItemSelectedListener {
             clipboardManager.setPrimaryClip(clipData)
 
             NotificationUtils.showSnackbar(
-                view, R.string.registered_copy_private_key_toast_text, Snackbar.LENGTH_LONG
+                view, R.string.my_balance_copy_account_key_toast_text, Snackbar.LENGTH_LONG
             )
         }
     }
