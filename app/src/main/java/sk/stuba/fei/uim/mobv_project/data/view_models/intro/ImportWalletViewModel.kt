@@ -1,5 +1,6 @@
 package sk.stuba.fei.uim.mobv_project.data.view_models.intro
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -69,6 +70,10 @@ class ImportWalletViewModel(
                     _eventLocalAccountCreated.postValue(Event(true))
                 }
                 catch (ex: ValidationException) {
+                    _eventRepositoryValidationError.postValue(Event(ex.message.toString()))
+                }
+                catch (ex: Exception) {
+                    Log.e("ImportWallet", ex.message.toString())
                     _eventRepositoryValidationError.postValue(Event(ex.message.toString()))
                 }
             }

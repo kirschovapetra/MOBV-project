@@ -107,18 +107,18 @@ class CreateNewTransactionViewModel(
                                 )
                             }
                         }
-                    } catch (exeption: ValidationException) {
-                        _eventApiValidationFailed.postValue(Event(exeption.message.toString()))
-                    }
-                    catch (exeption: TransactionFailedException) {
-                        _eventApiValidationFailed.postValue(Event(exeption.message.toString()))
-                    }
-                    catch (exeption: BadPaddingException) {
-                        Log.e("BadPadding exception", exeption.toString())
+                    } catch (exception: ValidationException) {
+                        _eventApiValidationFailed.postValue(Event(exception.message.toString()))
+                    } catch (exception: TransactionFailedException) {
+                        _eventApiValidationFailed.postValue(Event(exception.message.toString()))
+                    } catch (exception: BadPaddingException) {
                         _eventInvalidPin.postValue(Event(true))
                     } catch (exeption: ApiException) {
-                        Log.e("ApiException exception", exeption.toString())
+                        Log.w("ApiException", exeption.toString())
                         _eventApiValidationFailed.postValue(Event(exeption.message.toString()))
+                    } catch (exception: Exception) {
+                        Log.e("CreateNewTransaction", exception.message.toString())
+                        _eventApiValidationFailed.postValue(Event(exception.message.toString()))
                     }
                 } else {
                     _eventPaymentSuccessful.postValue(Event(null))

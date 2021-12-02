@@ -19,7 +19,6 @@ import sk.stuba.fei.uim.mobv_project.data.utils.Validation
 import sk.stuba.fei.uim.mobv_project.data.view_models.event.Event
 import sk.stuba.fei.uim.mobv_project.utils.CipherUtils
 import sk.stuba.fei.uim.mobv_project.utils.SecurityContext
-import java.lang.Exception
 import javax.crypto.BadPaddingException
 
 
@@ -101,8 +100,11 @@ class SettingsViewModel(
                         _eventApiValidationFailed.postValue(Event(e.message.toString()))
                     }
                     catch (e: BadPaddingException) {
-                        Log.e("BadPadding exception", e.toString())
                         _eventInvalidPin.postValue(Event(true))
+                    }
+                    catch (e: Exception) {
+                        Log.e("Settings", e.message.toString())
+                        _eventApiValidationFailed.postValue(Event(e.message.toString()))
                     }
                 } else {
                     _eventApiValidationFailed.postValue(Event("Invalid input data."))

@@ -72,6 +72,10 @@ class CreateWalletViewModel(
                 catch (ex: ValidationException) {
                     _eventRepositoryValidationError.postValue(Event(ex.message.toString()))
                 }
+                catch (ex: Exception) {
+                    Log.e("CreateWallet", ex.message.toString())
+                    _eventRepositoryValidationError.postValue(Event(ex.message.toString()))
+                }
             }
         }
     }
