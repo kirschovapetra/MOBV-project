@@ -52,26 +52,26 @@ class CreateWalletFragment : Fragment(R.layout.fragment_create_wallet) {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
-        viewModel.eventCopyToClipboard.observe(this, {
+        viewModel.eventCopyToClipboard.observe(viewLifecycleOwner, {
             it.getContentIfNotHandled()?.let { text ->
                 copyToClipboard(text)
             }
         })
-        viewModel.eventContinue.observe(this, { event ->
+        viewModel.eventContinue.observe(viewLifecycleOwner, { event ->
             event.getContentIfNotHandled()?.let {
                 if (it) {
                     showContinueDialog()
                 }
             }
         })
-        viewModel.eventLoadingStart.observe(this, {
+        viewModel.eventLoadingStart.observe(viewLifecycleOwner, {
             setLoadingLayoutVisibility(activity, true)
         })
-        viewModel.eventRepositoryValidationError.observe(this, {
+        viewModel.eventRepositoryValidationError.observe(viewLifecycleOwner, {
             showSnackbarFromMessageEvent(view, it, Snackbar.LENGTH_LONG)
             setLoadingLayoutVisibility(activity, false)
         })
-        viewModel.eventLocalAccountCreated.observe(this, { event ->
+        viewModel.eventLocalAccountCreated.observe(viewLifecycleOwner, { event ->
             event.getContentIfNotHandled()?.let {
                 if (it) {
                     setLoadingLayoutVisibility(activity, false)

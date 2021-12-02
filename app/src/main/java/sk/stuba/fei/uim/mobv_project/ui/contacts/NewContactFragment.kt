@@ -57,12 +57,12 @@ class NewContactFragment : Fragment() {
         binding.newContactViewModel = newContactViewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
-        newContactViewModel.eventInvalidForm.observe(this, { event ->
+        newContactViewModel.eventInvalidForm.observe(viewLifecycleOwner, { event ->
             event.getContentIfNotHandled()?.let { messageResourceId ->
                 showSnackbar(view, messageResourceId, Snackbar.LENGTH_LONG)
             }
         })
-        newContactViewModel.eventContactSave.observe(this, { event ->
+        newContactViewModel.eventContactSave.observe(viewLifecycleOwner, { event ->
             event.getContentIfNotHandled()?.let { messageResourceId ->
                 navigateToContactsAndShowSnackbar(messageResourceId)
             }

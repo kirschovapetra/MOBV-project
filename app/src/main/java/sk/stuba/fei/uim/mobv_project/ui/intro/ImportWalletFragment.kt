@@ -50,20 +50,20 @@ class ImportWalletFragment : Fragment(R.layout.fragment_import_wallet) {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
-        viewModel.eventLoadingStart.observe(this, {
+        viewModel.eventLoadingStart.observe(viewLifecycleOwner, {
             it.getContentIfNotHandled()?.let {
                 setLoadingLayoutVisibility(activity, true)
             }
         })
-        viewModel.eventFormError.observe(this, { event ->
+        viewModel.eventFormError.observe(viewLifecycleOwner, { event ->
             setLoadingLayoutVisibility(activity, false)
             showSnackbarFromResourceEvent(view, event, Snackbar.LENGTH_LONG)
         })
-        viewModel.eventRepositoryValidationError.observe(this, { event ->
+        viewModel.eventRepositoryValidationError.observe(viewLifecycleOwner, { event ->
             setLoadingLayoutVisibility(activity, false)
             showSnackbarFromMessageEvent(view, event, Snackbar.LENGTH_LONG)
         })
-        viewModel.eventLocalAccountCreated.observe(this, { event ->
+        viewModel.eventLocalAccountCreated.observe(viewLifecycleOwner, { event ->
             event.getContentIfNotHandled()?.let {
                 if (it) {
                     setLoadingLayoutVisibility(activity, false)

@@ -76,7 +76,7 @@ class MyBalanceFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     private fun attachObserverToSpinner(){
         myBalanceViewModel.assetOptions.observe(
-            this,
+            viewLifecycleOwner,
             { assetOptions ->
                 setSpinnerAdapter(assetOptions.toMutableList())
             }
@@ -108,15 +108,11 @@ class MyBalanceFragment : Fragment(), AdapterView.OnItemSelectedListener {
     }
 
     private fun attachListenerToNewTransactionButton(binding: FragmentMyBalanceBinding) {
-        val clickButtonListener: View.OnClickListener = View.OnClickListener {
+        binding.newTransactionButton.setOnClickListener {
             findNavController().navigate(
                 MyBalanceFragmentDirections.actionMyBalanceFragmentToCreateNewTransactionFragment()
             )
         }
-
-        binding.newTransactionButton.setOnClickListener(
-            clickButtonListener
-        )
     }
 
     private fun setPaymentsObserver(){
