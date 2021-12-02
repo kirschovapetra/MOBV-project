@@ -1,8 +1,5 @@
 package sk.stuba.fei.uim.mobv_project.ui.intro
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -21,9 +18,9 @@ import sk.stuba.fei.uim.mobv_project.data.utils.CreateWalletViewModelFactory
 import sk.stuba.fei.uim.mobv_project.data.view_models.intro.CreateWalletViewModel
 import sk.stuba.fei.uim.mobv_project.databinding.FragmentCreateWalletBinding
 import sk.stuba.fei.uim.mobv_project.ui.intro.CreateWalletFragmentDirections.actionCreateWalletFragmentToMyBalanceFragment
+import sk.stuba.fei.uim.mobv_project.ui.utils.ClipboardUtils
 import sk.stuba.fei.uim.mobv_project.ui.utils.LoadingLayoutUtils.setLoadingLayoutVisibility
 import sk.stuba.fei.uim.mobv_project.ui.utils.NavigationGraphUtils.changeNavGraphStartDestination
-import sk.stuba.fei.uim.mobv_project.ui.utils.NotificationUtils
 import sk.stuba.fei.uim.mobv_project.ui.utils.NotificationUtils.showSnackbarFromMessageEvent
 
 class CreateWalletFragment : Fragment(R.layout.fragment_create_wallet) {
@@ -53,9 +50,13 @@ class CreateWalletFragment : Fragment(R.layout.fragment_create_wallet) {
         binding.viewModel = viewModel
 
         viewModel.eventCopyToClipboard.observe(viewLifecycleOwner, {
-            it.getContentIfNotHandled()?.let { text ->
-                copyToClipboard(text)
-            }
+            ClipboardUtils.copyToClipboard(
+                context,
+                "privateKey",
+                it,
+                view,
+                R.string.registered_copy_private_key_toast_text
+            )
         })
         viewModel.eventContinue.observe(viewLifecycleOwner, { event ->
             event.getContentIfNotHandled()?.let {
@@ -83,19 +84,6 @@ class CreateWalletFragment : Fragment(R.layout.fragment_create_wallet) {
         })
 
         return binding.root
-    }
-
-    private fun copyToClipboard(content: String) {
-        context?.let {
-            val clipboardManager = it.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            val clipData: ClipData = ClipData.newPlainText("privateKey", content)
-
-            clipboardManager.setPrimaryClip(clipData)
-
-            NotificationUtils.showSnackbar(
-                view, R.string.registered_copy_private_key_toast_text, Snackbar.LENGTH_LONG
-            )
-        }
     }
 
     private fun showContinueDialog() {
