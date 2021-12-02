@@ -3,11 +3,10 @@ package sk.stuba.fei.uim.mobv_project.ui.contacts
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import sk.stuba.fei.uim.mobv_project.R
 import sk.stuba.fei.uim.mobv_project.data.entities.Contact
+import sk.stuba.fei.uim.mobv_project.databinding.FragmentContactCardBinding
 
 class ContactsRecycleViewAdapter(
     var contacts: List<Contact>,
@@ -17,34 +16,24 @@ class ContactsRecycleViewAdapter(
     RecyclerView.Adapter<ContactsRecycleViewAdapter.ViewHolder>() {
 
     // create new views
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        // inflates the card_view_design view
-        // that is used to hold list item
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.fragment_contact_card, parent, false)
-
-        return ViewHolder(view)
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+        ViewHolder(
+            FragmentContactCardBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
 
     // binds the list items to a view
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
-        val contact = contacts[position]
-
-        // sets the image to the imageview from our itemHolder class
-//        holder.imageView.setImageResource(ItemsViewModel.image)
-
-        // sets the text to the textview from our itemHolder class
-        holder.contactNameTextView.text = contact.name
-        holder.contactIdTextView.text = contact.contactId
-    }
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) =
+        holder.bind(contacts[position])
 
     // return the number of the items in the list
-    override fun getItemCount(): Int {
-        return contacts.size
-    }
+    override fun getItemCount() =
+        contacts.size
 
-    fun setData(newContacts: List<Contact>){
+    fun setData(newContacts: List<Contact>) {
         val diffUtil = ContactListDiffUtil(contacts, newContacts)
         val diffResults = DiffUtil.calculateDiff(diffUtil)
         contacts = newContacts
@@ -52,23 +41,30 @@ class ContactsRecycleViewAdapter(
     }
 
     // Holds the views for adding it to image and text
-   inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
-        val contactNameTextView: TextView = itemView.findViewById(R.id.contactCardName)
-        val contactIdTextView: TextView = itemView.findViewById(R.id.contactCardAccountId)
+    inner class ViewHolder(private val binding: FragmentContactCardBinding) :
+        RecyclerView.ViewHolder(binding.root), View.OnClickListener {
 
         init {
             itemView.setOnClickListener(this)
         }
 
+        fun bind(contact: Contact) {
+            binding.apply {
+                contactCardName.text = contact.name
+                contactCardAccountId.text = contact.contactId
+            }
+        }
+
         override fun onClick(view: View?) {
             val position = adapterPosition
-            if(position != RecyclerView.NO_POSITION){
-                listener.onContactClick(adapterPosition)
+            if (position != RecyclerView.NO_POSITION) {
+                listener.onContactClick(contacts[adapterPosition])
+                notifyItemChanged(adapterPosition)
             }
         }
     }
 
     interface OnContactClickListener {
-        fun onContactClick(position: Int)
+        fun onContactClick(contact: Contact)
     }
 }

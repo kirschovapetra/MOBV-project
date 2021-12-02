@@ -1,7 +1,6 @@
 package sk.stuba.fei.uim.mobv_project.ui.contacts
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,11 +10,12 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import sk.stuba.fei.uim.mobv_project.R
+import sk.stuba.fei.uim.mobv_project.data.entities.Contact
 import sk.stuba.fei.uim.mobv_project.data.repositories.ContactRepository
 import sk.stuba.fei.uim.mobv_project.data.utils.ViewModelFactory
 import sk.stuba.fei.uim.mobv_project.data.view_models.contacts.ContactsViewModel
 import sk.stuba.fei.uim.mobv_project.databinding.FragmentContactsBinding
-import sk.stuba.fei.uim.mobv_project.utils.SecurityContext
+import sk.stuba.fei.uim.mobv_project.ui.contacts.ContactsFragmentDirections.actionContactsFragmentToNewContactFragment
 
 class ContactsFragment : Fragment(), ContactsRecycleViewAdapter.OnContactClickListener {
 
@@ -26,7 +26,6 @@ class ContactsFragment : Fragment(), ContactsRecycleViewAdapter.OnContactClickLi
     }
     private lateinit var binding: FragmentContactsBinding
     private lateinit var adapter: ContactsRecycleViewAdapter
-    private val account = SecurityContext.account!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,33 +66,23 @@ class ContactsFragment : Fragment(), ContactsRecycleViewAdapter.OnContactClickLi
     }
 
     private fun attachListerToNewContactButton(binding: FragmentContactsBinding) {
-        val clickButtonListener: View.OnClickListener = View.OnClickListener {
+        binding.newContactButton.setOnClickListener {
             findNavController().navigate(
-                ContactsFragmentDirections.actionContactsFragmentToNewContactFragment()
+                actionContactsFragmentToNewContactFragment()
             )
         }
-
-        binding.newContactButton.setOnClickListener(
-            clickButtonListener
-        )
     }
 
-    private fun setContactObserver(){
-        contactsViewModel.contactRepo.getAccountContacts(account.accountId).observe(
+    private fun setContactObserver() {
+        contactsViewModel.allContacts.observe(
             this,
             { contacts -> adapter.setData(contacts) }
         )
     }
 
-
-    override fun onContactClick(position: Int) {
-        val clickedContact = adapter.contacts[position]
-
+    override fun onContactClick(contact: Contact) {
         findNavController().navigate(
-            ContactsFragmentDirections.actionContactsFragmentToNewContactFragment()
-                .setContact(clickedContact)
+            actionContactsFragmentToNewContactFragment().setContact(contact)
         )
-        adapter.notifyItemChanged(position)
-
     }
 }
