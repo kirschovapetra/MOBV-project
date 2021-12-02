@@ -37,13 +37,6 @@ class MyBalanceFragment : Fragment(), AdapterView.OnItemSelectedListener {
     private lateinit var binding: FragmentMyBalanceBinding
     private lateinit var adapter: PaymentsRecycleViewAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setPaymentsObserver()
-        adapter = PaymentsRecycleViewAdapter(listOf())
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -55,38 +48,28 @@ class MyBalanceFragment : Fragment(), AdapterView.OnItemSelectedListener {
             container,
             false
         )
+        binding.myBalanceViewModel = myBalanceViewModel
+        binding.lifecycleOwner = viewLifecycleOwner
 
-        attachObserverToSpinner()
+        setAssetsObserver()
         binding.assetOptionsSpinner.onItemSelectedListener = this
 
-        attachListenerToNewTransactionButton(binding)
-        attachViewModelToBinding(binding)
-        funInitializeRecycleAdapter(binding)
-
-
-        binding.accountIdTextView.setOnClickListener {
-            ClipboardUtils.copyToClipboard(
-                context,
-                "accountId",
-                SecurityContext.account?.accountId.orEmpty(),
-                view,
-                R.string.my_balance_copy_account_key_toast_text
-            )
-        }
+        setNewTransactionButtonListener()
+        initializeRecycleAdapter()
+        setBalanceObserver()
+        setPaymentsObserver()
+        setAccountIdClickListener()
 
         return binding.root
     }
 
-    private fun attachObserverToSpinner(){
-        myBalanceViewModel.assetOptions.observe(
-            viewLifecycleOwner,
-            { assetOptions ->
-                setSpinnerAdapter(assetOptions.toMutableList())
-            }
-        )
+    private fun setAssetsObserver() {
+        myBalanceViewModel.assetOptions.observe(viewLifecycleOwner,{ assetOptions ->
+            setSpinnerAdapter(assetOptions.toMutableList())
+        })
     }
 
-    private fun setSpinnerAdapter(options: MutableList<String>){
+    private fun setSpinnerAdapter(options: MutableList<String>) {
         val spinner: Spinner = binding.assetOptionsSpinner
         val adapter: ArrayAdapter<String> = ArrayAdapter<String>(
             context!!,
@@ -98,38 +81,52 @@ class MyBalanceFragment : Fragment(), AdapterView.OnItemSelectedListener {
         spinner.adapter = adapter
     }
 
-    private fun funInitializeRecycleAdapter(binding: FragmentMyBalanceBinding) {
+    private fun initializeRecycleAdapter() {
         val paymentsRecycleView = binding.paymentsRecyclerView
+
+        adapter = PaymentsRecycleViewAdapter(listOf())
 
         paymentsRecycleView.layoutManager = LinearLayoutManager(context)
         paymentsRecycleView.adapter = adapter
     }
 
-    private fun attachViewModelToBinding(binding: FragmentMyBalanceBinding) {
-        binding.myBalanceViewModel = myBalanceViewModel
-        binding.lifecycleOwner = viewLifecycleOwner
-    }
-
-    private fun attachListenerToNewTransactionButton(binding: FragmentMyBalanceBinding) {
+    private fun setNewTransactionButtonListener() {
         binding.newTransactionButton.setOnClickListener {
             findNavController().navigate(
-                MyBalanceFragmentDirections.actionMyBalanceFragmentToCreateNewTransactionFragment()
+                actionMyBalanceFragmentToCreateNewTransactionFragment()
             )
         }
     }
 
-    private fun setPaymentsObserver(){
-        myBalanceViewModel.selectedPayments.observe(
-            this,
-            { selectedPayments ->
-                adapter.setData(selectedPayments)
-            }
-        )
+    private fun setBalanceObserver() {
+        //TODO: neviem preco databinding z XML nefunguje pre tento field (kvoli transformacii?)
+        myBalanceViewModel.balance.observe(viewLifecycleOwner, {
+            binding.accountBalance.text = it
+        })
     }
 
-    override fun onItemSelected(p0: AdapterView<*>?, p1: View?, assetOptionIndex: Int, p3: Long) {
-        val selectedAssetOption = myBalanceViewModel.assetOptions.value!![assetOptionIndex]
-        myBalanceViewModel.updatePaymentsAndBalance(selectedAssetOption)
+    private fun setPaymentsObserver() {
+        myBalanceViewModel.paymentsToShow.observe(viewLifecycleOwner, { selectedPayments ->
+            adapter.setData(selectedPayments)
+        })
+    }
+
+    private fun setAccountIdClickListener() {
+        binding.accountIdTextView.setOnClickListener {
+            ClipboardUtils.copyToClipboard(
+                context,
+                "accountId",
+                SecurityContext.account?.accountId.orEmpty(),
+                view,
+                R.string.my_balance_copy_account_key_toast_text
+            )
+        }
+    }
+
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        val selectedAsset = binding.assetOptionsSpinner.selectedItem as String
+        Log.d("SPINNER", "Selected asset: $selectedAsset")
+        myBalanceViewModel.selectedAsset.value = selectedAsset
     }
 
     override fun onNothingSelected(p0: AdapterView<*>?) {

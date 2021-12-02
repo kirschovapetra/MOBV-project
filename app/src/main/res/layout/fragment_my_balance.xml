@@ -6,7 +6,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="myBalanceViewModel"
             type="sk.stuba.fei.uim.mobv_project.data.view_models.my_balance.MyBalanceViewModel" />
@@ -32,7 +31,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:text="@={myBalanceViewModel.walletOwner}"
+                android:text="@{myBalanceViewModel.walletOwner}"
                 android:textColor="@color/md_theme_light_primary"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:layout_editor_absoluteX="16dp" />
@@ -44,7 +43,7 @@
                 android:layout_height="30dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                android:text="@={myBalanceViewModel.account.accountId}"
+                android:text="@{myBalanceViewModel.account.accountId}"
                 android:textColor="@color/md_theme_light_primary"
                 android:textSize="13sp"
                 android:clickable="true"
@@ -71,7 +70,6 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="16dp"
-                android:text="@{myBalanceViewModel.balanceToShow}"
                 app:layout_constraintTop_toBottomOf="@+id/assetOptionsSpinner" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 

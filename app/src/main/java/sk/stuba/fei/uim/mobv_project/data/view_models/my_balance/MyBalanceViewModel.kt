@@ -1,19 +1,14 @@
 package sk.stuba.fei.uim.mobv_project.data.view_models.my_balance
 
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.google.android.material.snackbar.Snackbar
+import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import sk.stuba.fei.uim.mobv_project.data.entities.Balances
 import sk.stuba.fei.uim.mobv_project.data.entities.Payment
 import sk.stuba.fei.uim.mobv_project.data.repositories.BalanceRepository
 import sk.stuba.fei.uim.mobv_project.data.repositories.ContactRepository
 import sk.stuba.fei.uim.mobv_project.data.repositories.PaymentRepository
-import sk.stuba.fei.uim.mobv_project.ui.utils.NotificationUtils
 import sk.stuba.fei.uim.mobv_project.utils.SecurityContext
 
 
@@ -23,74 +18,74 @@ class MyBalanceViewModel(
     private val contactRepo: ContactRepository,
 ) : ViewModel() {
 
-    var account = SecurityContext.account!!
+    val account = SecurityContext.account!!
+    val walletOwner = "${account.firstName} ${account.lastName}"
 
-    val walletOwner = MutableLiveData<String>()
+    val assetOptions: LiveData<List<String>>
+        get() = balanceRepo.getAccountAssetCodes(account.accountId)
 
-    var assetOptions = balanceRepo.getAccountAssetCodes(account.accountId)
+    val selectedAsset = MutableLiveData<String>()
 
-    var balanceToShow = MutableLiveData<String?>()
-    var selectedPayments = MutableLiveData<List<Payment>>()
+    val balance: LiveData<String>
+        get() = Transformations.switchMap(selectedAsset) { selectedAsset ->
+            val accountBalance = balanceRepo.getBalanceByAssetCodeAndSourceAccount(selectedAsset, account.accountId)
 
-    init {
-        walletOwner.value = account.firstName + " " + account.lastName
+            Transformations.map(accountBalance) {
+                it.balance
+            }
+        }
 
-            viewModelScope.launch {
-                withContext(Dispatchers.IO) {
-                    try {
-                        paymentRepo.syncPayments(account.accountId)
-                        balanceRepo.syncBalances(account.accountId)
-                    } catch (e: Exception) {
-                        Log.e("MyBalanceViewModel", "${e.message}")
-                    }
+    val paymentsToShow: LiveData<List<Payment>>
+        get() = Transformations.switchMap(selectedAsset) { selectedAsset ->
+            val accountPayments = paymentRepo.getAccountPaymentsByAssetCodeAndSourceAccount(
+                selectedAsset,
+                account.accountId
+            )
+
+            Transformations.map(accountPayments) {
+                it.map { payment ->
+                    // TODO: asi by bolo lepsie db view, ale who cares at this point
+                    val attachedContactName = fetchContactNameForPayment(payment)
+                    payment.sourceAccount = attachedContactName
+                    payment.from = setPaymentSender(payment)
+                    payment
                 }
             }
+        }
 
+    init {
+        syncPaymentsAndBalances()
+    }
+
+    private fun syncPaymentsAndBalances() {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                try {
+                    paymentRepo.syncPayments(account.accountId)
+                    balanceRepo.syncBalances(account.accountId)
+                } catch (e: Exception) {
+                    Log.e("MyBalanceViewModel", "${e.message}")
+                }
+            }
+        }
     }
 
     private fun fetchContactNameForPayment(payment: Payment): String {
         val associatedContactId =
-            if (payment.paymentType.equals("debit")) payment.from else payment.to
+            if ("debit" == payment.paymentType) payment.from else payment.to
 
         val attachedContact =
             contactRepo.getDeadContactByIdAndSourceAccount(associatedContactId!!, account.accountId)
 
-        if (attachedContact.isNotEmpty()) {
-            return attachedContact[0].name!!
+        return if (attachedContact.isNotEmpty() && !attachedContact[0].name.isNullOrEmpty()) {
+            attachedContact[0].name!!
+        } else {
+            "Unknown"
         }
-        return "Unknown"
     }
 
     private fun setPaymentSender(payment: Payment): String {
-        return if (payment.paymentType.equals("debit")) payment.from!! else payment.to!!
-    }
-
-    fun updatePaymentsAndBalance(selectedAsset: String) {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                val balance =
-                    balanceRepo.getDeadBalancesByAssetCodeAndSourceAccount(selectedAsset, account.accountId)
-                val payments =
-                    paymentRepo.getDeadAccountPaymentsByAssetCodeAndSourceAccount(selectedAsset, account.accountId)
-
-                payments.forEach {
-                    val attachedContactName = fetchContactNameForPayment(it)
-                    it.sourceAccount = attachedContactName
-                    it.from = setPaymentSender(it)
-                }
-
-                selectedPayments.postValue(payments)
-                balanceToShow.postValue(parseBalance(balance))
-            }
-        }
-    }
-
-    private fun parseBalance(dbBalance: List<Balances>): String {
-        return if (dbBalance.isNotEmpty()) {
-            return dbBalance[0].balance!!
-        } else {
-            "NO BALANCE"
-        }
+        return if ("debit" == payment.paymentType) payment.from.toString() else payment.to.toString()
     }
 
 }

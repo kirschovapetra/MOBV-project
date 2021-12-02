@@ -20,7 +20,7 @@ abstract class  PaymentDao : EntityDao<Payment>() {
     abstract fun getBySourceAccountAssetCode(accountId: String?, assetCode: String?): LiveData<List<Payment>>
 
     @Query("SELECT * FROM payment WHERE asset_code = :assetCode and (`from` = :accountId OR `to` = :accountId) ORDER BY created_at DESC")
-    abstract fun getDeadByAssetCodeAndSourceAccount(assetCode: String, accountId: String): List<Payment>
+    abstract fun getByAssetCodeAndSourceAccount(assetCode: String, accountId: String): LiveData<List<Payment>>
 
     @Query("DELETE FROM payment")
     abstract suspend fun clear(): Int

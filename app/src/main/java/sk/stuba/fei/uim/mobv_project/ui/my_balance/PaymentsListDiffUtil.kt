@@ -8,46 +8,15 @@ class PaymentsListDiffUtil(
     private val newPayments: List<Payment>
 
 ): DiffUtil.Callback() {
-    override fun getOldListSize(): Int {
-        return oldPayments.size
-    }
+    override fun getOldListSize() =
+        oldPayments.size
 
-    override fun getNewListSize(): Int {
-        return newPayments.size
-    }
+    override fun getNewListSize() =
+        newPayments.size
 
-    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldPayments[oldItemPosition].paymentId == newPayments[newItemPosition].paymentId
-    }
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int) =
+        oldPayments[oldItemPosition].paymentId == newPayments[newItemPosition].paymentId
 
-    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return when {
-            oldPayments[oldItemPosition].paymentId != newPayments[newItemPosition].paymentId -> {
-                false
-            }
-            oldPayments[oldItemPosition].createdAt != newPayments[newItemPosition].createdAt -> {
-                false
-            }
-            oldPayments[oldItemPosition].assetCode != newPayments[newItemPosition].assetCode -> {
-                false
-            }
-            oldPayments[oldItemPosition].from != newPayments[newItemPosition].from -> {
-                false
-            }
-            oldPayments[oldItemPosition].to != newPayments[newItemPosition].to -> {
-                false
-            }
-            oldPayments[oldItemPosition].amount != newPayments[newItemPosition].amount -> {
-                false
-            }
-            oldPayments[oldItemPosition].paymentType != newPayments[newItemPosition].paymentType -> {
-                false
-            }
-            oldPayments[oldItemPosition].sourceAccount != newPayments[newItemPosition].sourceAccount -> {
-                false
-            }
-
-            else -> true
-        }
-    }
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) =
+        oldPayments[oldItemPosition] == newPayments[newItemPosition]
 }

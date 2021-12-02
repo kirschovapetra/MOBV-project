@@ -80,7 +80,7 @@ class CreateNewTransactionFragment : Fragment(), AdapterView.OnItemSelectedListe
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        val adapterItem = binding.spinner.adapter.getItem(position) as Contact
+        val adapterItem = binding.spinner.selectedItem as Contact
         viewModel.setSelectedContact(adapterItem)
     }
 

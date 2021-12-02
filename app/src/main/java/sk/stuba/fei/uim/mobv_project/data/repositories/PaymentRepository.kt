@@ -46,8 +46,8 @@ class PaymentRepository(
     fun getAccountPayments(id: String?): LiveData<List<Payment>> = dao.getBySourceAccount(id)
 
     fun getAccountPaymentsByAssetCode(id: String?, assetCode:String?): LiveData<List<Payment>> = dao.getBySourceAccountAssetCode(id, assetCode)
-    fun getDeadAccountPaymentsByAssetCodeAndSourceAccount(assetCode:String, accountId: String): List<Payment> =
-        dao.getDeadByAssetCodeAndSourceAccount(assetCode, accountId)
+    fun getAccountPaymentsByAssetCodeAndSourceAccount(assetCode:String, accountId: String): LiveData<List<Payment>> =
+        dao.getByAssetCodeAndSourceAccount(assetCode, accountId)
 
     suspend fun insertPayment(payment: Payment) {
         dao.insert(payment)
@@ -71,6 +71,7 @@ class PaymentRepository(
     suspend fun syncPayments(sourceAccount: String) {
 
         val paymentsResponse = api.getStellarPayments(sourceAccount)
+        Log.d(TAG, "syncPayments: payment count ${paymentsResponse.size}")
 
         paymentsResponse.forEach { payment ->
 
@@ -96,8 +97,9 @@ class PaymentRepository(
             )
         }
 
-
+        Log.i(TAG, "syncPayments: Success $sourceAccount")
     }
+
     @Throws(ValidationException::class, TransactionFailedException::class, ApiException::class)
     suspend fun sendAndSyncPayment(
         sourcePublicKey: String,

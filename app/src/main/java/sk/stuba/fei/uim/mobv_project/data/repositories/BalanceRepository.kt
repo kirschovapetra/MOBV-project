@@ -43,8 +43,8 @@ class BalanceRepository(
 
     fun getAllBalances(): LiveData<List<Balances>> = dao.getAll()
     fun getBalancesByAssetCode(code: String): LiveData<Balances> = dao.getByAssetCode(code)
-    fun getDeadBalancesByAssetCodeAndSourceAccount(assetCode: String, sourceAccount: String): List<Balances> =
-        dao.getDeadByAssetCodeAndSourceAccount(assetCode, sourceAccount)
+    fun getBalanceByAssetCodeAndSourceAccount(assetCode: String, sourceAccount: String): LiveData<Balances> =
+        dao.getByAssetCodeAndSourceAccount(assetCode, sourceAccount)
 
     fun getAccountBalances(id: String): LiveData<List<Balances>> = dao.getBySourceAccount(id)
 
@@ -74,6 +74,7 @@ class BalanceRepository(
 
         // + check ci existuje
         val accountResp = api.getStellarAccount(sourceAccount)
+        Log.d(TAG, "syncBalances: balance count ${accountResp.balances.size}")
 
         accountResp.balances?.forEach { balance ->
 
