@@ -13,6 +13,7 @@
     <string name="fragment_create_new_transaction_label">New Transaction</string>
     <string name="fragment_new_contact_label">Contact</string>
     <string name="fragment_save_recipient_label">Save recipient</string>
+    <string name="my_balance_copy_account_key_toast_text">Account id copied</string>
 
     <!-- Navigation bar -->
     <string name="bottom_nav_settings">Settings</string>

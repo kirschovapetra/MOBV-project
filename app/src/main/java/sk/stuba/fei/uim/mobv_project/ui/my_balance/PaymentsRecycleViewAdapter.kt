@@ -1,5 +1,6 @@
 package sk.stuba.fei.uim.mobv_project.ui.my_balance
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
@@ -45,14 +46,17 @@ class PaymentsRecycleViewAdapter(
     }
 
     // binds the list items to a view
+    @SuppressLint("ResourceAsColor")
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onBindViewHolder(holder: PaymentsRecycleViewAdapter.ViewHolder, position: Int) {
         val payment = payments[position]
 
         if(payment.paymentType.equals("debit")) {
             holder.paymentTypeIcon.setBackgroundResource(R.drawable.ic_baseline_add_24)
+            holder.paymentCardWrapper.setBackgroundResource(R.drawable.custom_green_card)
         } else {
-            holder.paymentTypeIcon.setBackgroundResource(R.drawable.ic_baseline_arrow_back_24)
+            holder.paymentTypeIcon.setBackgroundResource(R.drawable.ic_baseline_remove_24)
+            holder.paymentCardWrapper.setBackgroundResource(R.drawable.custom_red_card)
         }
 
         val amountNum = payment.amount!!.toDouble()
@@ -80,5 +84,6 @@ class PaymentsRecycleViewAdapter(
         val paymentContactId: TextView = itemView.findViewById(R.id.paymentSourceAccountId)
         val paymentAmount: TextView = itemView.findViewById(R.id.paymentAmount)
         val paymentDate: TextView = itemView.findViewById(R.id.paymentDate)
+        val paymentCardWrapper: View = itemView.findViewById(R.id.paymentCardWrapper)
     }
 }

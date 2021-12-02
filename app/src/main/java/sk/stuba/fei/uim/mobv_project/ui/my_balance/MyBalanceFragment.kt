@@ -1,5 +1,8 @@
 package sk.stuba.fei.uim.mobv_project.ui.my_balance
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,11 +11,13 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
+import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import sk.stuba.fei.uim.mobv_project.R
 import sk.stuba.fei.uim.mobv_project.data.repositories.BalanceRepository
 import sk.stuba.fei.uim.mobv_project.data.repositories.ContactRepository
@@ -20,6 +25,9 @@ import sk.stuba.fei.uim.mobv_project.data.repositories.PaymentRepository
 import sk.stuba.fei.uim.mobv_project.data.utils.ViewModelFactory
 import sk.stuba.fei.uim.mobv_project.data.view_models.my_balance.MyBalanceViewModel
 import sk.stuba.fei.uim.mobv_project.databinding.FragmentMyBalanceBinding
+import sk.stuba.fei.uim.mobv_project.ui.utils.NotificationUtils
+import sk.stuba.fei.uim.mobv_project.utils.SecurityContext
+
 
 class MyBalanceFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
@@ -43,7 +51,7 @@ class MyBalanceFragment : Fragment(), AdapterView.OnItemSelectedListener {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         binding = DataBindingUtil.inflate(
             inflater,
@@ -58,6 +66,11 @@ class MyBalanceFragment : Fragment(), AdapterView.OnItemSelectedListener {
         attachListenerToNewTransactionButton(binding)
         attachViewModelToBinding(binding)
         funInitializeRecycleAdapter(binding)
+
+
+        binding.accountIdTextView.setOnClickListener {
+            copyToClipboard()
+        }
 
         return binding.root
     }
@@ -123,5 +136,19 @@ class MyBalanceFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     override fun onNothingSelected(p0: AdapterView<*>?) {
         Log.e("SPINNER", "NIC SA NEDEJE")
+    }
+
+    private fun copyToClipboard() {
+
+        context?.let {
+            val clipboardManager = it.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val clipData: ClipData = ClipData.newPlainText("account id", SecurityContext.account!!.accountId)
+
+            clipboardManager.setPrimaryClip(clipData)
+
+            NotificationUtils.showSnackbar(
+                view, R.string.registered_copy_private_key_toast_text, Snackbar.LENGTH_LONG
+            )
+        }
     }
 }

@@ -17,7 +17,7 @@ import sk.stuba.fei.uim.mobv_project.data.utils.ViewModelFactory
 import sk.stuba.fei.uim.mobv_project.data.view_models.contacts.NewContactViewModel
 import sk.stuba.fei.uim.mobv_project.databinding.FragmentSaveRecipientBinding
 import sk.stuba.fei.uim.mobv_project.ui.transaction.SaveRecipientFragmentDirections.actionSaveRecipientFragmentToMyBalanceFragment
-import sk.stuba.fei.uim.mobv_project.ui.utils.NotificationUtils.showSnackbar
+import sk.stuba.fei.uim.mobv_project.ui.utils.NotificationUtils
 import sk.stuba.fei.uim.mobv_project.ui.utils.NotificationUtils.showSnackbarFromResourceEvent
 
 class SaveRecipientFragment : Fragment() {
@@ -52,8 +52,13 @@ class SaveRecipientFragment : Fragment() {
         })
         viewModel.eventContactSave.observe(this, { event ->
             event.getContentIfNotHandled()?.let { messageResourceId ->
-                showSnackbar(view, messageResourceId, Snackbar.LENGTH_LONG)
                 findNavController().navigate(actionSaveRecipientFragmentToMyBalanceFragment())
+                NotificationUtils.showAnchorSnackbar(
+                    view,
+                    messageResourceId,
+                    Snackbar.LENGTH_LONG,
+                    R.id.bottom_nav_view
+                )
             }
         })
         return binding.root

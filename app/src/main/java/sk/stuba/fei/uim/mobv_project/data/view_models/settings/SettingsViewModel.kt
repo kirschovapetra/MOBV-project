@@ -31,6 +31,7 @@ class SettingsViewModel(
 ) : ViewModel() {
     // "asset_code": "DOGECOIN", "asset_issuer": "GB46LWKQW65CZ7AMEY7JD4Z4ADX2CA4XYQBAJK6VTIUP6MWQUKCRQDJF"
     // "asset_code": "USD", "asset_issuer": "GA234B7P5ME6FTFLZ77PBYMRUJ3L33I6UPNYZ3XAUY4NNT7QWIAV7GL5"
+    // "asset_code": "EUR", "asset_issuer": "GAKNDFRRWA3RPWNLTI3G4EBSD3RGNZZOY5WKWYMQ6CQTG3KIEKPYWAYC",
 
     val assetCode = MutableLiveData<String>()
     val assetIssuer = MutableLiveData<String>()
