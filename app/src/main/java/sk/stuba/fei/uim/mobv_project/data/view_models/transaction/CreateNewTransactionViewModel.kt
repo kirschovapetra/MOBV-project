@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import sk.stuba.fei.uim.mobv_project.data.entities.Contact
+import sk.stuba.fei.uim.mobv_project.data.exceptions.ApiException
 import sk.stuba.fei.uim.mobv_project.data.exceptions.ValidationException
 import sk.stuba.fei.uim.mobv_project.data.repositories.ContactRepository
 import sk.stuba.fei.uim.mobv_project.data.repositories.PaymentRepository
@@ -24,7 +25,7 @@ class CreateNewTransactionViewModel(
 ) :
     ViewModel() {
     val accountId = MutableLiveData<String>()
-    val amount = MutableLiveData<Float>()
+    val amount = MutableLiveData<String>()
     val pin = MutableLiveData<String>()
 
     private val _eventPaymentSuccessful = MutableLiveData<Event<NavDirections?>>()
@@ -77,17 +78,21 @@ class CreateNewTransactionViewModel(
                                 account.salt!!,
                                 account.iv!!
                             )
-                            paymentRepository.sendAndSyncPayment(
-                                account.accountId,
-                                decryptedPrivateKey,
-                                accountId.value!!,
-                                amount = amount.value.toString()
-                            )
+                            amount.value?.let {
+                                paymentRepository.sendAndSyncPayment(
+                                    account.accountId,
+                                    decryptedPrivateKey,
+                                    accountId.value!!,
+                                    amount = it
+                                )
+                            }
 
                             if (isNewRecipient()) {
                                 _eventPaymentSuccessful.postValue(
                                     Event(
-                                        actionCreateNewTransactionFragmentToSaveRecipientFragment(accountId.value.orEmpty())
+                                        actionCreateNewTransactionFragmentToSaveRecipientFragment(
+                                            accountId.value.orEmpty()
+                                        )
                                     )
                                 )
                             } else {
@@ -103,6 +108,9 @@ class CreateNewTransactionViewModel(
                     } catch (exeption: BadPaddingException) {
                         Log.e("BadPadding exception", exeption.toString())
                         _eventInvalidPin.postValue(Event(true))
+                    } catch (exeption: ApiException) {
+                        Log.e("ApiException exception", exeption.toString())
+                        _eventApiValidationFailed.postValue(Event(exeption.message.toString()))
                     }
                 } else {
                     _eventPaymentSuccessful.postValue(Event(null))
