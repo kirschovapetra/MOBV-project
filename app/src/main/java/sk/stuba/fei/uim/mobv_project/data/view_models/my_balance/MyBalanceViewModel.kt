@@ -3,6 +3,7 @@ package sk.stuba.fei.uim.mobv_project.data.view_models.my_balance
 import android.util.Log
 import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import sk.stuba.fei.uim.mobv_project.data.entities.Payment
@@ -60,11 +61,15 @@ class MyBalanceViewModel(
     private fun syncPaymentsAndBalances() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                try {
-                    paymentRepo.syncPayments(account.accountId)
-                    balanceRepo.syncBalances(account.accountId)
-                } catch (e: Exception) {
-                    Log.e("MyBalanceViewModel", "${e.message}")
+                while (true) {
+                    try {
+                        paymentRepo.syncPayments(account.accountId)
+                        balanceRepo.syncBalances(account.accountId)
+                        Log.d("MyBalanceViewModel", "syncing")
+                    } catch (e: Exception) {
+                        Log.e("MyBalanceViewModel", "${e.message}")
+                    }
+                    delay(30000)
                 }
             }
         }
