@@ -83,27 +83,25 @@ class MainActivity : AppCompatActivity() {
 
     private fun addOnGlobalLayoutListener() {
         binding.root.viewTreeObserver.addOnGlobalLayoutListener {
-            if (!onGlobalLayoutListenerEnabled) {
-                return@addOnGlobalLayoutListener
-            }
+            if (onGlobalLayoutListenerEnabled) {
+                val view = binding.root
+                val r = Rect()
 
-            val view = binding.root
-            val r = Rect()
+                view.getWindowVisibleDisplayFrame(r)
 
-            view.getWindowVisibleDisplayFrame(r)
+                val heightDiff = view.rootView.height - (r.bottom - r.top)
+                if (heightDiff > 400) {
+                    Log.d("hide", heightDiff.toString())
+                    bottomNavView.visibility = View.GONE
+                } else {
+                    Log.d("show", heightDiff.toString())
+                    val transition = Fade()
+                    transition.duration = 100
+                    transition.addTarget(bottomNavView)
 
-            val heightDiff = view.rootView.height - (r.bottom - r.top)
-            if (heightDiff > 400) {
-                Log.d("hide", heightDiff.toString())
-                bottomNavView.visibility = View.GONE
-            } else {
-                Log.d("show", heightDiff.toString())
-                val transition = Fade()
-                transition.duration = 100
-                transition.addTarget(bottomNavView)
-
-                TransitionManager.beginDelayedTransition(bottomNavView, transition)
-                bottomNavView.visibility = View.VISIBLE
+                    TransitionManager.beginDelayedTransition(bottomNavView, transition)
+                    bottomNavView.visibility = View.VISIBLE
+                }
             }
         }
     }

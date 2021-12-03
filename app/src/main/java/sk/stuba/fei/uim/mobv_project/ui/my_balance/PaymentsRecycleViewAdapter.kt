@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import sk.stuba.fei.uim.mobv_project.R
 import sk.stuba.fei.uim.mobv_project.data.entities.Payment
-import sk.stuba.fei.uim.mobv_project.databinding.FragmentBalanceCardBinding
+import sk.stuba.fei.uim.mobv_project.databinding.FragmentMyBalanceCardBinding
 
 
 class PaymentsRecycleViewAdapter(
@@ -18,7 +18,7 @@ class PaymentsRecycleViewAdapter(
     // create new views
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ViewHolder(
-            FragmentBalanceCardBinding.inflate(
+            FragmentMyBalanceCardBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
@@ -40,7 +40,7 @@ class PaymentsRecycleViewAdapter(
         diffResults.dispatchUpdatesTo(this)
     }
 
-    class ViewHolder(private val binding: FragmentBalanceCardBinding) :
+    class ViewHolder(private val binding: FragmentMyBalanceCardBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(payment: Payment) {

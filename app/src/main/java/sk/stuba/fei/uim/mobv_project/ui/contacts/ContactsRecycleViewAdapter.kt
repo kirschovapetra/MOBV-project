@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import sk.stuba.fei.uim.mobv_project.data.entities.Contact
-import sk.stuba.fei.uim.mobv_project.databinding.FragmentContactCardBinding
+import sk.stuba.fei.uim.mobv_project.databinding.FragmentContactsCardBinding
 
 class ContactsRecycleViewAdapter(
     var contacts: List<Contact>,
@@ -18,7 +18,7 @@ class ContactsRecycleViewAdapter(
     // create new views
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ViewHolder(
-            FragmentContactCardBinding.inflate(
+            FragmentContactsCardBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
@@ -41,7 +41,7 @@ class ContactsRecycleViewAdapter(
     }
 
     // Holds the views for adding it to image and text
-    inner class ViewHolder(private val binding: FragmentContactCardBinding) :
+    inner class ViewHolder(private val binding: FragmentContactsCardBinding) :
         RecyclerView.ViewHolder(binding.root), View.OnClickListener {
 
         init {

@@ -73,7 +73,7 @@ class AccountRepository(
         pair: KeyPair
     ): Account {
         // od friendbota si vypytam 10000 peniazkov
-        val resp = api.createStellarAccount(pair.accountId)
+        api.createStellarAccount(pair.accountId)
 
         val encryptResult = encrypt(String(pair.secretSeed), pin)
 

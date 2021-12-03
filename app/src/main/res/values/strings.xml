@@ -66,14 +66,21 @@
     <string name="new_contact_duplicate_contact">You already have a contact with this id</string>
     <string name="new_contact_you_like_yourself">You can not add yourself</string>
 
+    <!-- My balance -->
+    <string name="my_balance_card_plus_icon_description">Plus icon</string>
+    <string name="asset_options_description">Asset options</string>
+    <string name="create_transaction_description">Create transaction</string>
+    <string name="my_balance_account_id_label">Account Id:</string>
+    <string name="my_balance_balance_label">Balance:</string>
+    <string name="my_balance_asset_spinner_label">Asset:</string>
+
     <!-- Create new transaction -->
     <string name="accountId_hint">Account ID</string>
     <string name="amount_hint">Amount</string>
     <string name="sendTransactionButton">Send Transaction</string>
     <string name="pin_hint">PIN</string>
-    <string name="plus_icon">plusIcon</string>
-    <string name="asset_options_description">Asset options</string>
-    <string name="create_transaction_description">Create transaction</string>
+    <string name="currency_text">Lumens</string>
+    <string name="plus_icon">Plus icon</string>
 
     <!-- Save recipient -->
     <string name="addSkipButton">Skip</string>
@@ -91,9 +98,4 @@
     <string name="settings_add_asset_button">Add to trusted</string>
     <string name="settings_asset_issuer_hint">Asset Issuer</string>
     <string name="settings_asset_code_hint">Asset code</string>
-    <string name="currency_text">Lumens</string>
-    <string name="contactCardName">ContactCardName</string>
-    <string name="contactId">845646</string>
-    <string name="contacticon">contactIcon</string>
-    <string name="CardContactId">4564894654</string>
 </resources>

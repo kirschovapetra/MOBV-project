@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="myBalanceViewModel"
             type="sk.stuba.fei.uim.mobv_project.data.view_models.my_balance.MyBalanceViewModel" />
@@ -14,87 +14,154 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="true"
         tools:context=".ui.my_balance.MyBalanceFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/linearLayout"
+            android:id="@+id/top_contraint_layout"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
             android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/paymentsRecyclerView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:id="@+id/walletOwner"
                 style="@style/TextAppearance.Material3.HeadlineMedium"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
+                android:layout_height="wrap_content"
                 android:text="@{myBalanceViewModel.walletOwner}"
                 android:textColor="@color/md_theme_light_primary"
+                app:layout_constraintBottom_toTopOf="@+id/account_id_layout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:layout_editor_absoluteX="16dp" />
+                tools:text="Wallet owner" />
 
-            <TextView
-                android:id="@+id/accountIdTextView"
-                style="@style/TextAppearance.Material3.HeadlineMedium"
+            <LinearLayout
+                android:id="@+id/account_id_layout"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:text="@{myBalanceViewModel.account.accountId}"
-                android:textColor="@color/md_theme_light_primary"
-                android:textSize="13sp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
                 android:clickable="true"
                 android:focusable="true"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/walletOwner" />
+                android:minHeight="48dp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toTopOf="@+id/asset_layout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/walletOwner">
 
-            <Spinner
-                android:id="@+id/assetOptionsSpinner"
-                android:layout_width="200dp"
-                android:layout_height="50dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="16dp"
-                android:contentDescription="@string/asset_options_description"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/accountIdTextView" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:labelFor="@id/accountIdTextView"
+                    android:text="@string/my_balance_account_id_label"
+                    android:textColor="@color/md_theme_light_primary" />
 
-            <TextView
-                android:id="@+id/accountBalance"
+                <TextView
+                    android:id="@+id/accountIdTextView"
+                    style="@style/TextAppearance.Material3.HeadlineSmall"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:elevation="2sp"
+                    android:text="@{myBalanceViewModel.account.accountId}"
+                    android:textColor="@color/md_theme_light_primary"
+                    android:textSize="13sp"
+                    tools:text="46546496846fdsfdas4f6das4f6sf4sa65f4sda6f479as8f463sad1f" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/asset_layout"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="16dp"
-                app:layout_constraintTop_toBottomOf="@+id/assetOptionsSpinner" />
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toTopOf="@+id/balance_layout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/account_id_layout">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:labelFor="@id/assetOptionsSpinner"
+                    android:text="@string/my_balance_asset_spinner_label" />
+
+                <Spinner
+                    android:id="@+id/assetOptionsSpinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName"
+                    android:minHeight="36dp"
+                    tools:listitem="@android:layout/simple_spinner_item" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/balance_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/asset_layout">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:elevation="5dp"
+                    android:labelFor="@id/accountBalance"
+                    android:text="@string/my_balance_balance_label" />
+
+                <TextView
+                    android:id="@+id/accountBalance"
+                    style="@style/MaterialAlertDialog.Material3.Body.Text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="textEnd"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"
+                    tools:text="10000.0000" />
+            </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/paymentsRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_marginBottom="96dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="4dp"
             android:background="@drawable/custom_black_border"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-            tools:layout_editor_absoluteX="16dp" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/top_contraint_layout" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/newTransactionButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="8dp"
             android:clickable="true"
-            app:srcCompat="@drawable/ic_baseline_add_24"
+            android:contentDescription="@string/create_transaction_description"
+            android:focusable="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:focusable="true"
-            android:contentDescription="@string/create_transaction_description"/>
+            app:srcCompat="@drawable/ic_baseline_add_24" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

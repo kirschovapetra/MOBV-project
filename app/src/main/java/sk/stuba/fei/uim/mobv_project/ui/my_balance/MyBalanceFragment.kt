@@ -112,7 +112,7 @@ class MyBalanceFragment : Fragment(), AdapterView.OnItemSelectedListener {
     }
 
     private fun setAccountIdClickListener() {
-        binding.accountIdTextView.setOnClickListener {
+        binding.accountIdLayout.setOnClickListener {
             ClipboardUtils.copyToClipboard(
                 context,
                 "accountId",
