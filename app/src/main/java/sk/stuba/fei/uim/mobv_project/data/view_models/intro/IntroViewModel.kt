@@ -49,7 +49,7 @@ class IntroViewModel : ViewModel() {
     }
 
     private fun validateInput(): Boolean {
-        var inputsValid = true;
+        var inputsValid = true
 
         inputsValid = inputsValid && validatePin()
         inputsValid = inputsValid && pinsMatch()
@@ -58,7 +58,7 @@ class IntroViewModel : ViewModel() {
     }
 
     private fun validatePin(): Boolean {
-        val pinValid = Validation.validatePin(pin.value)
+        val pinValid = Validation.isPinValid(pin.value)
         _eventInvalidPin.value = Event(!pinValid)
 
         return pinValid

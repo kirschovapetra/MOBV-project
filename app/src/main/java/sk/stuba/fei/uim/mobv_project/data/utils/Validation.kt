@@ -10,8 +10,34 @@ import kotlin.jvm.Throws
 
 object Validation {
 
-    fun validatePin(pin: String?): Boolean {
-        return pin != null && 8 <= pin.length
+    fun isPinValid(pin: String?) =
+        !pin.isNullOrEmpty() && 8 <= pin.length
+
+    fun isAccountIdValid(accountId: String?): Boolean {
+        if (accountId.isNullOrEmpty()) {
+            return false
+        }
+
+        return try {
+            validateAccountId(accountId.orEmpty())
+            true
+        } catch (ex: Exception) {
+            false
+        }
+    }
+
+    fun isPrivateKeyValid(privateKey: String?): Boolean {
+        if (privateKey.isNullOrEmpty()) {
+            return false
+        }
+
+        return try {
+            validatePrivateKey(privateKey)
+            true
+        }
+        catch (ex: Exception) {
+            false
+        }
     }
 
     @Throws(ValidationException::class)

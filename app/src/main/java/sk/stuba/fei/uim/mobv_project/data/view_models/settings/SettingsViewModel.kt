@@ -114,7 +114,7 @@ class SettingsViewModel(
     }
 
     private fun validatePin(): Boolean {
-        val pinValid = Validation.validatePin(pin.value)
+        val pinValid = Validation.isPinValid(pin.value)
         _eventInvalidPin.postValue(Event(!pinValid))
 
         return pinValid

@@ -13,6 +13,7 @@ import sk.stuba.fei.uim.mobv_project.data.exceptions.ValidationException
 import sk.stuba.fei.uim.mobv_project.data.repositories.AccountRepository
 import sk.stuba.fei.uim.mobv_project.data.repositories.BalanceRepository
 import sk.stuba.fei.uim.mobv_project.data.repositories.PaymentRepository
+import sk.stuba.fei.uim.mobv_project.data.utils.Validation
 import sk.stuba.fei.uim.mobv_project.data.view_models.event.Event
 import sk.stuba.fei.uim.mobv_project.ui.intro.ImportWalletFragmentArgs
 import sk.stuba.fei.uim.mobv_project.utils.SecurityContext
@@ -25,7 +26,7 @@ class ImportWalletViewModel(
 ) : ViewModel() {
     enum class FormError {
         KEY_EMPTY,
-        KEY_INVALID_LENGTH
+        KEY_INVALID
     }
 
     val privateKey = MutableLiveData<String>()
@@ -83,7 +84,7 @@ class ImportWalletViewModel(
     private fun validateForm(): FormError? {
         return when {
             privateKey.value.isNullOrEmpty() -> FormError.KEY_EMPTY
-            privateKey.value!!.length != 56 -> FormError.KEY_INVALID_LENGTH
+            !Validation.isPrivateKeyValid(privateKey.value) -> FormError.KEY_INVALID
             else -> null
         }
     }
@@ -91,7 +92,7 @@ class ImportWalletViewModel(
     private fun getMessageResourceId(formError: FormError): Int {
         return when (formError) {
             FormError.KEY_EMPTY -> R.string.import_form_error_empty_key
-            FormError.KEY_INVALID_LENGTH -> R.string.import_form_error_invalid_key_length
+            FormError.KEY_INVALID -> R.string.import_form_error_invalid_key_length
         }
     }
 }

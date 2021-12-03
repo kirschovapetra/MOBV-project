@@ -12,6 +12,7 @@ import sk.stuba.fei.uim.mobv_project.data.entities.Account
 import sk.stuba.fei.uim.mobv_project.data.entities.Contact
 import sk.stuba.fei.uim.mobv_project.data.repositories.AccountRepository
 import sk.stuba.fei.uim.mobv_project.data.repositories.ContactRepository
+import sk.stuba.fei.uim.mobv_project.data.utils.Validation
 import sk.stuba.fei.uim.mobv_project.data.view_models.event.Event
 import sk.stuba.fei.uim.mobv_project.utils.SecurityContext
 
@@ -109,7 +110,7 @@ class NewContactViewModel(
         return when {
             contactName.value == "" -> FormError.INVALID_NAME
 
-            contactAccountId.value == "" -> FormError.INVALID_CONTACT_ID
+            !Validation.isAccountIdValid(contactAccountId.value) -> FormError.INVALID_CONTACT_ID
 
             isNew.value!! && accountDoesNotExist(account.accountId)
             -> FormError.NON_EXISTING_ACCOUNT
