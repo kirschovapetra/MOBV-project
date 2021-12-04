@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import sk.stuba.fei.uim.mobv_project.R
 import sk.stuba.fei.uim.mobv_project.data.repositories.BalanceRepository
 import sk.stuba.fei.uim.mobv_project.data.repositories.ContactRepository
@@ -22,6 +23,7 @@ import sk.stuba.fei.uim.mobv_project.data.view_models.my_balance.MyBalanceViewMo
 import sk.stuba.fei.uim.mobv_project.databinding.FragmentMyBalanceBinding
 import sk.stuba.fei.uim.mobv_project.ui.my_balance.MyBalanceFragmentDirections.actionMyBalanceFragmentToCreateNewTransactionFragment
 import sk.stuba.fei.uim.mobv_project.ui.utils.ClipboardUtils
+import sk.stuba.fei.uim.mobv_project.ui.utils.NotificationUtils
 import sk.stuba.fei.uim.mobv_project.utils.SecurityContext
 
 
@@ -64,7 +66,7 @@ class MyBalanceFragment : Fragment(), AdapterView.OnItemSelectedListener {
     }
 
     private fun setAssetsObserver() {
-        myBalanceViewModel.assetOptions.observe(viewLifecycleOwner,{ assetOptions ->
+        myBalanceViewModel.assetOptions.observe(viewLifecycleOwner, { assetOptions ->
             setSpinnerAdapter(assetOptions.toMutableList())
         })
     }
@@ -113,13 +115,19 @@ class MyBalanceFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     private fun setAccountIdClickListener() {
         binding.accountIdLayout.setOnClickListener {
-            ClipboardUtils.copyToClipboard(
+            val copiedToClipboard = ClipboardUtils.copyToClipboard(
                 context,
                 "accountId",
-                SecurityContext.account?.accountId.orEmpty(),
-                view,
-                R.string.my_balance_copy_account_key_toast_text
+                SecurityContext.account?.accountId.orEmpty()
             )
+            if (copiedToClipboard) {
+                NotificationUtils.showAnchorSnackbar(
+                    view,
+                    R.string.my_balance_copy_account_key_toast_text,
+                    Snackbar.LENGTH_LONG,
+                    R.id.bottom_nav_view
+                )
+            }
         }
     }
 

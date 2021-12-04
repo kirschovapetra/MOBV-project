@@ -30,7 +30,7 @@ class NewContactViewModel(
     }
 
     enum class SaveResult {
-        CREATED, UPDATED
+        CREATED, UPDATED, DELETED
     }
 
     // UI
@@ -50,7 +50,7 @@ class NewContactViewModel(
         get() = _eventInvalidForm
 
     private val _eventContactSaved = MutableLiveData<Event<Int>>()
-    val eventContactSave: LiveData<Event<Int>>
+    val eventFormSubmitted: LiveData<Event<Int>>
         get() = _eventContactSaved
 
 
@@ -89,10 +89,19 @@ class NewContactViewModel(
         }
     }
 
+    fun deleteContact() {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                contactRepo.deleteContact(getContact())
+                _eventContactSaved.postValue(Event(getMessageResourceId(SaveResult.DELETED)))
+            }
+        }
+    }
+
     private fun getContact(): Contact {
         return Contact(
-            contactAccountId.value!!,
-            contactName.value!!,
+            contactAccountId.value!!.trim(),
+            contactName.value!!.trim(),
             account.accountId
         )
     }
@@ -128,6 +137,7 @@ class NewContactViewModel(
         return when (saveResult) {
             SaveResult.CREATED -> R.string.new_contact_created
             SaveResult.UPDATED -> R.string.new_contact_updated
+            SaveResult.DELETED -> R.string.new_contact_deleted
         }
     }
 

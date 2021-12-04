@@ -50,7 +50,7 @@ class SaveRecipientFragment : Fragment() {
         viewModel.eventInvalidForm.observe(viewLifecycleOwner, { event ->
             showSnackbarFromResourceEvent(view, event, Snackbar.LENGTH_LONG)
         })
-        viewModel.eventContactSave.observe(viewLifecycleOwner, { event ->
+        viewModel.eventFormSubmitted.observe(viewLifecycleOwner, { event ->
             event.getContentIfNotHandled()?.let { messageResourceId ->
                 findNavController().navigate(actionSaveRecipientFragmentToMyBalanceFragment())
                 NotificationUtils.showAnchorSnackbar(

@@ -45,37 +45,41 @@ class CreateNewTransactionFragment : Fragment(), AdapterView.OnItemSelectedListe
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
         binding.spinner.onItemSelectedListener = this
-        viewModel.allContacts.observe(viewLifecycleOwner, { contactList ->
-            context?.let { context ->
-                val spinnerAdapter = ContactArrayAdapter(context, contactList)
-                binding.spinner.adapter = spinnerAdapter
-            }
-        })
-        viewModel.eventPaymentSuccessful.observe(viewLifecycleOwner, { event ->
-            event.getContentIfNotHandled()?.let {
-                findNavController().navigate(it)
-                setLoadingLayoutVisibility(activity, false)
-            }
-        })
-        viewModel.eventInvalidPin.observe(viewLifecycleOwner, {
-            it.getContentIfNotHandled()?.let { pinInvalid ->
-                if (pinInvalid) {
-                    onInvalidPin()
+
+        viewModel.apply {
+            allContacts.observe(viewLifecycleOwner, { contactList ->
+                context?.let { context ->
+                    val spinnerAdapter = ContactArrayAdapter(context, contactList)
+                    binding.spinner.adapter = spinnerAdapter
+                }
+            })
+            eventPaymentSuccessful.observe(viewLifecycleOwner, { event ->
+                event.getContentIfNotHandled()?.let {
+                    findNavController().navigate(it)
                     setLoadingLayoutVisibility(activity, false)
                 }
-            }
-        })
-        viewModel.eventApiValidationFailed.observe(viewLifecycleOwner, {
-            it.getContentIfNotHandled()?.let { errorMessage ->
-                NotificationUtils.showSnackbar(view, errorMessage, Snackbar.LENGTH_LONG)
-                setLoadingLayoutVisibility(activity, false)
-            }
-        })
-        viewModel.eventLoadingStarted.observe(viewLifecycleOwner, {
-            it.getContentIfNotHandled()?.let {
-                setLoadingLayoutVisibility(activity, true)
-            }
-        })
+            })
+            eventInvalidPin.observe(viewLifecycleOwner, {
+                it.getContentIfNotHandled()?.let { pinInvalid ->
+                    if (pinInvalid) {
+                        onInvalidPin()
+                        setLoadingLayoutVisibility(activity, false)
+                    }
+                }
+            })
+            eventApiValidationFailed.observe(viewLifecycleOwner, {
+                it.getContentIfNotHandled()?.let { errorMessage ->
+                    NotificationUtils.showSnackbar(view, errorMessage, Snackbar.LENGTH_LONG)
+                    setLoadingLayoutVisibility(activity, false)
+                }
+            })
+            eventLoadingStarted.observe(viewLifecycleOwner, {
+                it.getContentIfNotHandled()?.let {
+                    setLoadingLayoutVisibility(activity, true)
+                }
+            })
+        }
+
         return binding.root
     }
 

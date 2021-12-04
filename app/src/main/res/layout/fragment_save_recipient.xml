@@ -67,36 +67,30 @@
             android:id="@+id/constraintLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/newContactAccountId">
 
             <Button
-                style="@style/button_text_submit"
                 android:id="@+id/addSkipButton"
-                android:layout_marginTop="16dp"
-                android:gravity="center_horizontal|center_vertical"
+                style="@style/button_text_submit"
                 android:text="@string/addSkipButton"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/addNewContactButtonTitle"
-                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0"
                 tools:text="Skip" />
 
             <Button
-                style="@style/button_submit"
                 android:id="@+id/addNewContactButtonTitle"
-                android:gravity="center_horizontal|center_vertical"
+                style="@style/button_submit"
                 android:onClick="@{() -> viewModel.saveContact()}"
                 android:text="@string/addNewContactButton"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/addSkipButton"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Save" />

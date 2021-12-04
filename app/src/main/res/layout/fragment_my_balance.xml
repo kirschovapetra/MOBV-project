@@ -73,6 +73,7 @@
                     style="@style/TextAppearance.Material3.HeadlineSmall"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
                     android:elevation="2sp"
                     android:text="@{myBalanceViewModel.account.accountId}"
                     android:textColor="@color/md_theme_light_primary"

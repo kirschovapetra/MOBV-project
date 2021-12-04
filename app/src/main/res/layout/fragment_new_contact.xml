@@ -17,10 +17,11 @@
 
         <!-- WHATEVER YOU DO, NEPRIDAVAJTE SEM AUTOFILL HINTS. NASTANE KONIEC VESMIRU AKO HO POZNAME -->
         <EditText
-            style="@style/edit_text_default"
             android:id="@+id/newContactName"
+            style="@style/edit_text_default"
             android:hint="@string/contactNameHint"
             android:inputType="textPersonName"
+            android:minHeight="48dp"
             android:text="@={newContactViewModel.contactName}"
             app:layout_constraintBottom_toTopOf="@+id/newContactAccountId"
             app:layout_constraintEnd_toEndOf="parent"
@@ -32,29 +33,49 @@
             app:layout_constraintVertical_chainStyle="packed" />
 
         <EditText
-            style="@style/edit_text_default"
             android:id="@+id/newContactAccountId"
+            style="@style/edit_text_default"
             android:enabled="@{newContactViewModel.isNew}"
             android:hint="@string/contactAccountIdHint"
             android:inputType="text"
+            android:minHeight="48dp"
             android:text="@={newContactViewModel.contactAccountId}"
-            app:layout_constraintBottom_toTopOf="@+id/addNewContactButtonTitle"
+            app:layout_constraintBottom_toTopOf="@+id/new_contact_buttons_layout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/newContactName" />
 
-        <Button
-            style="@style/button_submit"
-            android:id="@+id/addNewContactButtonTitle"
-            android:onClick="@{() -> newContactViewModel.saveContact()}"
-            android:text="@string/addNewContactButton"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/new_contact_buttons_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/newContactAccountId" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/newContactAccountId">
 
+            <Button
+                android:id="@+id/deleteContactButton"
+                style="@style/button_text_submit"
+                android:text="@string/new_contact_delete_button"
+                android:textColor="@color/md_theme_light_error"
+                android:onClick="@{() -> newContactViewModel.deleteContact()}"
+                app:layout_constraintBaseline_toBaselineOf="@id/addNewContactButtonTitle"
+                app:layout_constraintEnd_toStartOf="@+id/addNewContactButtonTitle"
+                app:layout_constraintStart_toStartOf="parent" />
 
+            <Button
+                android:id="@+id/addNewContactButtonTitle"
+                style="@style/button_submit"
+                android:onClick="@{() -> newContactViewModel.saveContact()}"
+                android:text="@string/addNewContactButton"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/deleteContactButton"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

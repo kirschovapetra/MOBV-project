@@ -14,31 +14,27 @@ class ContactArrayAdapter(
     contactsList: List<Contact>
 ) : ArrayAdapter<Contact>(context, 0, contactsList) {
 
-    init {
-        setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-    }
-
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        return createOrBindView(position, convertView, parent)
+        return createOrBindView(position, convertView, parent, android.R.layout.simple_spinner_item)
     }
 
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
-        return createOrBindView(position, convertView, parent)
+        return createOrBindView(position, convertView, parent, android.R.layout.simple_spinner_dropdown_item)
     }
 
-    private fun createOrBindView(position: Int, convertView: View?, parent: ViewGroup): View {
+    private fun createOrBindView(position: Int, convertView: View?, parent: ViewGroup, viewResource: Int): View {
         val contact = getItem(position)
 
         return if (convertView == null) {
-            createView(contact, parent)
+            createView(contact, parent, viewResource)
         } else {
             bindView(contact, convertView)
         }
     }
 
-    private fun createView(contact: Contact?, parent: ViewGroup): View {
+    private fun createView(contact: Contact?, parent: ViewGroup, viewResource: Int): View {
         val view: TextView = LayoutInflater.from(context)
-                                 .inflate(android.R.layout.simple_spinner_item, parent, false)
+                                 .inflate(viewResource, parent, false)
                                  as TextView
         return bindView(contact, view)
     }

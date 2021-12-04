@@ -56,9 +56,11 @@
     <string name="contactNameHint">Contact name</string>
     <string name="contactAccountIdHint">Account Id</string>
     <string name="addNewContactButton">Save</string>
+    <string name="new_contact_delete_button">Delete</string>
 
     <string name="new_contact_created">Contact saved</string>
     <string name="new_contact_updated">Contact updated</string>
+    <string name="new_contact_deleted">Contact deleted</string>
 
     <string name="new_contact_invalid_contact_name">Invalid name</string>
     <string name="new_contact_invalid_contact_account_id">You have entered an invalid contact id</string>

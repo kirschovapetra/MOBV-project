@@ -57,16 +57,26 @@ class NewContactFragment : Fragment() {
         binding.newContactViewModel = newContactViewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
-        newContactViewModel.eventInvalidForm.observe(viewLifecycleOwner, { event ->
-            event.getContentIfNotHandled()?.let { messageResourceId ->
-                showSnackbar(view, messageResourceId, Snackbar.LENGTH_LONG)
-            }
-        })
-        newContactViewModel.eventContactSave.observe(viewLifecycleOwner, { event ->
-            event.getContentIfNotHandled()?.let { messageResourceId ->
-                navigateToContactsAndShowSnackbar(messageResourceId)
-            }
-        })
+        newContactViewModel.apply {
+            isNew.observe(viewLifecycleOwner, { isNew ->
+                if (isNew) {
+                    binding.deleteContactButton.visibility = View.GONE
+                }
+                else {
+                    binding.deleteContactButton.visibility = View.VISIBLE
+                }
+            })
+            eventInvalidForm.observe(viewLifecycleOwner, { event ->
+                event.getContentIfNotHandled()?.let { messageResourceId ->
+                    showSnackbar(view, messageResourceId, Snackbar.LENGTH_LONG)
+                }
+            })
+            eventFormSubmitted.observe(viewLifecycleOwner, { event ->
+                event.getContentIfNotHandled()?.let { messageResourceId ->
+                    navigateToContactsAndShowSnackbar(messageResourceId)
+                }
+            })
+        }
 
         return binding.root
     }
